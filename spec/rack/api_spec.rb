@@ -109,7 +109,7 @@ describe Rack::API do
 
       it { is_expected.to eq(200) }
 
-      it { is_expected.to be response.status}
+      it { is_expected.to be response.status }
     end
 
     context 'when new status given to be set' do
@@ -117,8 +117,45 @@ describe Rack::API do
 
       it { is_expected.to eq(201) }
 
-      it { is_expected.to be response.status}
+      it { is_expected.to be response.status }
     end
+
+  end
+
+  describe '.mount' do
+    subject { described_class.mount(to_be_mounted_api_class) }
+
+    context 'when valid api class given' do
+
+      let(:to_be_mounted_api_class) do
+        klass = Class.new(Rack::API)
+        klass.class_eval do
+
+          get '/endpoint' do
+            'hello world!'
+          end
+
+        end
+        klass
+      end
+
+      it 'should merge the mounted class endpoints to its own collection' do
+        is_expected.to be nil
+
+        expect(described_class.endpoints.count).to eq 1
+      end
+
+    end
+
+    context 'when invalid class given' do
+      let(:to_be_mounted_api_class) { 'nope this is a string' }
+
+      it 'should raise argument error' do
+        expect{subject}.to raise_error(ArgumentError,'Invalid class given for mount, must be a Rack::API')
+      end
+
+    end
+
 
   end
 

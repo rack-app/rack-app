@@ -53,4 +53,15 @@ module Rack::API::SyntaxSugar
     @endpoints ||= {}
   end
 
+  def mount(api_class)
+
+    unless api_class.is_a?(Class) and api_class <= Rack::API
+      raise(ArgumentError, 'Invalid class given for mount, must be a Rack::API')
+    end
+
+    endpoints.merge!(api_class.endpoints)
+
+    nil
+  end
+
 end
