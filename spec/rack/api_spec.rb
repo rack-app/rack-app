@@ -41,7 +41,8 @@ describe Rack::API do
 
   end
 
-  let(:request) { Rack::Request.new({}) }
+  let(:request_env) { {} }
+  let(:request) { Rack::Request.new(request_env) }
   let(:response) { Rack::Response.new }
 
   def new_subject
@@ -60,7 +61,7 @@ describe Rack::API do
 
 
   describe '#request_path_not_found' do
-    subject{ new_subject.request_path_not_found }
+    subject { new_subject.request_path_not_found }
 
     it 'should set the response body to 404 Not Found' do
       expect(response).to receive(:write).with('404 Not Found')
@@ -83,5 +84,34 @@ describe Rack::API do
     end
 
   end
+
+  describe '#params' do
+    subject { new_subject.params }
+
+    context 'when query string given in request env' do
+
+      context 'with single value' do
+        before { request_env['QUERY_STRING']= 'a=2' }
+
+        it { is_expected.to eq({"a" => "2"}) }
+      end
+
+      context 'with multiple value' do
+        before { request_env['QUERY_STRING']= 'a=2&a=3' }
+
+        it { is_expected.to eq({"a" => ["2","3"]}) }
+      end
+
+    end
+
+    context 'when reuqest env do not include any query' do
+      before { request_env['QUERY_STRING']= '' }
+
+      it { is_expected.to eq({}) }
+    end
+
+  end
+
+
 
 end
