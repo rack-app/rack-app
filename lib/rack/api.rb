@@ -15,4 +15,10 @@ class Rack::API
     @request = request
   end
 
+  def request_path_not_found
+    response.status= 404
+    response.write '404 Not Found'
+    response.finish
+  end
+
 end

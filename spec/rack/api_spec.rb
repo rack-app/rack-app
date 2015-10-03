@@ -59,4 +59,29 @@ describe Rack::API do
   end
 
 
+  describe '#request_path_not_found' do
+    subject{ new_subject.request_path_not_found }
+
+    it 'should set the response body to 404 Not Found' do
+      expect(response).to receive(:write).with('404 Not Found')
+
+      subject
+    end
+
+    it 'should set the response status to 404' do
+      expect(response).to receive(:status=).with(404)
+
+      subject
+    end
+
+    it 'should mark response to be finished' do
+      finished_response = []
+
+      expect(response).to receive(:finish).and_return(finished_response)
+
+      is_expected.to be finished_response
+    end
+
+  end
+
 end
