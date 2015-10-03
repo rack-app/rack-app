@@ -3,7 +3,7 @@ require 'rack/app'
 
 require_relative 'first_controller'
 
-class SampleApi < Rack::APP
+class SampleApp < Rack::APP
 
   mount FirstController
 
@@ -18,4 +18,4 @@ class SampleApi < Rack::APP
 
 end
 
-run SampleApi
+run SampleApp

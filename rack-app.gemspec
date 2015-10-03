@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Bare bone minimalistic (masochistic) pico framework for building rack apps}
   spec.description   = %q{Bare bone minimalistic (masochistic) pico framework for building rack apps}
-  spec.homepage      = "https://github.com/adamluzsi/rack-api.rb"
+  spec.homepage      = "https://github.com/adamluzsi/rack-app.rb"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
