@@ -56,7 +56,10 @@ run YourAwesomeApp
 
 * benchmark for rails, padrino, sinatra, grape etc to prove awesomeness
 * more verbose readme
-* drink less coffee 
+* drink less coffee
+* support restful endpoints
+  * params
+  * route-matching
 
 ## Development
 
