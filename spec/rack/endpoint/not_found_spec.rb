@@ -31,7 +31,7 @@ describe Rack::API::Endpoint::NOT_FOUND do
     end
 
     it 'should mark response to be finished' do
-      finished_response = []
+      finished_response = Rack::Response.new.finish
 
       expect(response).to receive(:finish).and_return(finished_response)
 

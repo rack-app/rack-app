@@ -19,4 +19,9 @@ module Rack::API::RequestHelpers
     response.status
   end
 
+  def body(new_body_content)
+
+
+  end
+
 end

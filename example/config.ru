@@ -9,6 +9,7 @@ class SampleApi < Rack::API
 
   get '/nope' do
     response.write 'nope nope nope...'
+
   end
 
 end
