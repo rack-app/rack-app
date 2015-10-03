@@ -112,6 +112,4 @@ describe Rack::API do
 
   end
 
-
-
 end

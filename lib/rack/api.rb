@@ -11,6 +11,8 @@ class Rack::API
   require 'rack/api/request_helpers'
   include Rack::API::RequestHelpers
 
+  require 'rack/api/runner'
+
   attr_reader :request, :response
 
   def initialize(request, response)
