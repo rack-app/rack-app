@@ -1,9 +1,9 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','lib'))
-require 'rack/api'
+require 'rack/app'
 
 require_relative 'first_controller'
 
-class SampleApi < Rack::API
+class SampleApi < Rack::APP
 
   mount FirstController
 

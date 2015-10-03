@@ -97,4 +97,4 @@ end
 
 rack_api_lib_folder = File.join(File.dirname(__FILE__), '..', 'lib')
 $LOAD_PATH.unshift(rack_api_lib_folder)
-require 'rack/api'
+require 'rack/app'

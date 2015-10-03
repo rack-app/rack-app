@@ -1,7 +1,7 @@
 require 'spec_helper'
-describe Rack::API do
+describe Rack::APP do
 
-  let(:described_class) { Class.new(Rack::API) }
+  let(:described_class) { Class.new(Rack::APP) }
   let(:request_path) { '/some/endpoint/path' }
   let(:block) { Proc.new {} }
 
@@ -16,9 +16,9 @@ describe Rack::API do
 
       subject { described_class.public_send(http_method, request_path, &block) }
 
-      let!(:endpoint) { Rack::API::Endpoint.new(described_class, &block) }
+      let!(:endpoint) { Rack::APP::Endpoint.new(described_class, &block) }
       before do
-        allow(Rack::API::Endpoint).to receive(:new)
+        allow(Rack::APP::Endpoint).to receive(:new)
                                           .with(
                                               described_class,
                                               {
@@ -31,7 +31,7 @@ describe Rack::API do
 
       end
 
-      it { is_expected.to be_a Rack::API::Endpoint }
+      it { is_expected.to be_a Rack::APP::Endpoint }
       it { is_expected.to be endpoint }
 
       it "should create an endpoint in the endpoint collection" do
@@ -47,7 +47,7 @@ describe Rack::API do
     let(:http_method) { 'GET' }
     subject { described_class.add_route(http_method, request_path, &block) }
 
-    it { is_expected.to be_a Rack::API::Endpoint }
+    it { is_expected.to be_a Rack::APP::Endpoint }
 
     it "should create an endpoint entry under the right request_key based" do
       request_key = [http_method.to_s.upcase, request_path]
@@ -128,7 +128,7 @@ describe Rack::API do
     context 'when valid api class given' do
 
       let(:to_be_mounted_api_class) do
-        klass = Class.new(Rack::API)
+        klass = Class.new(Rack::APP)
         klass.class_eval do
 
           get '/endpoint' do
@@ -151,7 +151,7 @@ describe Rack::API do
       let(:to_be_mounted_api_class) { 'nope this is a string' }
 
       it 'should raise argument error' do
-        expect{subject}.to raise_error(ArgumentError,'Invalid class given for mount, must be a Rack::API')
+        expect{subject}.to raise_error(ArgumentError,'Invalid class given for mount, must be a Rack::APP')
       end
 
     end

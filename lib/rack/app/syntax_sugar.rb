@@ -1,4 +1,4 @@
-module Rack::API::SyntaxSugar
+module Rack::APP::SyntaxSugar
 
   def description(*description_texts)
     @last_description = description_texts.join("\n")
@@ -35,7 +35,7 @@ module Rack::API::SyntaxSugar
   def add_route(request_method, request_path, &block)
     request_key = [request_method, request_path]
 
-    endpoint = endpoints[request_key]= Rack::API::Endpoint.new(
+    endpoint = endpoints[request_key]= Rack::APP::Endpoint.new(
         self,
         {
             request_method: request_method,
@@ -55,8 +55,8 @@ module Rack::API::SyntaxSugar
 
   def mount(api_class)
 
-    unless api_class.is_a?(Class) and api_class <= Rack::API
-      raise(ArgumentError, 'Invalid class given for mount, must be a Rack::API')
+    unless api_class.is_a?(Class) and api_class <= Rack::APP
+      raise(ArgumentError, 'Invalid class given for mount, must be a Rack::APP')
     end
 
     endpoints.merge!(api_class.endpoints)

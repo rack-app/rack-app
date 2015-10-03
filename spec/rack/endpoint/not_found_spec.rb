@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Rack::API::Endpoint::NOT_FOUND do
+describe Rack::APP::Endpoint::NOT_FOUND do
 
   def new_subject
     described_class

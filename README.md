@@ -3,7 +3,7 @@
 Super bare bone Rack::App for writing minimalist/masochist rack apps
 
 The idea behind is simple. 
-Have a little framework that can allow you write pure rack apps or api,
+Have a little framework that can allow you write pure rack apps,
 that will do nothing more than what you defined.
 
  
@@ -12,7 +12,7 @@ that will do nothing more than what you defined.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rack-api'
+gem 'rack-app'
 ```
 
 And then execute:
@@ -21,16 +21,16 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install rack-api
+    $ gem install rack-app
 
 ## Usage
 
 config.ru
 ```ruby
 
-require 'rack/api'
+require 'rack/app'
 
-class YourAwesomeApi < Rack::API
+class YourAwesomeApp < Rack::APP
 
   get '/hello' do
     'Hello World!'
@@ -49,7 +49,7 @@ class YourAwesomeApi < Rack::API
 
 end
 
-run YourAwesomeApi
+run YourAwesomeApp
 ```
 
 ## TODO
@@ -66,5 +66,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rack-api. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rack-app. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 

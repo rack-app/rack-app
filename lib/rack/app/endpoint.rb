@@ -1,4 +1,4 @@
-class Rack::API::Endpoint
+class Rack::APP::Endpoint
 
   def initialize(api_class, properties={}, &logic_block)
     @properties = properties

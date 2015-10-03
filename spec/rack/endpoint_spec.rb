@@ -1,10 +1,10 @@
 require 'spec_helper'
-describe Rack::API::Endpoint do
+describe Rack::APP::Endpoint do
 
   let(:request_method) { 'GET' }
   let(:request_path) { '/endpoint/path' }
   let(:description) { 'sample description for the endpoint' }
-  let(:api_class) { Class.new(Rack::API) }
+  let(:api_class) { Class.new(Rack::APP) }
   let(:logic_block) { Proc.new { 'hello world!' } }
 
   def new_subject

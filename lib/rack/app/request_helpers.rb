@@ -1,5 +1,5 @@
 require 'cgi'
-module Rack::API::RequestHelpers
+module Rack::APP::RequestHelpers
 
   def params
     @__request_params__ ||= CGI.parse(request.env['QUERY_STRING']).freeze.reduce({}) do |params_collection, (k, v)|

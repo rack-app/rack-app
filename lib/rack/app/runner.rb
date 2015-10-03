@@ -1,4 +1,4 @@
-module Rack::API::Runner
+module Rack::APP::Runner
   extend self
 
   def response_for(api_class, request_env)
@@ -9,7 +9,7 @@ module Rack::API::Runner
   protected
 
   def fetch_endpoint(api_class, request_method, request_path)
-    api_class.endpoints[[request_method, request_path]] || Rack::API::Endpoint::NOT_FOUND
+    api_class.endpoints[[request_method, request_path]] || Rack::APP::Endpoint::NOT_FOUND
   end
 
 end
