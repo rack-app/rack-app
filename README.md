@@ -1,6 +1,11 @@
 # Rack::App
 
 Super bare bone Rack::App for writing minimalist/masochist rack apps
+
+The idea behind is simple. 
+Have a little framework that can allow you write pure rack apps or api,
+that will do nothing more than what you defined.
+
  
 ## Installation
 
@@ -20,7 +25,38 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+config.ru
+```ruby
+
+require 'rack/api'
+
+class YourAwesomeApi < Rack::API
+
+  get '/hello' do
+    'Hello World!'
+  end
+
+  get '/nope' do
+    request.env
+    response.write 'some response body'
+    
+  end
+  
+  post '/lol_post' do 
+    status 500 
+    'LOL'
+  end
+
+end
+
+run YourAwesomeApi
+```
+
+## TODO
+
+* benchmark for rails, padrino, sinatra, grape etc to prove awesomeness
+* more verbose readme
+* drink less coffee 
 
 ## Development
 
