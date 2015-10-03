@@ -41,6 +41,22 @@ describe Rack::API do
 
   end
 
+  let(:request) { Rack::Request.new({}) }
+  let(:response) { Rack::Response.new }
+
+  def new_subject
+    described_class.new(request, response)
+  end
+
+  describe '#request' do
+    subject { new_subject.request }
+    it { is_expected.to be request }
+  end
+
+  describe '#response' do
+    subject { new_subject.response }
+    it { is_expected.to be response }
+  end
 
 
 end
