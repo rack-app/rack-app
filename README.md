@@ -6,6 +6,7 @@ The idea behind is simple.
 Have a little framework that can allow you write pure rack apps,
 that will do nothing more than what you defined.
 
+This includes that it do not depend on fat libs like activesupport. 
  
 ## Installation
 
