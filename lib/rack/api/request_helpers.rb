@@ -13,4 +13,10 @@ module Rack::API::RequestHelpers
     end
   end
 
+  def status(new_status=nil)
+    response.status= new_status.to_i unless new_status.nil?
+
+    response.status
+  end
+
 end

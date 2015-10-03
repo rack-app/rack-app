@@ -5,13 +5,16 @@ class Rack::API
 
   require 'rack/api/version'
 
+  require 'rack/api/endpoint'
+  require 'rack/api/endpoint/not_found'
+
+  require 'rack/api/runner'
+
   require 'rack/api/syntax_sugar'
   extend Rack::API::SyntaxSugar
 
   require 'rack/api/request_helpers'
   include Rack::API::RequestHelpers
-
-  require 'rack/api/runner'
 
   attr_reader :request, :response
 
@@ -20,10 +23,8 @@ class Rack::API
     @request = request
   end
 
-  def request_path_not_found
-    response.status= 404
-    response.write '404 Not Found'
-    response.finish
+  def self.call(request_env)
+    Rack::API::Runner.response_for(self,request_env)
   end
 
 end

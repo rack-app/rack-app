@@ -1,5 +1,9 @@
 module Rack::API::SyntaxSugar
 
+  def description(*description_texts)
+    @last_description = description_texts.join("\n")
+  end
+
   def get(path = '/', &block)
     add_route('GET', path, &block)
   end
@@ -29,7 +33,20 @@ module Rack::API::SyntaxSugar
   end
 
   def add_route(request_method, request_path, &block)
-    endpoints[[request_method, request_path]]= block
+    request_key = [request_method, request_path]
+
+    endpoint = endpoints[request_key]= Rack::API::Endpoint.new(
+        self,
+        {
+            request_method: request_method,
+            request_path: request_path,
+            description: @last_description
+        },
+        &block
+    )
+
+    @last_description = nil
+    endpoint
   end
 
   def endpoints

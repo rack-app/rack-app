@@ -16,8 +16,23 @@ describe Rack::API do
 
       subject { described_class.public_send(http_method, request_path, &block) }
 
-      it { is_expected.to be_a Proc }
-      it { is_expected.to be block }
+      let!(:endpoint) { Rack::API::Endpoint.new(described_class, &block) }
+      before do
+        allow(Rack::API::Endpoint).to receive(:new)
+                                          .with(
+                                              described_class,
+                                              {
+                                                  request_method: http_method.to_s.upcase,
+                                                  request_path: request_path,
+                                                  description: nil
+                                              }
+                                          )
+                                          .and_return(endpoint)
+
+      end
+
+      it { is_expected.to be_a Rack::API::Endpoint }
+      it { is_expected.to be endpoint }
 
       it "should create an endpoint in the endpoint collection" do
         request_key = [http_method.to_s.upcase, request_path]
@@ -32,7 +47,7 @@ describe Rack::API do
     let(:http_method) { 'GET' }
     subject { described_class.add_route(http_method, request_path, &block) }
 
-    it { is_expected.to be block }
+    it { is_expected.to be_a Rack::API::Endpoint }
 
     it "should create an endpoint entry under the right request_key based" do
       request_key = [http_method.to_s.upcase, request_path]
@@ -60,31 +75,6 @@ describe Rack::API do
   end
 
 
-  describe '#request_path_not_found' do
-    subject { new_subject.request_path_not_found }
-
-    it 'should set the response body to 404 Not Found' do
-      expect(response).to receive(:write).with('404 Not Found')
-
-      subject
-    end
-
-    it 'should set the response status to 404' do
-      expect(response).to receive(:status=).with(404)
-
-      subject
-    end
-
-    it 'should mark response to be finished' do
-      finished_response = []
-
-      expect(response).to receive(:finish).and_return(finished_response)
-
-      is_expected.to be finished_response
-    end
-
-  end
-
   describe '#params' do
     subject { new_subject.params }
 
@@ -99,7 +89,7 @@ describe Rack::API do
       context 'with multiple value' do
         before { request_env['QUERY_STRING']= 'a=2&a=3' }
 
-        it { is_expected.to eq({"a" => ["2","3"]}) }
+        it { is_expected.to eq({"a" => ["2", "3"]}) }
       end
 
     end
@@ -108,6 +98,26 @@ describe Rack::API do
       before { request_env['QUERY_STRING']= '' }
 
       it { is_expected.to eq({}) }
+    end
+
+  end
+
+  describe '#status' do
+
+    context 'when new status given to be set' do
+      subject { new_subject.status }
+
+      it { is_expected.to eq(200) }
+
+      it { is_expected.to be response.status}
+    end
+
+    context 'when new status given to be set' do
+      subject { new_subject.status(201) }
+
+      it { is_expected.to eq(201) }
+
+      it { is_expected.to be response.status}
     end
 
   end
