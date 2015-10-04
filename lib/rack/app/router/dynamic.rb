@@ -1,13 +1,6 @@
 class Rack::APP::Router::Dynamic
 
-  #TODO: clean up sketch
-  ANY = String.new('any').tap do |any_str|
-    any_str.instance_eval do
-      def ==(oth_str)
-        oth_str.is_a?(String)
-      end
-    end
-  end
+  ANY = 'Rack::APP::Router::Dynamic::ANY'.freeze
 
   def add_endpoint(request_method, request_path, endpoint)
     request_path = Rack::APP::Utils.normalize_path(request_path)
