@@ -9,7 +9,7 @@ module Rack::APP::Runner
   protected
 
   def fetch_endpoint(api_class, request_method, request_path)
-    api_class.endpoints[[request_method, request_path]] || Rack::APP::Endpoint::NOT_FOUND
+    api_class.static_router.fetch_endpoint(request_method, request_path)|| Rack::APP::Endpoint::NOT_FOUND
   end
 
 end

@@ -32,10 +32,13 @@ module Rack::APP::ClassMethods
     add_route('PATCH', path, &block)
   end
 
-  def add_route(request_method, request_path, &block)
-    request_key = [request_method, request_path]
+  def static_router
+    @static_router ||= Rack::APP::Router::Static.new
+  end
 
-    endpoint = endpoints[request_key]= Rack::APP::Endpoint.new(
+  def add_route(request_method, request_path, &block)
+
+    endpoint = Rack::APP::Endpoint.new(
         self,
         {
             request_method: request_method,
@@ -45,13 +48,12 @@ module Rack::APP::ClassMethods
         &block
     )
 
+    static_router.add_endpoint(request_method,request_path,endpoint)
+
     @last_description = nil
     endpoint
   end
 
-  def endpoints
-    @endpoints ||= {}
-  end
 
   def mount(api_class)
 
@@ -59,7 +61,7 @@ module Rack::APP::ClassMethods
       raise(ArgumentError, 'Invalid class given for mount, must be a Rack::APP')
     end
 
-    endpoints.merge!(api_class.endpoints)
+    static_router.merge!(api_class.static_router)
 
     nil
   end
