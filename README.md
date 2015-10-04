@@ -10,6 +10,9 @@ that will do nothing more than what you defined.
 If you want see fancy magic, you are in a bad place buddy!
 This includes that it do not have such core extensions like activesupport that monkey patch the whole world.
 
+Routing can handle large amount of endpoints so if you that crazy to use more than 10k endpoint,
+you still dont have to worry about response speed.
+
 ## Installation
 
 Add this line to your application's Gemfile:
