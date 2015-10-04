@@ -27,6 +27,7 @@ class Rack::APP::Router::Dynamic
 
     end
 
+    #TODO: add dynamic params index collection to endpoint object
     current_cluster[:endpoint]= endpoint
 
     endpoint
