@@ -66,7 +66,7 @@ class YourAwesomeApp < Rack::APP
   
   def mq_request
     q = BUNNY_CONN_CHANNEL.queue(params['queue_name'])
-    BUNNY_CONN_CHANNEL.default_exchange.publish("Hello World!", :routing_key => q.name)
+    BUNNY_CONN_CHANNEL.default_exchange.publish(request.body.read, :routing_key => q.name)
   end 
   
 end
