@@ -1,4 +1,4 @@
-module Rack::APP::SyntaxSugar
+module Rack::APP::ClassMethods
 
   def description(*description_texts)
     @last_description = description_texts.join("\n")

@@ -16,6 +16,10 @@ class YourAwesomeApp < Rack::APP
 
   end
 
+  get '/users/:user_id' do
+    params[:user_id]
+  end
+
 end
 
 run YourAwesomeApp
