@@ -1,13 +1,15 @@
-# Rack::App
+# Rack::APP
 
 Super bare bone Rack::App for writing minimalist/masochist rack apps
 
 The idea behind is simple. 
-Have a little framework that can allow you write pure rack apps,
+Keep the dependencies and everything as little as possible, 
+while able to write pure rack apps,
 that will do nothing more than what you defined.
 
-This includes that it do not depend on fat libs like activesupport. 
- 
+If you want see fancy magic, you are in a bad place buddy!
+This includes that it do not have such core extensions like activesupport that monkey patch the whole world.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -31,7 +33,11 @@ config.ru
 
 require 'rack/app'
 
+require_relative 'lib/bootstrap'
+
 class YourAwesomeApp < Rack::APP
+
+  mount AwesomeController
 
   get '/hello' do
     'Hello World!'
@@ -40,27 +46,43 @@ class YourAwesomeApp < Rack::APP
   get '/nope' do
     request.env
     response.write 'some response body'
-    
   end
   
-  post '/lol_post' do 
+  post '/lol_post_fail' do 
     status 500 
     'LOL'
   end
-
+  
+  get '/users/:user_id' do 
+    params['user_id']
+  end 
+  
+  post '/some/endpoint/for/the/rabbit/:queue_name' do 
+    mq_request # helper are the class instance method 
+  end 
+  
+  def mq_request
+    q = BUNNY_CONN_CHANNEL.queue(params['queue_name'])
+    BUNNY_CONN_CHANNEL.default_exchange.publish("Hello World!", :routing_key => q.name)
+  end 
+  
 end
 
 run YourAwesomeApp
 ```
 
+you can access Rack::Request with the request method and 
+Rack::Response as response method. 
+
+By default if you dont write anything to the response 'body' the endpoint block logic return will be used
+
 ## TODO
 
-* benchmark for rails, padrino, sinatra, grape etc to prove awesomeness
+* benchmark for rails, padrino, sinatra, grape etc to prove awesomeness in term of speed
 * more verbose readme
 * drink less coffee
-* support restful endpoints
-  * params
-  * route-matching
+* add TESTING module for rspec helpers that allow easy to test controllers 
+* formatter block to allow easy support for JSON or else serializer
 
 ## Development
 
@@ -70,5 +92,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rack-app. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/adamluzsi/rack-app.rb This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
