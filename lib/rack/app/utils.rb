@@ -1,5 +1,6 @@
 module Rack::APP::Utils
   extend self
+
   # Normalizes URI path.
   #
   # Strips off trailing slash and ensures there is a leading slash.
