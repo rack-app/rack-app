@@ -4,6 +4,7 @@ class Rack::APP::Endpoint
     @properties = properties
     @logic_block = logic_block
     @api_class = api_class
+    @path_params_matcher = {}
   end
 
   def execute(request_env)
@@ -11,7 +12,7 @@ class Rack::APP::Endpoint
     request = Rack::Request.new(request_env)
     response = Rack::Response.new
 
-    request_handler = @api_class.new(request, response)
+    request_handler = @api_class.new(request, response,{path_params_matcher: @path_params_matcher})
     call_return = request_handler.instance_exec(&@logic_block)
 
     return call_return if is_a_rack_response_finish?(call_return)
@@ -19,6 +20,10 @@ class Rack::APP::Endpoint
 
     return response.finish
 
+  end
+
+  def register_path_params_matcher(params_matcher)
+    @path_params_matcher.merge!(params_matcher)
   end
 
   protected

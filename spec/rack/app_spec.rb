@@ -90,6 +90,26 @@ describe Rack::APP do
         it { is_expected.to eq({"a" => ["2", "3"]}) }
       end
 
+      context 'when dynamic path given with restful param' do
+        subject { described_class.new(request, response, path_params_matcher: {2 => 'user_id'}).params }
+
+        before{ request_env['REQUEST_PATH']='/users/123' }
+
+        before do
+          described_class.class_eval do
+
+            get '/users/:user_id' do
+              params['user_id']
+            end
+
+          end
+        end
+
+        it { is_expected.to eq({"user_id" => '123'}) }
+
+      end
+
+
     end
 
     context 'when reuqest env do not include any query' do
@@ -140,7 +160,7 @@ describe Rack::APP do
       it 'should merge the mounted class endpoints to its own collection' do
         is_expected.to be nil
 
-        expect(described_class.router.fetch_endpoint('GET','/endpoint')).to_not be nil
+        expect(described_class.router.fetch_endpoint('GET', '/endpoint')).to_not be nil
       end
 
     end
@@ -149,7 +169,7 @@ describe Rack::APP do
       let(:to_be_mounted_api_class) { 'nope this is a string' }
 
       it 'should raise argument error' do
-        expect{subject}.to raise_error(ArgumentError,'Invalid class given for mount, must be a Rack::APP')
+        expect { subject }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::APP')
       end
 
     end

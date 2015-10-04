@@ -16,6 +16,13 @@ describe Rack::APP::Router::Dynamic do
     subject { described_class.new.add_endpoint(request_method, defined_request_path, endpoint) }
 
     it { is_expected.to be endpoint }
+
+    it 'should add path params matcher to the endpoint' do
+      expect(endpoint).to receive(:register_path_params_matcher).with({2 => 'user_id'})
+
+      is_expected.to be endpoint
+    end
+
   end
 
   describe 'fetch_endpoint' do

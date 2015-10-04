@@ -49,4 +49,11 @@ describe Rack::APP::Endpoint do
 
   end
 
+  describe '#register_path_params_matcher' do
+    let(:params_matcher) { {} }
+    subject { new_subject.register_path_params_matcher(params_matcher) }
+
+    it { is_expected.to eq params_matcher }
+  end
+
 end

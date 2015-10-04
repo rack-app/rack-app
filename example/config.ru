@@ -13,11 +13,10 @@ class YourAwesomeApp < Rack::APP
 
   get '/nope' do
     response.write 'nope nope nope...'
-
   end
 
   get '/users/:user_id' do
-    params[:user_id]
+    params['user_id']
   end
 
 end

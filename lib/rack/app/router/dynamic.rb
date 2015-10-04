@@ -10,7 +10,7 @@ class Rack::APP::Router::Dynamic
     request_path.split('/').each.with_index do |path_part, index|
 
       new_cluster_name = if path_part_is_dynamic?(path_part)
-                           path_params[path_part]= index
+                           path_params[index]= path_part.sub(/^:/,'')
                            ANY
                          else
                            path_part
@@ -20,8 +20,8 @@ class Rack::APP::Router::Dynamic
 
     end
 
-    #TODO: add dynamic params index collection to endpoint object
     current_cluster[:endpoint]= endpoint
+    current_cluster[:endpoint].register_path_params_matcher(path_params)
 
     endpoint
   end

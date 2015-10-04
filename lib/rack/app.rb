@@ -26,9 +26,10 @@ class Rack::APP
 
   protected
 
-  def initialize(request, response)
+  def initialize(request, response,options = {})
     @response = response
     @request = request
+    @options = options
   end
 
 end
