@@ -1,4 +1,4 @@
-class FirstController < Rack::APP
+class MountedController < Rack::APP
 
   get '/first' do
     first

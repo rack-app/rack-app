@@ -1,11 +1,11 @@
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__),'..','lib'))
 require 'rack/app'
 
-require_relative 'first_controller'
+require_relative 'mounted_controller'
 
-class SampleApp < Rack::APP
+class YourAwesomeApp < Rack::APP
 
-  mount FirstController
+  mount MountedController
 
   get '/hello' do
     'Hello World!'
@@ -18,4 +18,4 @@ class SampleApp < Rack::APP
 
 end
 
-run SampleApp
+run YourAwesomeApp
