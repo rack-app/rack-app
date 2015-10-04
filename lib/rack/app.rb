@@ -5,12 +5,12 @@ class Rack::APP
 
   require 'rack/app/version'
 
+  require 'rack/app/router'
   require 'rack/app/endpoint'
   require 'rack/app/endpoint/not_found'
-
   require 'rack/app/runner'
 
-  require 'rack/app/syntax_sugar'
+  require 'rack/app/class_methods'
   extend Rack::APP::SyntaxSugar
 
   require 'rack/app/request_helpers'
