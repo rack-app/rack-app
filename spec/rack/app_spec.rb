@@ -5,10 +5,10 @@ describe Rack::APP do
   let(:request_path) { '/some/endpoint/path' }
   let(:block) { Proc.new {} }
 
-  describe '.static_router' do
-    subject { described_class.static_router }
+  describe '.router' do
+    subject { described_class.router }
 
-    it { is_expected.to be_a Rack::APP::Router::Static }
+    it { is_expected.to be_a Rack::APP::Router }
   end
 
   [:get, :post, :put, :delete, :patch, :options].each do |http_method|
@@ -35,7 +35,7 @@ describe Rack::APP do
       it { is_expected.to be endpoint }
 
       it "should create an endpoint in the endpoint collection" do
-        is_expected.to be described_class.static_router.fetch_endpoint(http_method.to_s.upcase, request_path)
+        is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
       end
 
     end
@@ -49,7 +49,7 @@ describe Rack::APP do
     it { is_expected.to be_a Rack::APP::Endpoint }
 
     it "should create an endpoint entry under the right request_key based" do
-      is_expected.to be described_class.static_router.fetch_endpoint(http_method.to_s.upcase, request_path)
+      is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
     end
 
   end
@@ -140,7 +140,7 @@ describe Rack::APP do
       it 'should merge the mounted class endpoints to its own collection' do
         is_expected.to be nil
 
-        expect(described_class.static_router.fetch_endpoint('GET','/endpoint')).to_not be nil
+        expect(described_class.router.fetch_endpoint('GET','/endpoint')).to_not be nil
       end
 
     end
