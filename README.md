@@ -82,6 +82,7 @@ By default if you dont write anything to the response 'body' the endpoint block 
 ## Example Apps To start with
 
 * [Basic](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/basic)
+* [Escher Authorized Api](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/escher_authorized)
 
 ## TODO
 
