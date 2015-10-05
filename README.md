@@ -79,7 +79,9 @@ Rack::Response as response method.
 
 By default if you dont write anything to the response 'body' the endpoint block logic return will be used
 
-## [Example App](https://github.com/adamluzsi/rack-app.rb-example) 
+## Example Apps To start with
+
+* [Basic](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/basic)
 
 ## TODO
 
