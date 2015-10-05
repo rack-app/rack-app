@@ -1,6 +1,6 @@
 # Rack::APP
 
-Super bare bone Rack::App for writing minimalist/masochist rack apps
+Super bare bone app builder framework for writing minimalist/masochist not junked rack apps
 
 The idea behind is simple. 
 Keep the dependencies and everything as little as possible, 
@@ -78,6 +78,8 @@ you can access Rack::Request with the request method and
 Rack::Response as response method. 
 
 By default if you dont write anything to the response 'body' the endpoint block logic return will be used
+
+## [Example App](https://github.com/adamluzsi/rack-app.rb-example) 
 
 ## TODO
 
