@@ -88,6 +88,14 @@ By default if you dont write anything to the response 'body' the endpoint block 
 * [Escher Authorized Api](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/escher_authorized)
   * complex authorization for corporal level api use
 
+## Benchmarking
+
+Dump duration with zero if or routing: 6.0e-06 s
+Rack::APP duration with routing lookup: 7.0e-05 s
+Grape::API duration with routing lookup: 0.180764 s
+
+i feared do this for Rails that is slower than Grape :S
+
 ## TODO
 
 * benchmark for rails, padrino, sinatra, grape etc to prove awesomeness in term of speed
