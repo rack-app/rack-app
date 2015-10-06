@@ -90,16 +90,22 @@ By default if you dont write anything to the response 'body' the endpoint block 
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
 
-Dump duration with zero if or routing: 6.0e-06 s
-Rack::APP duration with routing lookup: 7.0e-05 s
-Grape::API duration with routing lookup: 0.180764 s
-
+* Dump duration with zero if or routing: 6.0e-06 s
+  * no routing
+  * return only a static array with static values
+* Rack::APP duration with routing lookup: 7.0e-05 s
+  * with routing 
+  * with value parsing and reponse object building
+* Grape::API duration with routing lookup: 0.180764 s
+  * with routing 
+  * with value parsing and reponse object building
+  
 This was measured with multiple endpoints like that would be in real life example.
 i feared do this for Rails that is usually slower than Grape :S
 
 ## TODO
 
-* benchmark for rails, padrino, sinatra, grape etc to prove awesomeness in term of speed
+* benchmark for rails, padrino, sinatra etc to prove awesomeness in term of speed
 * more verbose readme
 * drink less coffee
 
