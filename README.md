@@ -94,7 +94,8 @@ Dump duration with zero if or routing: 6.0e-06 s
 Rack::APP duration with routing lookup: 7.0e-05 s
 Grape::API duration with routing lookup: 0.180764 s
 
-i feared do this for Rails that is slower than Grape :S
+This was measured with multiple endpoints like that would be in real life example.
+i feared do this for Rails that is usually slower than Grape :S
 
 ## TODO
 
