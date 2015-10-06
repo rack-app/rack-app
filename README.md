@@ -105,7 +105,7 @@ i feared do this for Rails that is usually slower than Grape :S
 
 ## TODO
 
-* benchmark for rails, padrino, sinatra etc to prove awesomeness in term of speed
+* benchmark for rails::api and etc to prove awesomeness in term of speed
 * more verbose readme
 * drink less coffee
 
