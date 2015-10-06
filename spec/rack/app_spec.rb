@@ -84,6 +84,12 @@ describe Rack::APP do
         it { is_expected.to eq({"a" => "2"}) }
       end
 
+      context 'with array value' do
+        before { request_env['QUERY_STRING']= 'a[]=2&a[]=3' }
+
+        it { is_expected.to eq({"a" => ["2","3"]}) }
+      end
+
       context 'with multiple value' do
         before { request_env['QUERY_STRING']= 'a=2&a=3' }
 
