@@ -109,6 +109,11 @@ By default if you dont write anything to the response 'body' the endpoint block 
 * content_type syntax sugar on class level 
 * response_headers syntax sugar for request processing 
 
+### 0.6.0
+
+* custom error_handler block for api, where Exception class types can be defined to process
+  * NULL Object pattern for error_handler_fetcher
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
