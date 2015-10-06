@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Adam Luzsi"]
   spec.email         = ["adamluzsi@gmail.com"]
 
-  spec.summary       = %q{Bare bone minimalistic (masochistic) pico framework for building rack apps}
-  spec.description   = %q{Bare bone minimalistic (masochistic) pico framework for building rack apps}
+  spec.summary       = %q{Your next favourite, performance designed micro framework!}
+  spec.description   = %q{Your next favourite rack based micro framework that is totally addition free! Have a cup of awesomeness with  your to performance designed framework!}
   spec.homepage      = "https://github.com/adamluzsi/rack-app.rb"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

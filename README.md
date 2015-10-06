@@ -1,9 +1,10 @@
 # Rack::APP
 
-Super bare bone app builder framework for writing minimalist/masochist not junked rack apps
+Your next favourite rack based micro framework that is totally addition free! 
+Have a cup of awesomeness with  your to performance designed framework!
 
 The idea behind is simple. 
-Keep the dependencies and everything as little as possible, 
+Keep the dependencies and everything as little as possible,
 while able to write pure rack apps,
 that will do nothing more than what you defined.
 
@@ -82,15 +83,31 @@ By default if you dont write anything to the response 'body' the endpoint block 
 ## Example Apps To start with
 
 * [Basic](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/basic)
+  * bare bone simple example app 
+  
 * [Escher Authorized Api](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/escher_authorized)
+  * complex authorization for corporal level api use
 
 ## TODO
 
 * benchmark for rails, padrino, sinatra, grape etc to prove awesomeness in term of speed
 * more verbose readme
 * drink less coffee
-* add TESTING module for rspec helpers that allow easy to test controllers 
-* formatter block to allow easy support for JSON or else serializer
+
+## Roadmap 
+
+### 0.3.0
+
+* add TESTING module for rspec helpers that allow easy to test controllers
+
+### 0.4.0
+
+* serializer block/method for class shared serialization logic
+
+### 0.5.0
+
+* content_type syntax sugar on class level 
+* response_headers syntax sugar for request processing 
 
 ## Development
 
