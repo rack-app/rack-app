@@ -1,7 +1,7 @@
 # Rack::APP
 
 Your next favourite rack based micro framework that is totally addition free! 
-Have a cup of awesomeness with  your to performance designed framework!
+Have a cup of awesomeness with  your performance designed framework!
 
 The idea behind is simple. 
 Keep the dependencies and everything as little as possible,
