@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    rack-app (0.2.2)
+    rack-app (0.2.3)
       rack
 
 GEM

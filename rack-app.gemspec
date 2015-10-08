@@ -12,14 +12,14 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Your next favourite, performance designed micro framework!}
   spec.description   = %q{Your next favourite rack based micro framework that is totally addition free! Have a cup of awesomeness with  your to performance designed framework!}
-  spec.homepage      = "https://github.com/adamluzsi/rack-app.rb"
+  spec.homepage      = 'https://github.com/adamluzsi/rack-app.rb'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.license       = 'GNU General Public License v2'
+  spec.license       = 'GNU General Public License v3'
 
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
