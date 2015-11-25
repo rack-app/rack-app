@@ -1,7 +1,7 @@
 require 'rack'
 require 'rack/request'
 require 'rack/response'
-class Rack::APP
+class Rack::App
 
   require 'rack/app/version'
 
@@ -12,14 +12,14 @@ class Rack::APP
   require 'rack/app/runner'
 
   require 'rack/app/class_methods'
-  extend Rack::APP::ClassMethods
+  extend Rack::App::ClassMethods
 
   require 'rack/app/request_helpers'
 
-  include Rack::APP::RequestHelpers
+  include Rack::App::RequestHelpers
 
   def self.call(request_env)
-    Rack::APP::Runner.response_for(self,request_env)
+    Rack::App::Runner.response_for(self,request_env)
   end
 
   attr_reader :request, :response

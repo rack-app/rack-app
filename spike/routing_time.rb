@@ -2,8 +2,8 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'rack/app'
 require 'securerandom'
 
-static_router =  Rack::APP::Router::Static.new
-dynamic_router = Rack::APP::Router::Dynamic.new
+static_router =  Rack::App::Router::Static.new
+dynamic_router = Rack::App::Router::Dynamic.new
 
 classic_router = []
 

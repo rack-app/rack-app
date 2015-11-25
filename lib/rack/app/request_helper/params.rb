@@ -1,11 +1,10 @@
 require 'cgi'
-class Rack::APP::RequestHelpers::Params
+class Rack::App::RequestHelpers::Params
 
-  def initialize(request_env, path_params_matcher={})
+  def initialize(request_env, options = {})
     @request_env = request_env
 
-    @path_params_matcher = path_params_matcher
-
+    @path_params_matcher = options[:path_params_matcher] || {}
   end
 
   def to_hash
@@ -32,7 +31,7 @@ class Rack::APP::RequestHelpers::Params
     path_params = {}
     if @path_params_matcher.is_a?(Hash) and not @path_params_matcher.empty?
 
-      request_path_parts = Rack::APP::Utils.normalize_path(@request_env['REQUEST_PATH']).split('/')
+      request_path_parts = Rack::App::Utils.normalize_path(@request_env['REQUEST_PATH']).split('/')
 
       path_params = request_path_parts.each.with_index.reduce({}) do |params_col, (path_part, index)|
         if @path_params_matcher[index]

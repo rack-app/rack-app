@@ -1,4 +1,4 @@
-module Rack::APP::Utils
+module Rack::App::Utils
   extend self
 
   # Normalizes URI path.

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Rack::APP::Router do
+describe Rack::App::Router do
 
   let(:defined_request_path) { '/users/:user_id' }
   let(:received_request_path) { '/users/123' }
   let(:request_method) { 'GET' }
 
   let(:endpoint) do
-    Rack::APP::Endpoint.new(Class.new(Rack::APP)) do
+    Rack::App::Endpoint.new(Class.new(Rack::App)) do
       'hello world!'
     end
   end
@@ -22,8 +22,8 @@ describe Rack::APP::Router do
       let(:defined_request_path) { '/users/:user_id' }
 
       it 'should use dynamic router for register the new endpoint' do
-        dynamic_router = Rack::APP::Router::Dynamic.new
-        expect(Rack::APP::Router::Dynamic).to receive(:new).and_return(dynamic_router)
+        dynamic_router = Rack::App::Router::Dynamic.new
+        expect(Rack::App::Router::Dynamic).to receive(:new).and_return(dynamic_router)
         expect(dynamic_router).to receive(:add_endpoint).and_return(endpoint)
 
         is_expected.to be endpoint
@@ -35,8 +35,8 @@ describe Rack::APP::Router do
       let(:defined_request_path) { '/users/user_id' }
 
       it 'should use dynamic router for register the new endpoint' do
-        static_router = Rack::APP::Router::Static.new
-        expect(Rack::APP::Router::Static).to receive(:new).and_return(static_router)
+        static_router = Rack::App::Router::Static.new
+        expect(Rack::App::Router::Static).to receive(:new).and_return(static_router)
         expect(static_router).to receive(:add_endpoint).and_return(endpoint)
 
         is_expected.to be endpoint
@@ -69,7 +69,7 @@ describe Rack::APP::Router do
 
     context 'when no matching route given' do
       it 'should return not_found default endpoint' do
-        is_expected.to be Rack::APP::Endpoint::NOT_FOUND
+        is_expected.to be Rack::App::Endpoint::NOT_FOUND
       end
     end
 

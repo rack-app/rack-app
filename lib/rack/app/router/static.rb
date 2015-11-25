@@ -1,7 +1,7 @@
-class Rack::APP::Router::Static
+class Rack::App::Router::Static
 
   def add_endpoint(request_method, request_path, endpoint)
-    @endpoints[[request_method.to_s.upcase, Rack::APP::Utils.normalize_path(request_path)]]= endpoint
+    @endpoints[[request_method.to_s.upcase, Rack::App::Utils.normalize_path(request_path)]]= endpoint
   end
 
   def fetch_endpoint(request_method, request_path)

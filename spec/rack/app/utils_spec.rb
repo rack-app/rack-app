@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rack::APP::Utils do
+describe Rack::App::Utils do
 
   def new_subject
     Object.new.tap { |o| o.extend(described_class) }

@@ -1,9 +1,9 @@
-module Rack::APP::RequestHelpers
+module Rack::App::RequestHelpers
 
   require 'rack/app/request_helper/params'
 
   def params
-    @__request_params__ ||= Rack::APP::RequestHelpers::Params.new(request.env).to_hash
+    @__request_params__ ||= Rack::App::RequestHelpers::Params.new(request.env,@options).to_hash
   end
 
   def status(new_status=nil)

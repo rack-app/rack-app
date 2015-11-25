@@ -1,10 +1,10 @@
-class Rack::APP::Router
+class Rack::App::Router
 
   require 'rack/app/router/static'
   require 'rack/app/router/dynamic'
 
   def add_endpoint(request_method, request_path, endpoint)
-    if defined_path_is_dynamic?(Rack::APP::Utils.normalize_path(request_path))
+    if defined_path_is_dynamic?(Rack::App::Utils.normalize_path(request_path))
       @dynamic_router.add_endpoint(request_method, request_path, endpoint)
     else
       @static_router.add_endpoint(request_method, request_path, endpoint)
@@ -14,7 +14,7 @@ class Rack::APP::Router
   def fetch_endpoint(request_method, request_path)
     @static_router.fetch_endpoint(request_method, request_path) or
         @dynamic_router.fetch_endpoint(request_method, request_path) or
-        Rack::APP::Endpoint::NOT_FOUND
+        Rack::App::Endpoint::NOT_FOUND
   end
 
   def merge!(router)
@@ -27,8 +27,8 @@ class Rack::APP::Router
   protected
 
   def initialize
-    @static_router = Rack::APP::Router::Static.new
-    @dynamic_router = Rack::APP::Router::Dynamic.new
+    @static_router = Rack::App::Router::Static.new
+    @dynamic_router = Rack::App::Router::Dynamic.new
   end
 
   def defined_path_is_dynamic?(path_str)

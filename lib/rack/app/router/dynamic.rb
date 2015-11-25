@@ -1,9 +1,9 @@
-class Rack::APP::Router::Dynamic
+class Rack::App::Router::Dynamic
 
-  ANY = 'Rack::APP::Router::Dynamic::ANY'.freeze
+  ANY = 'Rack::App::Router::Dynamic::ANY'.freeze
 
   def add_endpoint(request_method, request_path, endpoint)
-    request_path = Rack::APP::Utils.normalize_path(request_path)
+    request_path = Rack::App::Utils.normalize_path(request_path)
 
     current_cluster = main_cluster(request_method)
     path_params = {}
@@ -27,7 +27,7 @@ class Rack::APP::Router::Dynamic
   end
 
   def fetch_endpoint(request_method, request_path)
-    normalized_request_path = Rack::APP::Utils.normalize_path(request_path)
+    normalized_request_path = Rack::App::Utils.normalize_path(request_path)
 
     current_cluster = main_cluster(request_method)
     normalized_request_path.split('/').each do |path_part|

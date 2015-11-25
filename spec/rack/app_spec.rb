@@ -1,14 +1,14 @@
 require 'spec_helper'
-describe Rack::APP do
+describe Rack::App do
 
-  let(:described_class) { Class.new(Rack::APP) }
+  let(:described_class) { Class.new(Rack::App) }
   let(:request_path) { '/some/endpoint/path' }
   let(:block) { Proc.new {} }
 
   describe '.router' do
     subject { described_class.router }
 
-    it { is_expected.to be_a Rack::APP::Router }
+    it { is_expected.to be_a Rack::App::Router }
   end
 
   [:get, :post, :put, :delete, :patch, :options].each do |http_method|
@@ -16,9 +16,9 @@ describe Rack::APP do
 
       subject { described_class.public_send(http_method, request_path, &block) }
 
-      let!(:endpoint) { Rack::APP::Endpoint.new(described_class, &block) }
+      let!(:endpoint) { Rack::App::Endpoint.new(described_class, &block) }
       before do
-        allow(Rack::APP::Endpoint).to receive(:new)
+        allow(Rack::App::Endpoint).to receive(:new)
                                           .with(
                                               described_class,
                                               {
@@ -31,7 +31,7 @@ describe Rack::APP do
 
       end
 
-      it { is_expected.to be_a Rack::APP::Endpoint }
+      it { is_expected.to be_a Rack::App::Endpoint }
       it { is_expected.to be endpoint }
 
       it "should create an endpoint in the endpoint collection" do
@@ -46,7 +46,7 @@ describe Rack::APP do
     let(:http_method) { 'GET' }
     subject { described_class.add_route(http_method, request_path, &block) }
 
-    it { is_expected.to be_a Rack::APP::Endpoint }
+    it { is_expected.to be_a Rack::App::Endpoint }
 
     it "should create an endpoint entry under the right request_key based" do
       is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
@@ -152,7 +152,7 @@ describe Rack::APP do
     context 'when valid api class given' do
 
       let(:to_be_mounted_api_class) do
-        klass = Class.new(Rack::APP)
+        klass = Class.new(Rack::App)
         klass.class_eval do
 
           get '/endpoint' do
@@ -175,7 +175,7 @@ describe Rack::APP do
       let(:to_be_mounted_api_class) { 'nope this is a string' }
 
       it 'should raise argument error' do
-        expect { subject }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::APP')
+        expect { subject }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
 
     end

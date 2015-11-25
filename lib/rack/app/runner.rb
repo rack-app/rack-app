@@ -1,4 +1,4 @@
-module Rack::APP::Runner
+module Rack::App::Runner
   extend self
 
   def response_for(api_class, request_env)

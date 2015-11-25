@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Rack::APP::Runner do
+describe Rack::App::Runner do
 
   let(:request_method) { 'GET' }
   let(:request_path) { '/hello' }
@@ -12,7 +12,7 @@ describe Rack::APP::Runner do
   end
 
   let(:api_class) do
-    klass = Class.new(Rack::APP)
+    klass = Class.new(Rack::App)
     klass.class_eval do
 
       get '/hello' do

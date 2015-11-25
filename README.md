@@ -1,4 +1,4 @@
-# Rack::APP
+# Rack::App
 
 Your next favourite rack based micro framework that is totally addition free! 
 Have a cup of awesomeness with  your performance designed framework!
@@ -39,7 +39,7 @@ require 'rack/app'
 
 require_relative 'lib/bootstrap'
 
-class YourAwesomeApp < Rack::APP
+class YourAwesomeApp < Rack::App
 
   mount AwesomeController
 
@@ -93,7 +93,7 @@ By default if you dont write anything to the response 'body' the endpoint block 
 * Dump duration with zero if or routing: 6.0e-06 s
   * no routing
   * return only a static array with static values
-* Rack::APP duration with routing lookup: 7.0e-05 s
+* Rack::App duration with routing lookup: 7.0e-05 s
   * with routing 
   * with value parsing and reponse object building
 * Grape::API duration with routing lookup: 0.180764 s

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-describe Rack::APP::Router::Dynamic do
+describe Rack::App::Router::Dynamic do
 
   let(:defined_request_path) { '/users/:user_id' }
   let(:received_request_path) { '/users/123' }
   let(:request_method) { 'GET' }
 
   let(:endpoint) do
-    Rack::APP::Endpoint.new(Class.new(Rack::APP)) do
+    Rack::App::Endpoint.new(Class.new(Rack::App)) do
       'hello world!'
     end
   end

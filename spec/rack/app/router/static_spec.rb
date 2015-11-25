@@ -1,12 +1,12 @@
 require 'spec_helper'
 
-describe Rack::APP::Router::Static do
+describe Rack::App::Router::Static do
 
   let(:request_path) { '/endpoint/path' }
   let(:request_method) { 'GET' }
 
   let(:endpoint) do
-    Rack::APP::Endpoint.new(Class.new(Rack::APP)) do
+    Rack::App::Endpoint.new(Class.new(Rack::App)) do
       'hello world!'
     end
   end
@@ -40,7 +40,7 @@ describe Rack::APP::Router::Static do
     context 'when not static router given' do
       let(:other_router) { 'nope, this is a string' }
 
-      it { expect { subject }.to raise_error(ArgumentError, /Rack::APP::Router::Static/) }
+      it { expect { subject }.to raise_error(ArgumentError, /Rack::App::Router::Static/) }
     end
 
     context 'when static router given' do

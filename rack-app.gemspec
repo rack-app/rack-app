@@ -6,7 +6,7 @@ require 'rack/app/version'
 Gem::Specification.new do |spec|
 
   spec.name          = "rack-app"
-  spec.version       = Rack::APP::VERSION
+  spec.version       = Rack::App::VERSION
   spec.authors       = ["Adam Luzsi"]
   spec.email         = ["adamluzsi@gmail.com"]
 
