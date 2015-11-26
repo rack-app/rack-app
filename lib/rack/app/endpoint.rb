@@ -12,7 +12,12 @@ class Rack::App::Endpoint
     request = Rack::Request.new(request_env)
     response = Rack::Response.new
 
-    request_handler = @api_class.new(request, response,{path_params_matcher: @path_params_matcher})
+    request_handler = @api_class.new
+
+    request_handler.request = request
+    request_handler.response = response
+    request.env['rack.app.path_params_matcher']= @path_params_matcher.dup
+
     call_return = request_handler.instance_exec(&@logic_block)
 
     return call_return if is_a_rack_response_finish?(call_return)

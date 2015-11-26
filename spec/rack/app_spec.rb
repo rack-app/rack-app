@@ -58,13 +58,43 @@ describe Rack::App do
   let(:request) { Rack::Request.new(request_env) }
   let(:response) { Rack::Response.new }
 
-  def new_subject
-    described_class.new(request, response)
-  end
+  let(:new_subject){
+    instance = described_class.new
+    instance.request = request
+    instance.response = response
+    instance
+  }
 
   describe '#request' do
     subject { new_subject.request }
-    it { is_expected.to be request }
+    context 'when request is set' do
+      before{ new_subject.request = request }
+
+      it { is_expected.to be request }
+    end
+
+    context 'when request is not set' do
+      before{ new_subject.request = nil }
+
+      it { expect{subject}.to raise_error("request object is not set for #{described_class}") }
+    end
+
+  end
+
+  describe '#response' do
+    subject { new_subject.response }
+    context 'when request is set' do
+      before{ new_subject.response = response }
+
+      it { is_expected.to be response }
+    end
+
+    context 'when request is not set' do
+      before{ new_subject.response = nil }
+
+      it { expect{subject}.to raise_error("response object is not set for #{described_class}") }
+    end
+
   end
 
   describe '#response' do
@@ -97,9 +127,10 @@ describe Rack::App do
       end
 
       context 'when dynamic path given with restful param' do
-        subject { described_class.new(request, response, path_params_matcher: {2 => 'user_id'}).params }
+        subject { new_subject.params }
 
         before{ request_env['REQUEST_PATH']='/users/123' }
+        before{ request_env['rack.app.path_params_matcher']= {2 => 'user_id'} }
 
         before do
           described_class.class_eval do

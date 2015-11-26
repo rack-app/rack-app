@@ -22,14 +22,14 @@ class Rack::App
     Rack::App::Runner.response_for(self,request_env)
   end
 
-  attr_reader :request, :response
+  attr_writer :request, :response
 
-  protected
+  def request
+    @request || raise("request object is not set for #{self.class}")
+  end
 
-  def initialize(request, response,options = {})
-    @response = response
-    @request = request
-    @options = options
+  def response
+    @response || raise("response object is not set for #{self.class}")
   end
 
 end
