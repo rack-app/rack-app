@@ -111,20 +111,20 @@ i feared do this for Rails that is usually slower than Grape :S
 
 ## Roadmap 
 
-### 0.3.0
+### 0.5.0
 
 * add TESTING module for rspec helpers that allow easy to test controllers
 
-### 0.4.0
+### 0.6.0
 
 * serializer block/method for class shared serialization logic
 
-### 0.5.0
+### 0.7.0
 
 * content_type syntax sugar on class level 
 * response_headers syntax sugar for request processing 
 
-### 0.6.0
+### 0.8.0
 
 * custom error_handler block for api, where Exception class types can be defined to process
   * NULL Object pattern for error_handler_fetcher
