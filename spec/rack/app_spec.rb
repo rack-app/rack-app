@@ -58,7 +58,7 @@ describe Rack::App do
   let(:request) { Rack::Request.new(request_env) }
   let(:response) { Rack::Response.new }
 
-  let(:new_subject){
+  let(:new_subject) {
     instance = described_class.new
     instance.request = request
     instance.response = response
@@ -68,15 +68,15 @@ describe Rack::App do
   describe '#request' do
     subject { new_subject.request }
     context 'when request is set' do
-      before{ new_subject.request = request }
+      before { new_subject.request = request }
 
       it { is_expected.to be request }
     end
 
     context 'when request is not set' do
-      before{ new_subject.request = nil }
+      before { new_subject.request = nil }
 
-      it { expect{subject}.to raise_error("request object is not set for #{described_class}") }
+      it { expect { subject }.to raise_error("request object is not set for #{described_class}") }
     end
 
   end
@@ -84,15 +84,15 @@ describe Rack::App do
   describe '#response' do
     subject { new_subject.response }
     context 'when request is set' do
-      before{ new_subject.response = response }
+      before { new_subject.response = response }
 
       it { is_expected.to be response }
     end
 
     context 'when request is not set' do
-      before{ new_subject.response = nil }
+      before { new_subject.response = nil }
 
-      it { expect{subject}.to raise_error("response object is not set for #{described_class}") }
+      it { expect { subject }.to raise_error("response object is not set for #{described_class}") }
     end
 
   end
@@ -117,7 +117,7 @@ describe Rack::App do
       context 'with array value' do
         before { request_env['QUERY_STRING']= 'a[]=2&a[]=3' }
 
-        it { is_expected.to eq({"a" => ["2","3"]}) }
+        it { is_expected.to eq({"a" => ["2", "3"]}) }
       end
 
       context 'with multiple value' do
@@ -129,8 +129,8 @@ describe Rack::App do
       context 'when dynamic path given with restful param' do
         subject { new_subject.params }
 
-        before{ request_env['REQUEST_PATH']='/users/123' }
-        before{ request_env['rack.app.path_params_matcher']= {2 => 'user_id'} }
+        before { request_env['REQUEST_PATH']='/users/123' }
+        before { request_env['rack.app.path_params_matcher']= {2 => 'user_id'} }
 
         before do
           described_class.class_eval do
@@ -211,6 +211,58 @@ describe Rack::App do
 
     end
 
+
+  end
+
+  describe '.call' do
+
+    let(:request_method) { 'GET' }
+    let(:request_path) { '/hello' }
+
+    let(:request_env) do
+      {
+          'REQUEST_METHOD' => request_method,
+          'REQUEST_PATH' => request_path
+      }
+    end
+
+    let(:api_class) do
+      klass = Class.new(described_class)
+
+      klass.class_eval do
+
+        get '/hello' do
+          status 201
+
+          'valid_endpoint'
+        end
+
+      end
+
+      klass
+    end
+
+    describe '#response_for' do
+      subject { api_class.call(request_env) }
+
+      let(:response_body) { subject[2].body[0] }
+      let(:response_status) { subject[2].status }
+
+      context 'when there is a valid endpoint for the request' do
+        it { expect(response_body).to eq 'valid_endpoint' }
+
+        it { expect(response_status).to eq 201 }
+      end
+
+      context 'when there is no endpoint registered for the given request' do
+        before { request_env['REQUEST_PATH']= '/unknown/endpoint/path' }
+
+        it { expect(response_body).to eq '404 Not Found' }
+
+        it { expect(response_status).to eq 404 }
+      end
+
+    end
 
   end
 

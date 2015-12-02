@@ -1,5 +1,5 @@
 require 'cgi'
-class Rack::App::RequestHelpers::Params
+class Rack::App::Params
 
   def initialize(request_env)
     @request_env = request_env
