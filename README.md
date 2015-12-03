@@ -119,7 +119,7 @@ end
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
 
-* Dump duration with zero if or routing: 6.0e-06 s
+* Dumb duration with zero if or routing: 6.0e-06 s
   * no routing
   * return only a static array with static values
 * Rack::App duration with routing lookup: 7.0e-05 s
