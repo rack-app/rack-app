@@ -37,42 +37,24 @@ config.ru
 
 require 'rack/app'
 
-require_relative 'lib/bootstrap'
-
 class YourAwesomeApp < Rack::App
-
-  mount AwesomeController
 
   get '/hello' do
     'Hello World!'
   end
 
-  get '/nope' do
-    request.env
-    response.write 'some response body'
-  end
-  
-  post '/lol_post_fail' do 
-    status 500 
-    'LOL'
-  end
-  
   get '/users/:user_id' do 
+    get_user_id 
+  end 
+  
+  def get_user_id
     params['user_id']
-  end 
-  
-  post '/some/endpoint/for/the/rabbit/:queue_name' do 
-    mq_request # helper are the class instance method 
-  end 
-  
-  def mq_request
-    q = BUNNY_CONN_CHANNEL.queue(params['queue_name'])
-    BUNNY_CONN_CHANNEL.default_exchange.publish(request.body.read, :routing_key => q.name)
   end 
   
 end
 
 run YourAwesomeApp
+
 ```
 
 you can access Rack::Request with the request method and 
