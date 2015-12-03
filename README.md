@@ -86,7 +86,7 @@ use bundled in testing module for writing unit test for your rack application
 
 ```ruby
 
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'rack/app/test'
 
 describe MyRackApp do
