@@ -25,6 +25,14 @@ describe Rack::App::Test do
       'find'
     end
 
+    get '/headers' do
+      request.env['HTTP_X_HEADER']
+    end
+
+    get '/params' do
+      params['dog']
+    end
+
     options '/destroy' do
       'options stuff'
     end
@@ -35,47 +43,59 @@ describe Rack::App::Test do
 
   describe '#get' do
 
-    subject{ get('/hello') }
+    subject { get('/hello') }
 
-    it { expect(subject.body).to eq ['world']}
-    it { expect(subject.status).to eq 201}
+    it { expect(subject.body).to eq ['world'] }
+    it { expect(subject.status).to eq 201 }
 
   end
 
   describe '#post' do
 
-    subject{ post('/hello') }
+    subject { post('/hello') }
 
-    it { expect(subject.body).to eq ['sup?']}
-    it { expect(subject.status).to eq 202}
+    it { expect(subject.body).to eq ['sup?'] }
+    it { expect(subject.status).to eq 202 }
 
   end
 
   describe '#put' do
 
-    subject{ put('/this') }
+    subject { put('/this') }
 
-    it { expect(subject.body).to eq ['in']}
-    it { expect(subject.status).to eq 200}
+    it { expect(subject.body).to eq ['in'] }
+    it { expect(subject.status).to eq 200 }
 
   end
 
   describe '#delete' do
 
-    subject{ delete('/destroy') }
+    subject { delete('/destroy') }
 
-    it { expect(subject.body).to eq ['find']}
-    it { expect(subject.status).to eq 200}
+    it { expect(subject.body).to eq ['find'] }
+    it { expect(subject.status).to eq 200 }
 
   end
 
   describe '#options' do
 
-    subject{ options('/destroy') }
+    subject { options('/destroy') }
 
-    it { expect(subject.body).to eq ['options stuff']}
-    it { expect(subject.status).to eq 200}
+    it { expect(subject.body).to eq ['options stuff'] }
+    it { expect(subject.status).to eq 200 }
 
+  end
+
+  describe '#headers' do
+    subject { get '/headers', headers: {'X-Header' => 'cat'} }
+
+    it { expect(subject.body).to eq ['cat'] }
+  end
+
+  describe '#params' do
+    subject { get '/params', params: {'dog' => 'meat'} }
+
+    it { expect(subject.body).to eq ['meat'] }
   end
 
 end

@@ -18,15 +18,16 @@ module Rack::App::Test
 
   end
 
-  [:get,:post,:put,:delete,:options].each do |request_method|
-    define_method(request_method) do |url,properties={}|
-      rack_app.call(request_env_by(request_method,url,properties)).last
+  [:get, :post, :put, :delete, :options].each do |request_method|
+    define_method(request_method) do |url, properties={}|
+      rack_app.call(request_env_by(request_method, url, properties)).last
     end
   end
 
   def format_properties(properties)
     raise('use hash format such as params: {"key" => "value"} or headers with the same concept') unless properties.is_a?(Hash)
     properties[:params] ||= {}
+    properties[:headers]||= {}
 
     properties
   end
@@ -36,24 +37,26 @@ module Rack::App::Test
     properties = format_properties(raw_properties)
     URI.encode_www_form(properties[:params].to_a)
 
+    additional_headers = properties[:headers].reduce({}) { |m,(k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+
     {
-        "REMOTE_ADDR"=>"192.168.56.1",
-        "REQUEST_METHOD"=> request_method.to_s.upcase,
+        "REMOTE_ADDR" => "192.168.56.1",
+        "REQUEST_METHOD" => request_method.to_s.upcase,
         "REQUEST_PATH" => url,
-        "REQUEST_URI"=> url,
-        "SERVER_PROTOCOL"=>"HTTP/1.1",
-        "CONTENT_LENGTH"=>"0",
-        "CONTENT_TYPE"=>"application/x-www-form-urlencoded",
-        "SERVER_NAME"=>"hds-dev.ett.local",
-        "SERVER_PORT"=>"80",
-        "QUERY_STRING"=> URI.encode_www_form(properties[:params].to_a),
-        "HTTP_VERSION"=>"HTTP/1.1",
-        "HTTP_USER_AGENT"=>"spec",
-        "HTTP_HOST"=>"spec.local",
-        "HTTP_ACCEPT_ENCODING"=>"gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-        "HTTP_ACCEPT"=>"*/*",
-        "HTTP_CONNECTION"=>"close"
-    }
+        "REQUEST_URI" => url,
+        "SERVER_PROTOCOL" => "HTTP/1.1",
+        "CONTENT_LENGTH" => "0",
+        "CONTENT_TYPE" => "application/x-www-form-urlencoded",
+        "SERVER_NAME" => "hds-dev.ett.local",
+        "SERVER_PORT" => "80",
+        "QUERY_STRING" => URI.encode_www_form(properties[:params].to_a),
+        "HTTP_VERSION" => "HTTP/1.1",
+        "HTTP_USER_AGENT" => "spec",
+        "HTTP_HOST" => "spec.local",
+        "HTTP_ACCEPT_ENCODING" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+        "HTTP_ACCEPT" => "*/*",
+        "HTTP_CONNECTION" => "close"
+    }.merge(additional_headers)
 
   end
 
