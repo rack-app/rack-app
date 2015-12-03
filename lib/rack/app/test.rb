@@ -5,10 +5,10 @@ module Rack::App::Test
   # magic ;)
   def self.included(klass)
 
-    klass.define_singleton_method :rack_app do |rack_app_class=Rack::App, &constructor|
+    klass.define_singleton_method :rack_app do |rack_app_class=nil, &constructor|
 
-      subject_app = Class.new(rack_app_class)
-      subject_app.instance_eval(&constructor)
+      subject_app = rack_app_class.is_a?(Class) ? rack_app_class : Class.new(Rack::App)
+      subject_app.instance_eval(&constructor) unless constructor.nil?
 
       klass.__send__ :define_method, :rack_app do
         @rack_app = subject_app
@@ -22,7 +22,6 @@ module Rack::App::Test
     define_method(request_method) do |url,properties={}|
       rack_app.call(request_env_by(request_method,url,properties)).last
     end
-
   end
 
   def format_properties(properties)

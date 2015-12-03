@@ -5,7 +5,7 @@ describe Rack::App::Test do
 
   include Rack::App::Test
 
-  rack_app do
+  class RackTEST < Rack::App
 
     get '/hello' do
       status 201
@@ -30,6 +30,8 @@ describe Rack::App::Test do
     end
 
   end
+
+  rack_app RackTEST
 
   describe '#get' do
 
