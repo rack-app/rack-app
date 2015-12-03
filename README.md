@@ -119,13 +119,13 @@ end
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
 
-* Dumb duration with zero if or routing: 6.0e-06 s
+* Dumb duration with zero if or routing: 5.0e-06 s - 6.0e-06 s
   * no routing
   * return only a static array with static values
-* Rack::App duration with routing lookup: 7.0e-05 s
+* Rack::App duration with routing lookup: 6.3e-05 s - 7.0e-05 s
   * with routing 
   * with value parsing and reponse object building
-* Grape::API duration with routing lookup: 0.180764 s
+* Grape::API duration with routing lookup: 0.028236 s - 0.180764 s
   * with routing 
   * with value parsing and reponse object building
   
