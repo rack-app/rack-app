@@ -80,6 +80,35 @@ Rack::Response as response method.
 
 By default if you dont write anything to the response 'body' the endpoint block logic return will be used
 
+## Testing 
+
+use bundled in testing module for writing unit test for your rack application
+
+```ruby
+
+require_relative '../../spec_helper'
+require 'rack/app/test'
+
+describe MyRackApp do
+
+  include Rack::App::Test
+  
+  rack_app described_class
+  
+  describe '#something' do
+  
+    subject{ get('/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}) }
+
+    it { expect(subject.body).to eq ['world']}
+    
+    it { expect(subject.status).to eq 201 }
+    
+  end 
+  
+end 
+
+```
+
 ## Example Apps To start with
 
 * [Basic](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/basic)
@@ -110,10 +139,6 @@ i feared do this for Rails that is usually slower than Grape :S
 * drink less coffee
 
 ## Roadmap 
-
-### 0.5.0
-
-* add TESTING module for rspec helpers that allow easy to test controllers
 
 ### 0.6.0
 
