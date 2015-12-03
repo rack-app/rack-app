@@ -125,6 +125,8 @@ i feared do this for Rails that is usually slower than Grape :S
 ### 0.6.0
 
 * serializer block/method for class shared serialization logic
+* Mount method should able to take namespace option
+* Create erb Parser Gem for View/FileServer to support to .erb files
 
 ### 0.7.0
 
