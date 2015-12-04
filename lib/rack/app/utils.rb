@@ -17,4 +17,16 @@ module Rack::App::Utils
     path
   end
 
+  def pwd(*path_parts)
+
+    root_folder =if ENV['BUNDLE_GEMFILE']
+                   ENV['BUNDLE_GEMFILE'].split(File::Separator)[0..-2].join(File::Separator)
+                 else
+                   Dir.pwd.to_s
+                 end
+
+    return File.join(root_folder,*path_parts)
+
+  end
+
 end

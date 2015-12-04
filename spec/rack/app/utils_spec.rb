@@ -2,12 +2,10 @@ require 'spec_helper'
 
 describe Rack::App::Utils do
 
-  def new_subject
-    Object.new.tap { |o| o.extend(described_class) }
-  end
+  let(:instance) { Object.new.tap { |o| o.extend(described_class) } }
 
   describe '#normalize_path' do
-    subject { new_subject.normalize_path(request_path) }
+    subject { instance.normalize_path(request_path) }
 
     context 'when path is as how expected' do
       let(:request_path) { '/foo' }
@@ -31,6 +29,41 @@ describe Rack::App::Utils do
       let(:request_path) { '' }
 
       it { is_expected.to eq '/' }
+    end
+
+  end
+
+
+  describe '#pwd' do
+    let(:path_parts){[]}
+    subject { instance.pwd(*path_parts) }
+
+    context 'when rails is not present' do
+
+      context 'and bundler already set the env file with the gem file path' do
+        before { allow(ENV).to receive(:[]).with('BUNDLE_GEMFILE').and_return('/path/to/folder/Gemfile') }
+
+        it { is_expected.to eq '/path/to/folder' }
+      end
+
+      context 'when bundler is not used and there is no env variable' do
+        before { allow(ENV).to receive(:[]).with('BUNDLE_GEMFILE').and_return(nil) }
+
+        it { is_expected.to eq Dir.pwd }
+      end
+
+    end
+
+    context 'when array of path part is given' do
+      let(:path_parts) { %w(hello world) }
+
+      it { is_expected.to eq File.join(Dir.pwd, 'hello', 'world') }
+    end
+
+    context 'when string path given' do
+      let(:path_parts) { '/hello/world' }
+
+      it { is_expected.to eq File.join(Dir.pwd, 'hello', 'world') }
     end
 
   end

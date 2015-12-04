@@ -116,18 +116,18 @@ i feared do this for Rails that is usually slower than Grape :S
 
 ## Roadmap 
 
-### 0.7.0
+### 0.10.0
 
 * serializer block/method for class shared serialization logic
 * Mount method should able to take namespace option
 * Create erb Parser Gem for View/FileServer to support to .erb files
 
-### 0.8.0
+### 0.11.0
 
 * content_type syntax sugar on class level 
 * response_headers syntax sugar for request processing 
 
-### 0.9.0
+### 0.12.0
 
 * custom error_handler block for api, where Exception class types can be defined to process
   * NULL Object pattern for error_handler_fetcher
