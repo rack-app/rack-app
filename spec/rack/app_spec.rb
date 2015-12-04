@@ -157,26 +157,6 @@ describe Rack::App do
 
   end
 
-  describe '#status' do
-
-    context 'when new status given to be set' do
-      subject { new_subject.status }
-
-      it { is_expected.to eq(200) }
-
-      it { is_expected.to be response.status }
-    end
-
-    context 'when new status given to be set' do
-      subject { new_subject.status(201) }
-
-      it { is_expected.to eq(201) }
-
-      it { is_expected.to be response.status }
-    end
-
-  end
-
   describe '.mount' do
     subject { described_class.mount(to_be_mounted_api_class) }
 
@@ -232,7 +212,7 @@ describe Rack::App do
       klass.class_eval do
 
         get '/hello' do
-          status 201
+          response.status = 201
 
           'valid_endpoint'
         end

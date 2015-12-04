@@ -8,12 +8,12 @@ describe Rack::App::Test do
   class RackTEST < Rack::App
 
     get '/hello' do
-      status 201
+      response.status = 201
       'world'
     end
 
     post '/hello' do
-      status 202
+      response.status = 202
       'sup?'
     end
 

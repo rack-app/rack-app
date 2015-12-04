@@ -114,26 +114,20 @@ end
 This was measured with multiple endpoints like that would be in real life example.
 i feared do this for Rails that is usually slower than Grape :S
 
-## TODO
-
-* benchmark for Rails::API, Grape::API and etc to prove awesomeness in term of speed
-* more verbose readme
-* drink less coffee
-
 ## Roadmap 
 
-### 0.6.0
+### 0.7.0
 
 * serializer block/method for class shared serialization logic
 * Mount method should able to take namespace option
 * Create erb Parser Gem for View/FileServer to support to .erb files
 
-### 0.7.0
+### 0.8.0
 
 * content_type syntax sugar on class level 
 * response_headers syntax sugar for request processing 
 
-### 0.8.0
+### 0.9.0
 
 * custom error_handler block for api, where Exception class types can be defined to process
   * NULL Object pattern for error_handler_fetcher

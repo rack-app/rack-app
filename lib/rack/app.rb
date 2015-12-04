@@ -4,17 +4,22 @@ require 'rack/response'
 class Rack::App
 
   require 'rack/app/version'
+  require 'rack/app/constants'
 
   require 'rack/app/params'
   require 'rack/app/utils'
   require 'rack/app/router'
   require 'rack/app/endpoint'
   require 'rack/app/endpoint/not_found'
+  require 'rack/app/request_configurator'
 
   class << self
 
     def call(request_env)
-      endpoint = router.fetch_endpoint(request_env['REQUEST_METHOD'],request_env['REQUEST_PATH'])
+      Rack::App::RequestConfigurator.configure(request_env)
+      endpoint = router.fetch_endpoint(
+          request_env['REQUEST_METHOD'],
+          request_env[Rack::App::Constants::NORMALIZED_REQUEST_PATH])
       endpoint.execute(request_env)
     end
 
@@ -50,6 +55,13 @@ class Rack::App
       add_route('PATCH', path, &block)
     end
 
+    def root(endpoint_path)
+      get '/' do
+        endpoint = self.class.router.fetch_endpoint('GET', Rack::App::Utils.normalize_path(endpoint_path))
+        endpoint.execute(request.env)
+      end
+    end
+
     def router
       @router ||= Rack::App::Router.new
     end
@@ -62,17 +74,13 @@ class Rack::App
           description: @last_description
       }
 
-      endpoint = Rack::App::Endpoint.new(
-          self, endpoint_properties, &block
-      )
-
+      endpoint = Rack::App::Endpoint.new(self, endpoint_properties, &block)
       router.add_endpoint(request_method, request_path, endpoint)
 
       @last_description = nil
       return endpoint
 
     end
-
 
     def mount(api_class)
 
@@ -89,12 +97,6 @@ class Rack::App
 
   def params
     @__params__ ||= Rack::App::Params.new(request.env).to_hash
-  end
-
-  def status(new_status=nil)
-    response.status= new_status.to_i unless new_status.nil?
-
-    response.status
   end
 
   attr_writer :request, :response
