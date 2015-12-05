@@ -1,5 +1,6 @@
 class Rack::App::File::Parser
 
+  require 'rack/app/file/parser/factory'
   require 'rack/app/file/parser/erb'
 
   def self.format_request_path(request_path)

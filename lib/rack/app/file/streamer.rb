@@ -6,6 +6,10 @@ class Rack::App::File::Streamer
     @file.close
   end
 
+  def to_a
+    @file.to_a.map(&:chomp)
+  end
+
   protected
 
   def initialize(path)

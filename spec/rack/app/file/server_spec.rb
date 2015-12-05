@@ -2,7 +2,12 @@ require 'spec_helper'
 
 describe Rack::App::File::Server do
 
-  let(:app_class) { Class.new(described_class) }
+  let(:app_class) do
+    klass = Class.new(Rack::App)
+    klass.extend(described_class)
+    klass
+  end
+
   let(:request_env) do
     {
         'REQUEST_PATH' => '/index.html',

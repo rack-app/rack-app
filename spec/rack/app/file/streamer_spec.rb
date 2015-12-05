@@ -14,7 +14,7 @@ describe Rack::App::File::Streamer do
 
       it 'should yield the given block on the file object' do
 
-        proc = Proc.new{}
+        proc = Proc.new {}
         expect(file).to receive(:each) do |*args, &block|
           expect(proc).to be(block)
         end
@@ -26,7 +26,17 @@ describe Rack::App::File::Streamer do
       it 'should ensure to run file.close always' do
         expect(file).to receive(:close)
 
-        instance.each(&(Proc.new{}))
+        instance.each(&(Proc.new {}))
+      end
+
+    end
+
+    describe '#to_a' do
+      subject{ instance.to_a }
+      context 'given the file has content' do
+        before { allow(file).to receive(:to_a).and_return(["hello\n", "world\n"]) }
+
+        it { is_expected.to eq ["hello", "world"] }
       end
 
     end
