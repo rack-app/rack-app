@@ -41,6 +41,38 @@ describe Rack::App do
     end
   end
 
+  describe '.root' do
+    context 'given there is already an endpoint' do
+
+      before do
+        described_class.class_eval do
+
+          options '/hello' do
+            response.status = 777
+          end
+          get '/hello' do
+            'WORLD'
+          end
+        end
+      end
+
+      it 'should define GET endpoint that point to the given request path\'s endpoint' do
+        described_class.root '/hello'
+
+        response = described_class.call({'REQUEST_PATH' => '/','REQUEST_METHOD' => 'GET'})
+        expect(response.last.body).to eq ['WORLD']
+      end
+
+      it 'should define GET endpoint that point to the given request path\'s endpoint' do
+        described_class.root '/hello'
+
+        response = described_class.call({'REQUEST_PATH' => '/','REQUEST_METHOD' => 'OPTIONS'})
+        expect(response.last.status).to eq 777
+      end
+
+    end
+  end
+
   describe '.add_route' do
 
     let(:http_method) { 'GET' }

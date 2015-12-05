@@ -59,6 +59,10 @@ class Rack::App
     end
 
     def root(endpoint_path)
+      options '/' do
+        endpoint = self.class.router.fetch_endpoint('OPTIONS', Rack::App::Utils.normalize_path(endpoint_path))
+        endpoint.execute(request.env)
+      end
       get '/' do
         endpoint = self.class.router.fetch_endpoint('GET', Rack::App::Utils.normalize_path(endpoint_path))
         endpoint.execute(request.env)
