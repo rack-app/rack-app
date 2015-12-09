@@ -32,13 +32,19 @@ describe Rack::App::File::Streamer do
     end
 
     describe '#to_a' do
-      subject{ instance.to_a }
+      subject { instance.to_a }
       context 'given the file has content' do
         before { allow(file).to receive(:to_a).and_return(["hello\n", "world\n"]) }
 
         it { is_expected.to eq ["hello", "world"] }
       end
 
+    end
+
+    describe '#render' do
+      subject { instance.render(nil) }
+
+      it { is_expected.to be instance }
     end
 
   end

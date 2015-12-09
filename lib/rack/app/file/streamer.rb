@@ -1,5 +1,7 @@
 class Rack::App::File::Streamer
 
+  include Enumerable
+
   def each(&blk)
     @file.each(&blk)
   ensure
@@ -8,6 +10,10 @@ class Rack::App::File::Streamer
 
   def to_a
     @file.to_a.map(&:chomp)
+  end
+
+  def render(object=nil)
+    return self
   end
 
   protected
