@@ -8,7 +8,7 @@ module Rack::App::Test
     klass.define_singleton_method :rack_app do |rack_app_class=nil, &constructor|
 
       subject_app = rack_app_class.is_a?(Class) ? rack_app_class : Class.new(Rack::App)
-      subject_app.instance_eval(&constructor) unless constructor.nil?
+      subject_app.class_eval(&constructor) unless constructor.nil?
 
       klass.__send__ :define_method, :rack_app do
         @rack_app = subject_app
