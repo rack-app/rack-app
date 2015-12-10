@@ -1,5 +1,7 @@
 class Rack::App::Endpoint
 
+  attr_reader :properties
+
   def initialize(api_class, properties={}, &logic_block)
     @properties = properties
     @logic_block = logic_block

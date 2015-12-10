@@ -56,4 +56,10 @@ describe Rack::App::Endpoint do
     it { is_expected.to eq params_matcher }
   end
 
+  describe '#properties' do
+    subject { new_subject.properties }
+
+    it { is_expected.to eq({request_method: request_method, request_path: request_path, description: description}) }
+  end
+
 end

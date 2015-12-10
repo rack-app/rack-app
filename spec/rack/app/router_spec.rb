@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Rack::App::Router do
+  let(:instance) { described_class.new }
 
   let(:defined_request_path) { '/users/:user_id' }
   let(:received_request_path) { '/users/123' }
@@ -14,7 +15,7 @@ describe Rack::App::Router do
 
   describe 'add_endpoint' do
 
-    subject { described_class.new.add_endpoint(request_method, defined_request_path, endpoint) }
+    subject { instance.add_endpoint(request_method, defined_request_path, endpoint) }
 
     it { is_expected.to be endpoint }
 
@@ -60,10 +61,10 @@ describe Rack::App::Router do
     context 'when multiple path given with partial matching' do
       let(:endpoint2) { endpoint.dup }
       before { router.add_endpoint(request_method, defined_request_path, endpoint) }
-      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'),endpoint2) }
+      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'), endpoint2) }
 
       it { is_expected.to be endpoint }
-      it { expect(router.fetch_endpoint(request_method, [received_request_path,'doc'].join('/'))).to be endpoint2 }
+      it { expect(router.fetch_endpoint(request_method, [received_request_path, 'doc'].join('/'))).to be endpoint2 }
 
     end
 
@@ -93,6 +94,22 @@ describe Rack::App::Router do
 
         expect(router.fetch_endpoint(request_method, received_request_path)).to be endpoint
       end
+    end
+
+  end
+
+  describe '#endpoint_paths' do
+    subject { instance.endpoint_paths }
+
+    require 'rack/app/test'
+    include Rack::App::Test
+    rack_app
+
+    context 'when static endpoint is defined' do
+      let(:endpoint) { Rack::App::Endpoint.new(rack_app, {}, &-> {}) }
+      before { instance.add_endpoint('GET', '/index.html', endpoint) }
+
+      it { is_expected.to eq ["GET\t/index.html"] }
     end
 
   end

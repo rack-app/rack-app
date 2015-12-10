@@ -30,6 +30,8 @@ class Rack::App
       @last_description = description_texts.join("\n")
     end
 
+    alias desc description
+
     def get(path = '/', &block)
       add_route('GET', path, &block)
     end

@@ -1,5 +1,8 @@
 class Rack::App::Router::Static
 
+  #TD
+  attr_reader :endpoints
+
   def add_endpoint(request_method, request_path, endpoint)
     @endpoints[[request_method.to_s.upcase, Rack::App::Utils.normalize_path(request_path)]]= endpoint
   end
@@ -13,6 +16,7 @@ class Rack::App::Router::Static
     @endpoints.merge!(static_router.instance_variable_get(:@endpoints))
     nil
   end
+
 
   protected
 

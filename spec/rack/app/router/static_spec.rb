@@ -11,8 +11,10 @@ describe Rack::App::Router::Static do
     end
   end
 
+  let(:instance) { described_class.new }
+
   describe 'add_endpoint' do
-    subject { described_class.new.add_endpoint(request_method, request_path, endpoint) }
+    subject { instance.add_endpoint(request_method, request_path, endpoint) }
 
     it { is_expected.to be endpoint }
   end
@@ -49,10 +51,23 @@ describe Rack::App::Router::Static do
       it 'should have all the endpoints that the othere router got' do
         is_expected.to be nil
 
-        expect(router.fetch_endpoint(request_method,request_path)).to be endpoint
+        expect(router.fetch_endpoint(request_method, request_path)).to be endpoint
       end
     end
 
+  end
+
+  describe '#endpoints' do
+    subject { instance.endpoints }
+
+    it { is_expected.to eq({}) }
+
+    context 'when endpoint is defined' do
+      let(:endpoint) { Rack::App::Endpoint.new(nil, {}, &-> {}) }
+      before { instance.add_endpoint('GET', '/index.html', endpoint) }
+
+      it { is_expected.to eq({['GET', '/index.html'] => endpoint}) }
+    end
   end
 
 end
