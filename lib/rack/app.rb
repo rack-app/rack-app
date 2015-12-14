@@ -14,7 +14,6 @@ class Rack::App
   require 'rack/app/request_configurator'
 
   require 'rack/app/file'
-  require 'rack/app/view'
 
   class << self
 
@@ -78,9 +77,9 @@ class Rack::App
     def add_route(request_method, request_path, &block)
 
       endpoint_properties = {
-          request_method: request_method,
-          request_path: request_path,
-          description: @last_description
+          :request_method => request_method,
+          :request_path => request_path,
+          :description => @last_description
       }
 
       endpoint = Rack::App::Endpoint.new(self, endpoint_properties, &block)

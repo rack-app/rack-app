@@ -1,4 +1,4 @@
-require_relative '../../spec_helper'
+require 'spec_helper'
 require 'rack/app/test'
 
 describe Rack::App::Test do
@@ -43,7 +43,7 @@ describe Rack::App::Test do
 
   describe '#get' do
 
-    subject { get('/hello') }
+    subject { get(:url => '/hello') }
 
     it { expect(subject.body).to eq ['world'] }
     it { expect(subject.status).to eq 201 }
@@ -52,7 +52,7 @@ describe Rack::App::Test do
 
   describe '#post' do
 
-    subject { post('/hello') }
+    subject { post(:url => '/hello') }
 
     it { expect(subject.body).to eq ['sup?'] }
     it { expect(subject.status).to eq 202 }
@@ -61,7 +61,7 @@ describe Rack::App::Test do
 
   describe '#put' do
 
-    subject { put('/this') }
+    subject { put(:url => '/this') }
 
     it { expect(subject.body).to eq ['in'] }
     it { expect(subject.status).to eq 200 }
@@ -70,7 +70,7 @@ describe Rack::App::Test do
 
   describe '#delete' do
 
-    subject { delete('/destroy') }
+    subject { delete(:url => '/destroy') }
 
     it { expect(subject.body).to eq ['find'] }
     it { expect(subject.status).to eq 200 }
@@ -79,7 +79,7 @@ describe Rack::App::Test do
 
   describe '#options' do
 
-    subject { options('/destroy') }
+    subject { options(:url => '/destroy') }
 
     it { expect(subject.body).to eq ['options stuff'] }
     it { expect(subject.status).to eq 200 }
@@ -87,13 +87,13 @@ describe Rack::App::Test do
   end
 
   describe '#headers' do
-    subject { get '/headers', headers: {'X-Header' => 'cat'} }
+    subject { get :url =>'/headers', :headers => {'X-Header' => 'cat'} }
 
     it { expect(subject.body).to eq ['cat'] }
   end
 
   describe '#params' do
-    subject { get '/params', params: {'dog' => 'meat'} }
+    subject { get :url => '/params', :params => {'dog' => 'meat'} }
 
     it { expect(subject.body).to eq ['meat'] }
   end

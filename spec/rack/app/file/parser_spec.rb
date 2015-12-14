@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+# DEPRECATED
 describe Rack::App::File::Parser do
 
   let(:controller_instance) { double('Rack::App/instance') }
@@ -36,7 +36,7 @@ describe Rack::App::File::Parser do
   end
 
   describe '#file_type' do
-    let(:extension) { ".#{Random.rand(0..10)}" }
+    let(:extension) { ".#{Kernel.rand(10)}" }
     let(:file_path) { "file_name#{extension}" }
     subject { instance.file_type(file_path) }
 

@@ -106,7 +106,7 @@ describe Rack::App::Router do
     rack_app
 
     context 'when static endpoint is defined' do
-      let(:endpoint) { Rack::App::Endpoint.new(rack_app, {}, &-> {}) }
+      let(:endpoint) { Rack::App::Endpoint.new(rack_app, {}, &lambda {}) }
       before { instance.add_endpoint('GET', '/index.html', endpoint) }
 
       it { is_expected.to eq ["GET\t/index.html"] }

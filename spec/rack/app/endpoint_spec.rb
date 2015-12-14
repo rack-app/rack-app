@@ -11,9 +11,9 @@ describe Rack::App::Endpoint do
     described_class.new(
         api_class,
         {
-            request_method: request_method,
-            request_path: request_path,
-            description: description
+            :request_method => request_method,
+            :request_path => request_path,
+            :description => description
         },
         &logic_block
     )
@@ -26,13 +26,13 @@ describe Rack::App::Endpoint do
     subject { new_subject.execute(request_env) }
 
     context 'when endpoint logic writes respond body already' do
-      let(:logic_block) { -> { response.write('hello world') } }
+      let(:logic_block) { lambda { response.write('hello world') } }
 
       it { expect(subject[2].body[0]).to eq 'hello world' }
     end
 
     context 'when endpoint logic not writes directly response body' do
-      let(:logic_block) { -> { 'hello world' } }
+      let(:logic_block) { lambda { 'hello world' } }
 
       it 'should use the block stringified return value as response payload' do
         expect(subject[2].body[0]).to eq 'hello world'
@@ -40,7 +40,7 @@ describe Rack::App::Endpoint do
     end
 
     context 'when finish response, it should not take any more action than' do
-      let(:logic_block) { -> { response.finish } }
+      let(:logic_block) { lambda { response.finish } }
 
       it 'should use the block stringified return value as response payload' do
         expect(subject[2].body[0]).to be nil
@@ -59,7 +59,7 @@ describe Rack::App::Endpoint do
   describe '#properties' do
     subject { new_subject.properties }
 
-    it { is_expected.to eq({request_method: request_method, request_path: request_path, description: description}) }
+    it { is_expected.to eq({:request_method => request_method, :request_path => request_path, :description => description}) }
   end
 
 end

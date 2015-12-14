@@ -14,20 +14,18 @@ describe Rack::App do
   [:get, :post, :put, :delete, :patch, :options].each do |http_method|
     describe ".#{http_method}" do
 
-      subject { described_class.public_send(http_method, request_path, &block) }
+      subject { described_class.__send__(http_method, request_path, &block) }
 
       let!(:endpoint) { Rack::App::Endpoint.new(described_class, &block) }
       before do
-        allow(Rack::App::Endpoint).to receive(:new)
-                                          .with(
-                                              described_class,
-                                              {
-                                                  request_method: http_method.to_s.upcase,
-                                                  request_path: request_path,
-                                                  description: nil
-                                              }
-                                          )
-                                          .and_return(endpoint)
+        allow(Rack::App::Endpoint).to receive(:new).with(
+            described_class,
+            {
+                :request_method => http_method.to_s.upcase,
+                :request_path => request_path,
+                :description => nil
+            }
+        ).and_return(endpoint)
 
       end
 

@@ -4,23 +4,29 @@ module Rack::App::Test
 
   # magic ;)
   def self.included(klass)
+    class << klass
 
-    klass.define_singleton_method :rack_app do |rack_app_class=nil, &constructor|
+      define_method(:rack_app) do |*args, &constructor|
 
-      subject_app = rack_app_class.is_a?(Class) ? rack_app_class : Class.new(Rack::App)
-      subject_app.class_eval(&constructor) unless constructor.nil?
+        rack_app_class = args.shift
+        subject_app = rack_app_class.is_a?(Class) ? rack_app_class : Class.new(Rack::App)
+        subject_app.class_eval(&constructor) unless constructor.nil?
 
-      klass.__send__ :define_method, :rack_app do
-        @rack_app = subject_app
+        define_method(:rack_app) do
+          subject_app
+        end
+
       end
 
     end
-
   end
 
   [:get, :post, :put, :delete, :options].each do |request_method|
-    define_method(request_method) do |url, properties={}|
-      rack_app.call(request_env_by(request_method, url, properties)).last
+    define_method(request_method) do |properties|
+      properties ||= Hash.new
+      url = properties.delete(:url)
+      request_env = request_env_by(request_method, url, properties)
+      rack_app.call(request_env).last
     end
   end
 
@@ -35,9 +41,7 @@ module Rack::App::Test
   def request_env_by(request_method, url, raw_properties)
 
     properties = format_properties(raw_properties)
-    URI.encode_www_form(properties[:params].to_a)
-
-    additional_headers = properties[:headers].reduce({}) { |m,(k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+    additional_headers = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
 
     {
         "REMOTE_ADDR" => "192.168.56.1",
@@ -49,7 +53,7 @@ module Rack::App::Test
         "CONTENT_TYPE" => "application/x-www-form-urlencoded",
         "SERVER_NAME" => "hds-dev.ett.local",
         "SERVER_PORT" => "80",
-        "QUERY_STRING" => URI.encode_www_form(properties[:params].to_a),
+        "QUERY_STRING" => encode_www_form(properties[:params].to_a),
         "HTTP_VERSION" => "HTTP/1.1",
         "HTTP_USER_AGENT" => "spec",
         "HTTP_HOST" => "spec.local",
@@ -58,6 +62,53 @@ module Rack::App::Test
         "HTTP_CONNECTION" => "close"
     }.merge(additional_headers)
 
+  end
+
+  def encode_www_form(enum)
+    enum.map do |k, v|
+      if v.nil?
+        encode_www_form_component(k)
+      elsif v.respond_to?(:to_ary)
+        v.to_ary.map do |w|
+          str = encode_www_form_component(k)
+          unless w.nil?
+            str << '='
+            str << encode_www_form_component(w)
+          end
+        end.join('&')
+      else
+        str = encode_www_form_component(k)
+        str << '='
+        str << encode_www_form_component(v)
+      end
+    end.join('&')
+  end
+
+  TBLENCWWWCOMP_ = {} # :nodoc:
+  256.times do |i|
+    TBLENCWWWCOMP_['%%%02X' % i] = i.chr
+  end
+  TBLENCWWWCOMP_[' '] = '+'
+  TBLENCWWWCOMP_.freeze
+  TBLDECWWWCOMP = {} # :nodoc:
+  256.times do |i|
+    h, l = i>>4, i&15
+    TBLDECWWWCOMP[i.chr]= '%%%X%X' % [h, l]
+    TBLDECWWWCOMP[i.chr]= '%%%X%X' % [h, l]
+    TBLDECWWWCOMP[i.chr]= '%%%x%X' % [h, l]
+    TBLDECWWWCOMP[i.chr]= '%%%X%x' % [h, l]
+    TBLDECWWWCOMP[i.chr]= '%%%x%x' % [h, l]
+  end
+  TBLDECWWWCOMP['+'] = ' '
+  TBLDECWWWCOMP.freeze
+
+  def encode_www_form_component(str)
+    str = str.to_s.dup
+
+    TBLENCWWWCOMP_.each do |from,to|
+      str.gsub!(from,to)
+    end
+    str
   end
 
 end
