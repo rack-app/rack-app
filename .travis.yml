@@ -1,27 +1,23 @@
 language: ruby
-
+script: rspec spec
 
 rvm:
   - 1.8
   - 1.9
   - 2.0
   - 2.1
-  - ruby-head
   - jruby-18mode
   - jruby-19mode
   - rbx-2
   - ree
 
+  - ruby-head
+  - jruby-head
+
 env:
   global:
     - VERBOSE=true
     - TIMEOUT=1
-
-# gemfile: ".travis/Gemfile"
-
-script: rspec spec
-
-sudo: false
 
 branches:
   only:
