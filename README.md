@@ -1,4 +1,8 @@
-# Rack::App
+# Rack::Appi [![Build Status][travis-image]][travis-link]
+
+[travis-image]: https://secure.travis-ci.org/adamluzsi/rack-app.rb.png?branch=master
+[travis-link]: http://travis-ci.org/adamluzsi/rack-app.rb
+[travis-home]: http://travis-ci.org/
 
 Your next favourite rack based micro framework that is totally addition free! 
 Have a cup of awesomeness with  your performance designed framework!
