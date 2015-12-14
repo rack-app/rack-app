@@ -1,12 +1,12 @@
 # coding: utf-8
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rack/app/version'
+# lib = File.expand_path('../lib', __FILE__)
+# $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+# require 'rack/app/version'
 
 Gem::Specification.new do |spec|
 
   spec.name          = "rack-app"
-  spec.version       = Rack::App::VERSION
+  spec.version       = File.read(File.join(File.dirname(__FILE__), 'VERSION')).strip
   spec.authors       = ["Adam Luzsi"]
   spec.email         = ["adamluzsi@gmail.com"]
 
