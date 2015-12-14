@@ -47,12 +47,13 @@ class YourAwesomeApp < Rack::App
     'Hello World!'
   end
 
-  get '/users/:user_id' do 
-    get_user_id 
+  get '/users/:user_id' do
+    params['user_id'] #=> restful parameter :user_id
+    say #=> "hello world!" 
   end 
   
-  def get_user_id
-    params['user_id']
+  def say
+    'hello world!'
   end 
   
 end
@@ -68,7 +69,7 @@ By default if you dont write anything to the response 'body' the endpoint block 
 
 ## Testing 
 
-use bundled in testing module for writing unit test for your rack application
+for testing use rack/test or the bundled testing module for writing unit test for your rack application
 
 ```ruby
 
@@ -83,7 +84,7 @@ describe MyRackApp do
   
   describe '#something' do
   
-    subject{ get('/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}) }
+    subject{ get(url: '/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}) }
 
     it { expect(subject.body).to eq ['world']}
     
