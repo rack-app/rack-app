@@ -5,10 +5,10 @@ describe Rack::App::Endpoint do
   let(:api_class) { Class.new(Rack::App) }
   let(:properties) do
     {
-        request_method: 'GET',
-        request_path: '/endpoint/path',
-        description: 'sample description for the endpoint',
-        serializer: lambda { |object| JSON.dump object }
+        :request_method => 'GET',
+        :request_path => '/endpoint/path',
+        :description => 'sample description for the endpoint',
+        :serializer => lambda { |object| JSON.dump object }
     }
   end
   let(:logic_block) { Proc.new { 'hello world!' } }
