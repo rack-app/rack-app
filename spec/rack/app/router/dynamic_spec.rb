@@ -7,9 +7,13 @@ describe Rack::App::Router::Dynamic do
   let(:request_method) { 'GET' }
 
   let(:endpoint) do
-    Rack::App::Endpoint.new(Class.new(Rack::App)) do
-      'hello world!'
-    end
+    settings = {
+        :app_class => Class.new(Rack::App),
+        :user_defined_logic => lambda { 'hello world!' },
+        :request_method => 'GET',
+        :request_path => '\404'
+    }
+    Rack::App::Endpoint.new(settings)
   end
 
   describe 'add_endpoint' do
@@ -42,10 +46,10 @@ describe Rack::App::Router::Dynamic do
     context 'when multiple path given with partial matching' do
       let(:endpoint2) { endpoint.dup }
       before { router.add_endpoint(request_method, defined_request_path, endpoint) }
-      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'),endpoint2) }
+      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'), endpoint2) }
 
       it { is_expected.to be endpoint }
-      it { expect(router.fetch_endpoint(request_method, [received_request_path,'doc'].join('/'))).to be endpoint2 }
+      it { expect(router.fetch_endpoint(request_method, [received_request_path, 'doc'].join('/'))).to be endpoint2 }
 
     end
 

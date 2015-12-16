@@ -77,13 +77,15 @@ class Rack::App
     def add_route(request_method, request_path, &block)
 
       endpoint_properties = {
+          :user_defined_logic => block,
           :request_method => request_method,
           :request_path => request_path,
           :description => @last_description,
-          :serializer => @serializer
+          :serializer => @serializer,
+          :app_class => self
       }
 
-      endpoint = Rack::App::Endpoint.new(self, endpoint_properties, &block)
+      endpoint = Rack::App::Endpoint.new(endpoint_properties)
       router.add_endpoint(request_method, request_path, endpoint)
 
       @last_description = nil

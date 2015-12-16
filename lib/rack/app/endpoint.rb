@@ -2,12 +2,15 @@ class Rack::App::Endpoint
 
   attr_reader :properties
 
-  def initialize(api_class, properties={}, &logic_block)
+  def initialize(properties)
     @properties = properties
-    @logic_block = logic_block
-    @api_class = api_class
+    @logic_block = properties[:user_defined_logic]
+    @serializer = properties[:serializer] || default_serializer
+    @api_class = properties[:app_class]
+
     @path_params_matcher = {}
   end
+
 
   def execute(request_env)
 
@@ -36,11 +39,7 @@ class Rack::App::Endpoint
   protected
 
   def add_response_body_if_missing(call_return, response)
-    response.write(serializer.call(call_return)) if response.body.empty?
-  end
-
-  def serializer
-    @properties[:serializer] ||= lambda { |object| object.to_s }
+    response.write(String(@serializer.call(call_return))) if response.body.empty?
   end
 
   def is_a_rack_response_finish?(call_return)
@@ -48,6 +47,10 @@ class Rack::App::Endpoint
         call_return.length == 3 and
         call_return[0].is_a?(Integer) and
         call_return[1].is_a?(Hash)
+  end
+
+  def default_serializer
+    lambda { |o| o.to_s }
   end
 
 end

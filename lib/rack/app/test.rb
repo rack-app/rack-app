@@ -21,7 +21,7 @@ module Rack::App::Test
     end
   end
 
-  [:get, :post, :put, :delete, :options].each do |request_method|
+  [:get, :post, :put, :delete, :options, :patch].each do |request_method|
     define_method(request_method) do |properties|
       properties ||= Hash.new
       url = properties.delete(:url)

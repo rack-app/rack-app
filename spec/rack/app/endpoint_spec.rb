@@ -1,20 +1,23 @@
 require 'spec_helper'
-require 'json'
+
 describe Rack::App::Endpoint do
 
-  let(:api_class) { Class.new(Rack::App) }
+  let(:app_class) { Class.new(Rack::App) }
+  let(:logic_block) { Proc.new { 'hello world!' } }
+
   let(:properties) do
     {
+        :user_defined_logic => logic_block,
         :request_method => 'GET',
         :request_path => '/endpoint/path',
         :description => 'sample description for the endpoint',
-        :serializer => lambda { |object| JSON.dump object }
+        :serializer => lambda { |object| object.inspect },
+        :app_class => app_class
     }
   end
-  let(:logic_block) { Proc.new { 'hello world!' } }
 
   def new_subject
-    described_class.new(api_class, properties, &logic_block)
+    described_class.new(properties)
   end
 
   let(:request_env) { {} }
@@ -25,7 +28,7 @@ describe Rack::App::Endpoint do
     body_content = [{:id => 1}]
 
     context 'when endpoint logic writes respond body already' do
-      let(:logic_block) { lambda { response.write(body_content) } }
+      let(:logic_block) { lambda { response.write(body_content.inspect) } }
 
       it { expect(subject[2].body[0]).to eq '[{:id=>1}]' }
     end
@@ -34,7 +37,7 @@ describe Rack::App::Endpoint do
       let(:logic_block) { lambda { body_content } }
 
       it "uses the block's serialized return value as response payload" do
-        expect(subject[2].body[0]).to eq '[{"id":1}]'
+        expect(subject[2].body[0]).to eq '[{:id=>1}]'
       end
     end
 

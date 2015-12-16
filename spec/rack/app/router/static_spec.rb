@@ -6,9 +6,13 @@ describe Rack::App::Router::Static do
   let(:request_method) { 'GET' }
 
   let(:endpoint) do
-    Rack::App::Endpoint.new(Class.new(Rack::App)) do
-      'hello world!'
-    end
+    settings = {
+        :app_class => Class.new(Rack::App),
+        :user_defined_logic => lambda { 'hello world!' },
+        :request_method => 'GET',
+        :request_path => '\404'
+    }
+    Rack::App::Endpoint.new(settings)
   end
 
   let(:instance) { described_class.new }
@@ -63,7 +67,6 @@ describe Rack::App::Router::Static do
     it { is_expected.to eq({}) }
 
     context 'when endpoint is defined' do
-      let(:endpoint) { Rack::App::Endpoint.new(nil, {}, &lambda{}) }
       before { instance.add_endpoint('GET', '/index.html', endpoint) }
 
       it { is_expected.to eq({['GET', '/index.html'] => endpoint}) }

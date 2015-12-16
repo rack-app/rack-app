@@ -11,31 +11,24 @@ describe Rack::App do
     it { is_expected.to be_a Rack::App::Router }
   end
 
+  require 'rack/app/test'
+  include Rack::App::Test
+  rack_app described_class
+
   [:get, :post, :put, :delete, :patch, :options].each do |http_method|
     describe ".#{http_method}" do
 
-      subject { described_class.__send__(http_method, request_path, &block) }
+      rack_app described_class do
 
-      let!(:endpoint) { Rack::App::Endpoint.new(described_class, &block) }
-      before do
-        allow(Rack::App::Endpoint).to receive(:new).with(
-            described_class,
-            {
-                :request_method => http_method.to_s.upcase,
-                :request_path => request_path,
-                :description => nil,
-                :serializer => nil
-            }
-        ).and_return(endpoint)
+        send http_method, "/hello_#{http_method}" do
+          String(http_method)
+        end
 
       end
 
-      it { is_expected.to be_a Rack::App::Endpoint }
-      it { is_expected.to be endpoint }
+      subject{ send(http_method,{:url => "/hello_#{http_method}"}) }
 
-      it "should create an endpoint in the endpoint collection" do
-        is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
-      end
+      it { expect(subject.body).to eq [String(http_method)]}
 
     end
   end
@@ -72,18 +65,18 @@ describe Rack::App do
     end
   end
 
-  describe '.add_route' do
-
-    let(:http_method) { 'GET' }
-    subject { described_class.add_route(http_method, request_path, &block) }
-
-    it { is_expected.to be_a Rack::App::Endpoint }
-
-    it "should create an endpoint entry under the right request_key based" do
-      is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
-    end
-
-  end
+  # describe '.add_route' do
+  #
+  #   let(:http_method) { 'GET' }
+  #   subject { described_class.add_route(http_method, request_path, &block) }
+  #
+  #   it { is_expected.to be_a Rack::App::Endpoint }
+  #
+  #   it "should create an endpoint entry under the right request_key based" do
+  #     is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
+  #   end
+  #
+  # end
 
   let(:request_env) { {} }
   let(:request) { Rack::Request.new(request_env) }
