@@ -1,22 +1,20 @@
 require 'spec_helper'
+require 'json'
 describe Rack::App::Endpoint do
 
-  let(:request_method) { 'GET' }
-  let(:request_path) { '/endpoint/path' }
-  let(:description) { 'sample description for the endpoint' }
   let(:api_class) { Class.new(Rack::App) }
+  let(:properties) do
+    {
+        request_method: 'GET',
+        request_path: '/endpoint/path',
+        description: 'sample description for the endpoint',
+        serializer: lambda { |object| JSON.dump object }
+    }
+  end
   let(:logic_block) { Proc.new { 'hello world!' } }
 
   def new_subject
-    described_class.new(
-        api_class,
-        {
-            :request_method => request_method,
-            :request_path => request_path,
-            :description => description
-        },
-        &logic_block
-    )
+    described_class.new(api_class, properties, &logic_block)
   end
 
   let(:request_env) { {} }
@@ -24,18 +22,19 @@ describe Rack::App::Endpoint do
   describe '#execute' do
 
     subject { new_subject.execute(request_env) }
+    body_content = [{:id => 1}]
 
     context 'when endpoint logic writes respond body already' do
-      let(:logic_block) { lambda { response.write('hello world') } }
+      let(:logic_block) { lambda { response.write(body_content) } }
 
-      it { expect(subject[2].body[0]).to eq 'hello world' }
+      it { expect(subject[2].body[0]).to eq '[{:id=>1}]' }
     end
 
-    context 'when endpoint logic not writes directly response body' do
-      let(:logic_block) { lambda { 'hello world' } }
+    context 'when endpoint logic does not write directly to response body' do
+      let(:logic_block) { lambda { body_content } }
 
-      it 'should use the block stringified return value as response payload' do
-        expect(subject[2].body[0]).to eq 'hello world'
+      it "uses the block's serialized return value as response payload" do
+        expect(subject[2].body[0]).to eq '[{"id":1}]'
       end
     end
 
@@ -59,7 +58,7 @@ describe Rack::App::Endpoint do
   describe '#properties' do
     subject { new_subject.properties }
 
-    it { is_expected.to eq({:request_method => request_method, :request_path => request_path, :description => description}) }
+    it { is_expected.to eq properties }
   end
 
 end

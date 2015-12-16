@@ -79,7 +79,8 @@ class Rack::App
       endpoint_properties = {
           :request_method => request_method,
           :request_path => request_path,
-          :description => @last_description
+          :description => @last_description,
+          :serializer => @serializer
       }
 
       endpoint = Rack::App::Endpoint.new(self, endpoint_properties, &block)
@@ -99,6 +100,10 @@ class Rack::App
       router.merge!(api_class.router)
 
       return nil
+    end
+
+    def serializer(&code)
+      @serializer = code
     end
 
   end

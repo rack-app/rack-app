@@ -23,7 +23,8 @@ describe Rack::App do
             {
                 :request_method => http_method.to_s.upcase,
                 :request_path => request_path,
-                :description => nil
+                :description => nil,
+                :serializer => nil
             }
         ).and_return(endpoint)
 
@@ -274,6 +275,13 @@ describe Rack::App do
 
     end
 
+  end
+
+  describe '.serializer' do
+    serializer = Proc.new { |o| o.to_s }
+    subject { described_class.serializer(&serializer) }
+
+    it { is_expected.to eq(serializer) }
   end
 
 end

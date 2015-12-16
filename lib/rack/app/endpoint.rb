@@ -36,7 +36,11 @@ class Rack::App::Endpoint
   protected
 
   def add_response_body_if_missing(call_return, response)
-    response.write(call_return.to_s) if response.body.empty?
+    response.write(serializer.call(call_return)) if response.body.empty?
+  end
+
+  def serializer
+    @properties[:serializer] ||= lambda { |object| object.to_s }
   end
 
   def is_a_rack_response_finish?(call_return)
