@@ -37,7 +37,6 @@ describe Rack::App::File::Streamer do
 
     it { is_expected.to match /(((Mon)|(Tue)|(Wed)|(Thu)|(Fri)|(Sat)|(Sun))[,]\s\d{2}\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}\s(0\d|1\d|2[0-3])(\:)(0\d|1\d|2\d|3\d|4\d|5\d)(\:)(0\d|1\d|2\d|3\d|4\d|5\d)\s(GMT))/ }
 
-    it { is_expected.to eq 'Wed, 09 Dec 2015 23:44:53 GMT' }
   end
 
   describe '#length' do
