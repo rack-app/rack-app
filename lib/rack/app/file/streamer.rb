@@ -2,24 +2,34 @@ class Rack::App::File::Streamer
 
   include Enumerable
 
-  def each(&blk)
-    @file.each(&blk)
-  ensure
-    @file.close
-  end
-
-  def to_a
-    @file.to_a.map(&:chomp)
+  def each(&block)
+    file { |f| f.each(&block) }
   end
 
   def render(object=nil)
-    return self
+    file { |f| f.read }
+  end
+
+  def mtime(object=nil)
+    ::File.mtime(@file_path).httpdate
+  end
+
+  def length(object=nil)
+    ::Rack::Utils.bytesize(render())
   end
 
   protected
 
-  def initialize(path)
-    @file = File.open(path)
+  def initialize(file_path)
+    @file_path = file_path
+    @file = File.open(file_path)
+  end
+
+  def file(&block)
+    @file.reopen(@file_path) if @file.closed?
+    return block.call(@file)
+  ensure
+    @file.close
   end
 
 end

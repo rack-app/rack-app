@@ -2,51 +2,48 @@ require 'spec_helper'
 
 describe Rack::App::File::Streamer do
 
-  let(:file_path) { '/file/path' }
+  let(:file_path) { Rack::App::Utils.pwd('spec', 'fixtures', 'raw.txt') }
   let(:instance) { described_class.new(file_path) }
 
-  context 'given the file exist' do
+  describe '#each' do
+    subject { instance.take(2) }
 
-    let(:file) { double('File/instance').as_null_object }
-    before { allow(File).to receive(:open).with(file_path).and_return(file) }
-
-    describe '#each' do
-
-      it 'should yield the given block on the file object' do
-
-        proc = Proc.new {}
-        expect(file).to receive(:each) do |*args, &block|
-          expect(proc).to be(block)
-        end
-
-        instance.each(&proc)
-
-      end
-
-      it 'should ensure to run file.close always' do
-        expect(file).to receive(:close)
-
-        instance.each(&(Proc.new {}))
-      end
-
+    it 'should iterate over the file content' do
+      is_expected.to eq ["hello world!\n", 'how you doing?']
     end
 
-    describe '#to_a' do
-      subject { instance.to_a }
-      context 'given the file has content' do
-        before { allow(file).to receive(:to_a).and_return(["hello\n", "world\n"]) }
-
-        it { is_expected.to eq ["hello", "world"] }
-      end
-
+    it 'should ensure to run file.close always' do
+      expect { instance.each.map { |l|} }.to raise_error(IOError, 'closed stream')
     end
 
-    describe '#render' do
-      subject { instance.render(nil) }
+  end
 
-      it { is_expected.to be instance }
-    end
+  describe '#render' do
+    subject { instance.render(nil) }
 
+    it { is_expected.to eq "hello world!\nhow you doing?" }
+  end
+
+  describe '#to_a' do
+    subject { instance.to_a }
+
+    it { is_expected.to eq ["hello world!\n", 'how you doing?'] }
+  end
+
+  describe '#mtime' do
+    subject { instance.mtime }
+
+    it { is_expected.to be_a String }
+
+    it { is_expected.to match /(((Mon)|(Tue)|(Wed)|(Thu)|(Fri)|(Sat)|(Sun))[,]\s\d{2}\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}\s(0\d|1\d|2[0-3])(\:)(0\d|1\d|2\d|3\d|4\d|5\d)(\:)(0\d|1\d|2\d|3\d|4\d|5\d)\s(GMT))/ }
+
+    it { is_expected.to eq 'Wed, 09 Dec 2015 23:44:53 GMT' }
+  end
+
+  describe '#length' do
+    subject { instance.length }
+
+    it { is_expected.to eq 27 }
   end
 
 end
