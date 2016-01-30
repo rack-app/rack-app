@@ -1,32 +1,36 @@
-module Rack::App::File::Server
+class Rack::App::File::Server
 
-  include Rack::App::File::Parser::Factory
+  def initialize(root_folder, options={})
+    require 'rack/file'
 
-  def source_folder(relative_folder_path)
+    namespace = formatted_namespace(options)
+    namespace.freeze
 
-    source_folder = Rack::App::Utils.pwd(relative_folder_path)
-    Dir.glob(File.join(source_folder, '**', '*')).each do |file_path|
+    @namespace_rgx = /#{Regexp.escape(namespace)}/.freeze
+    @rack_file_server = ::Rack::File.new(Rack::App::Utils.pwd(root_folder), {})
 
-      file_parser_class = find_file_parser_class_for(File.extname(file_path))
+  end
 
-      raw_endpoint_name = file_path.sub(source_folder, '').split(File::Separator).join('/')
-      request_path = file_parser_class.format_request_path(raw_endpoint_name)
+  def call(env)
+    env[::Rack::PATH_INFO]= clean_path_info(env).sub(@namespace_rgx, '')
+    @rack_file_server.call(env)
+  end
 
-      options request_path do
-        response.finish
-      end
+  protected
 
-      get request_path do
-        file_parser = file_parser_class.new(self)
+  def raw_namespace(options)
+    options[:to] || '/'
+  end
 
-        response.body = file_parser.parse(file_path)
-        response.headers[Rack::CONTENT_TYPE]= Rack::Mime.mime_type(file_parser.file_type(file_path)).to_s
+  def formatted_namespace(options)
+    namespace = raw_namespace(options).to_s.sub(/^\//, '').sub(/\/$/, '')
+    namespace += '/' unless namespace.empty?
+    namespace
+  end
 
-        response.finish
-      end
-
-    end
-
+  def clean_path_info(env)
+    path_info = ::Rack::Utils.unescape(env[::Rack::PATH_INFO])
+    return clean_path_info = ::Rack::Utils.clean_path_info(path_info)
   end
 
 end
