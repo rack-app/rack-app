@@ -53,6 +53,23 @@ describe Rack::App::Router::Dynamic do
 
     end
 
+    context 'when partial matching is defined' do
+      before { router.add_endpoint(request_method, '/assets/**/*', endpoint) }
+
+      context 'and the received request is targeting the partial match highest layer' do
+        let(:received_request_path){ '/assets/some.js' }
+
+        it { is_expected.to be endpoint }
+      end
+
+      context 'and the received request is targeting the partial match deep layer' do
+        let(:received_request_path){ '/assets/some/folder/to/deal/with/some.js' }
+
+        it { is_expected.to be endpoint }
+      end
+
+    end
+
   end
 
   describe 'merge!' do
