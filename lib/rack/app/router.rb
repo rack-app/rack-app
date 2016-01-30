@@ -3,11 +3,21 @@ class Rack::App::Router
   require 'rack/app/router/static'
   require 'rack/app/router/dynamic'
 
-  #TD
-  def endpoint_paths
-    @static.endpoints.map do |indentifiers, endpoint|
-      [[*indentifiers].join("\t"),endpoint.properties[:description]].compact.join("\t\t\t")
+  def show_endpoints
+    endpoints = (@static.show_endpoints + @dynamic.show_endpoints)
+
+    wd0 = endpoints.map { |row| row[0].to_s.length }.max
+    wd1 = endpoints.map { |row| row[1].to_s.length }.max
+    wd2 = endpoints.map { |row| row[2].to_s.length }.max
+
+    return endpoints.map do |row|
+      [
+          row[0].to_s.ljust(wd0),
+          row[1].to_s.ljust(wd1),
+          row[2].to_s.ljust(wd2)
+      ].join('   ')
     end
+
   end
 
   def add_endpoint(request_method, request_path, endpoint)
@@ -39,7 +49,7 @@ class Rack::App::Router
   end
 
   def defined_path_is_dynamic?(path_str)
-    !!(path_str.to_s =~ /\/:\w+/i)
+    !!(path_str.to_s =~ /\/:\w+/i) or !!(path_str.to_s =~ /\/\*/i)
   end
 
 end

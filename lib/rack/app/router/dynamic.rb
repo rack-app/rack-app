@@ -8,7 +8,7 @@ class Rack::App::Router::Dynamic
 
   def add_endpoint(request_method, request_path, endpoint)
     request_path = Rack::App::Utils.normalize_path(request_path)
-    @endpoint_paths << [request_method, request_path]
+    @endpoint_paths << [request_method, request_path, endpoint.properties[:description]]
 
     current_cluster = main_cluster(request_method)
     path_params = {}
@@ -63,6 +63,10 @@ class Rack::App::Router::Dynamic
     raise(ArgumentError, "invalid route object, must be instance of #{self.class.to_s}") unless router.is_a?(self.class)
     deep_merge!(@http_method_cluster, router.instance_variable_get(:@http_method_cluster))
     nil
+  end
+
+  def show_endpoints
+    @endpoint_paths
   end
 
   protected

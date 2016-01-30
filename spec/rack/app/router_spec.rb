@@ -102,17 +102,17 @@ describe Rack::App::Router do
 
   end
 
-  describe '#endpoint_paths' do
-    subject { instance.endpoint_paths }
+  describe '#show_endpoints' do
+    subject { instance.show_endpoints }
 
     require 'rack/app/test'
     include Rack::App::Test
     rack_app
 
-    context 'when static endpoint is defined' do
+    context 'when endpoint is defined' do
       before { instance.add_endpoint('GET', '/index.html', endpoint) }
 
-      it { is_expected.to eq ["GET\t/index.html"] }
+      it { is_expected.to eq ["GET   /index.html   "] }
     end
 
   end

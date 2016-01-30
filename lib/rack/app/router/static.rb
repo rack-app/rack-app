@@ -12,11 +12,16 @@ class Rack::App::Router::Static
   end
 
   def merge!(static_router)
-    raise(ArgumentError,"Invalid argument given, must be instance of a #{self.class.to_s}") unless static_router.is_a?(self.class)
+    raise(ArgumentError, "Invalid argument given, must be instance of a #{self.class.to_s}") unless static_router.is_a?(self.class)
     @endpoints.merge!(static_router.instance_variable_get(:@endpoints))
     nil
   end
 
+  def show_endpoints
+    @endpoints.map do |identifiers, endpoint|
+      [identifiers, endpoint.properties[:description]].flatten
+    end
+  end
 
   protected
 
