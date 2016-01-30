@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Rack::App::File::Server do
-  let(:instance) { described_class.new(root_folder, to: namespace) }
+  let(:instance) { described_class.new(root_folder, :to => namespace) }
   let(:root_folder) { '/spec/fixtures' }
   let(:request_method) { 'GET' }
 
@@ -26,7 +26,7 @@ describe Rack::App::File::Server do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to eq ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
         end
 
         it 'should response with a ::Rack::File instance' do
@@ -67,7 +67,7 @@ describe Rack::App::File::Server do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to eq ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
         end
 
         it 'should response with a ::Rack::File instance' do
@@ -108,7 +108,7 @@ describe Rack::App::File::Server do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to eq ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
         end
 
         it 'should response with a ::Rack::File instance' do
