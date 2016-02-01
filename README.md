@@ -4,7 +4,7 @@
 [travis-link]: http://travis-ci.org/adamluzsi/rack-app.rb
 [travis-home]: http://travis-ci.org/
 
-![Rack::App](http://rack-app-website.herokuapp.com/image/msruby.png)
+![Rack::App](http://rack-app-website.herokuapp.com/image/msruby_new.png)
 
 Your next favourite rack based micro framework that is totally addition free! 
 Have a cup of awesomeness with  your performance designed framework!
