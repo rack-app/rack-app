@@ -43,6 +43,9 @@ module Rack::App::Test
     properties = format_properties(raw_properties)
     additional_headers = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
 
+    payload = raw_properties.delete(:payload)
+    additional_headers["rack.input"]= ::Rack::Lint::InputWrapper.new(StringIO.new(payload.to_s)) if payload.is_a?(String)
+
     {
         "REMOTE_ADDR" => "192.168.56.1",
         "REQUEST_METHOD" => request_method.to_s.upcase,

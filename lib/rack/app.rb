@@ -124,4 +124,18 @@ class Rack::App
     @response || raise("response object is not set for #{self.class}")
   end
 
+  def payload
+    @__payload__ ||= Proc.new{
+      return nil if @request.body.nil?
+
+      payload = ''
+      while chunk = @request.body.gets
+        payload += chunk
+      end
+      @request.body.rewind
+
+      return payload
+    }.call
+  end
+
 end

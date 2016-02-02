@@ -33,6 +33,16 @@ describe Rack::App::Test do
       params['dog']
     end
 
+    get '/payload' do
+      payload = ''
+
+      while chunk = request.body.gets
+        payload += chunk
+      end
+
+      payload
+    end
+
     options '/destroy' do
       'options stuff'
     end
@@ -96,6 +106,12 @@ describe Rack::App::Test do
     subject { get :url => '/params', :params => {'dog' => 'meat'} }
 
     it { expect(subject.body).to eq ['meat'] }
+  end
+
+  describe '#payload' do
+    subject { get :url => '/payload', :payload => "hello\nworld" }
+
+    it { expect(subject.body).to eq ["hello\nworld"]}
   end
 
 end

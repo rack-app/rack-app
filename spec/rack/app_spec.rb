@@ -181,6 +181,21 @@ describe Rack::App do
 
   end
 
+  describe '#payload' do
+    subject { new_subject.payload }
+
+    context 'when payload is present in the request env' do
+      before{ request_env['rack.input']= ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld")) }
+
+      it{ is_expected.to eq "hello\nworld" }
+    end
+
+    context 'when payload is not included in the request env' do
+      it{ is_expected.to eq nil }
+    end
+
+  end
+
   describe '.mount' do
     subject { described_class.mount(to_be_mounted_api_class) }
 
