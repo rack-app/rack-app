@@ -126,7 +126,7 @@ class Rack::App
 
   def payload
     @__payload__ ||= Proc.new{
-      return nil if @request.body.nil?
+      return nil unless @request.body.respond_to?(:gets)
 
       payload = ''
       while chunk = @request.body.gets
