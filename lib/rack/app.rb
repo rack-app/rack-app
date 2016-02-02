@@ -125,7 +125,7 @@ class Rack::App
   end
 
   def payload
-    @__payload__ ||= Proc.new{
+    @__payload__ ||= lambda {
       return nil unless @request.body.respond_to?(:gets)
 
       payload = ''
