@@ -9,6 +9,7 @@ describe Rack::App::Endpoint do
     {
         :user_defined_logic => logic_block,
         :request_method => 'GET',
+        :error_handler => ::Rack::App::ErrorHandler.new,
         :request_path => '/endpoint/path',
         :description => 'sample description for the endpoint',
         :serializer => lambda { |object| object.inspect },

@@ -9,6 +9,7 @@ not_found_properties = {
     :request_path => '\404',
     :description => 'page not found',
     :serializer => lambda { |o| String(o) },
+    :error_handler => Rack::App::ErrorHandler.new,
     :app_class => app_class
 }
 

@@ -7,12 +7,13 @@ class Rack::App
   require 'rack/app/constants'
 
   require 'rack/app/params'
-  require 'rack/app/utils'
   require 'rack/app/router'
   require 'rack/app/endpoint'
+  require 'rack/app/error_handler'
   require 'rack/app/endpoint/not_found'
   require 'rack/app/request_configurator'
 
+  require 'rack/app/utils'
   require 'rack/app/file'
 
   class << self
@@ -70,6 +71,15 @@ class Rack::App
       end
     end
 
+    def error(*exception_classes,&block)
+      @error_handler ||= Rack::App::ErrorHandler.new
+      unless block.nil?
+        @error_handler.register_handler(exception_classes,block)
+      end
+
+      return @error_handler
+    end
+
     def router
       @router ||= Rack::App::Router.new
     end
@@ -82,6 +92,7 @@ class Rack::App
           :request_path => request_path,
           :description => @last_description,
           :serializer => @serializer,
+          :error_handler => error,
           :app_class => self
       }
 

@@ -292,4 +292,45 @@ describe Rack::App do
     it { is_expected.to eq(serializer) }
   end
 
+
+  describe '.error' do
+
+    rack_app described_class do
+
+      error ArgumentError, RangeError do |ex|
+        ex.message
+      end
+
+      error StandardError do |ex|
+        'standard'
+      end
+
+      get '/handled_exception1' do
+        raise(RangeError,'range')
+      end
+
+      get '/handled_exception2' do
+        raise(NoMethodError,'arg')
+      end
+
+      get '/unhandled_exception' do
+        raise(Exception,'unhandled')
+      end
+
+    end
+
+    context 'when expected error class raised' do
+      it { expect( get(:url => '/handled_exception1').body.join ).to eq 'range' }
+    end
+
+    context 'when a subclass of the expected error class raised' do
+      it { expect( get(:url => '/handled_exception2').body.join ).to eq 'standard' }
+    end
+
+    context 'when one of the unhandled exception happen in the endpoint' do
+      it { expect{ get(:url => '/unhandled_exception') }.to raise_error(Exception,'unhandled') }
+    end
+
+  end
+
 end
