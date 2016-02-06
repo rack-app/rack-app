@@ -26,9 +26,9 @@ describe Rack::App do
 
       end
 
-      subject{ send(http_method,{:url => "/hello_#{http_method}"}) }
+      subject { send(http_method, {:url => "/hello_#{http_method}"}) }
 
-      it { expect(subject.body).to eq [String(http_method)]}
+      it { expect(subject.body).to eq [String(http_method)] }
 
     end
   end
@@ -185,13 +185,13 @@ describe Rack::App do
     subject { new_subject.payload }
 
     context 'when payload is present in the request env' do
-      before{ request_env['rack.input']= ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld")) }
+      before { request_env['rack.input']= ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld")) }
 
-      it{ is_expected.to eq "hello\nworld" }
+      it { is_expected.to eq "hello\nworld" }
     end
 
     context 'when payload is not included in the request env' do
-      it{ is_expected.to eq nil }
+      it { is_expected.to eq nil }
     end
 
   end
@@ -286,10 +286,39 @@ describe Rack::App do
   end
 
   describe '.serializer' do
-    serializer = Proc.new { |o| o.to_s }
-    subject { described_class.serializer(&serializer) }
 
-    it { is_expected.to eq(serializer) }
+    context 'when no serializer defined' do
+
+      rack_app described_class do
+
+        get '/serialized' do
+          'to_s'
+        end
+
+      end
+
+      it { expect(get(:url => '/serialized').body.join).to eq 'to_s' }
+
+    end
+
+    context 'when serializer is defined' do
+
+      rack_app described_class do
+
+        serializer do |o|
+          o.inspect.upcase
+        end
+
+        get '/serialized' do
+          {:hello => :world}
+        end
+
+      end
+
+      it { expect(get(:url => '/serialized').body.join).to eq '{:HELLO=>:WORLD}' }
+
+    end
+
   end
 
 
@@ -306,29 +335,29 @@ describe Rack::App do
       end
 
       get '/handled_exception1' do
-        raise(RangeError,'range')
+        raise(RangeError, 'range')
       end
 
       get '/handled_exception2' do
-        raise(NoMethodError,'arg')
+        raise(NoMethodError, 'arg')
       end
 
       get '/unhandled_exception' do
-        raise(Exception,'unhandled')
+        raise(Exception, 'unhandled')
       end
 
     end
 
     context 'when expected error class raised' do
-      it { expect( get(:url => '/handled_exception1').body.join ).to eq 'range' }
+      it { expect(get(:url => '/handled_exception1').body.join).to eq 'range' }
     end
 
     context 'when a subclass of the expected error class raised' do
-      it { expect( get(:url => '/handled_exception2').body.join ).to eq 'standard' }
+      it { expect(get(:url => '/handled_exception2').body.join).to eq 'standard' }
     end
 
     context 'when one of the unhandled exception happen in the endpoint' do
-      it { expect{ get(:url => '/unhandled_exception') }.to raise_error(Exception,'unhandled') }
+      it { expect { get(:url => '/unhandled_exception') }.to raise_error(Exception, 'unhandled') }
     end
 
   end

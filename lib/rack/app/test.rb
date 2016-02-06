@@ -2,23 +2,38 @@ require 'uri'
 require 'rack/app'
 module Rack::App::Test
 
-  # magic ;)
   def self.included(klass)
-    class << klass
+    klass.__send__(:extend,SpecHelpers)
+  end
 
-      define_method(:rack_app) do |*args, &constructor|
+  module SpecHelpers
 
-        rack_app_class = args.shift
-        subject_app = rack_app_class.is_a?(Class) ? rack_app_class : Class.new(Rack::App)
-        subject_app.class_eval(&constructor) unless constructor.nil?
+    def rack_app(*args,&constructor)
 
+      begin
+        let(:rack_app){ rack_app_by(*args,&constructor) }
+      rescue NoMethodError
         define_method(:rack_app) do
-          subject_app
+          rack_app_by(*args,&constructor)
         end
-
       end
 
     end
+
+  end
+
+  def rack_app_by(*args,&constructor)
+    subject_app = nil
+    rack_app_class = args.shift
+
+    if constructor.nil?
+      subject_app = rack_app_class
+    else
+      subject_app = Class.new(rack_app_class || Rack::App)
+      subject_app.class_eval(&constructor)
+    end
+
+    subject_app
   end
 
   [:get, :post, :put, :delete, :options, :patch].each do |request_method|
