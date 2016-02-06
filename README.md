@@ -108,18 +108,24 @@ end
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
 
-* Dumb duration with zero if or routing: 5.0e-06 s - 6.0e-06 s
+
+* Dump duration with zero business logic or routing: 2.4184169999892074e-06 s
   * no routing
   * return only a static array with static values
-* Rack::App duration with routing lookup: 6.3e-05 s - 7.0e-05 s
+* Rack::App duration with routing lookup: 2.9978291999967683e-05 s
   * with routing 
   * with value parsing and reponse object building
-* Grape::API duration with routing lookup: 0.028236 s - 0.180764 s
+* Grape::API duration with routing lookup: 0.0002996424499999746 s
   * with routing 
   * with value parsing and reponse object building
+
+* Rack::App 9.995314276086763x faster (0.00026966415800000693 sec) that Grape::API
+* returning a simple rack response array without any logic is 12.395832480544698x faster (2.7559874999978477e-05 sec) that Rack::App
+* the same dumb empty proc call is 123.90024135676842x faster than Grape::API (0.0002972240329999854 sec)
   
 This was measured with multiple endpoints like that would be in real life example.
-i feared do this for Rails that is usually slower than Grape :S
+I feared do this for Rails that is usually slower than Grape :S
+To be honest, I measured with grape because that is one of my favorite micro framework
 
 ## Roadmap 
 
