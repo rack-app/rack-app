@@ -12,7 +12,7 @@ describe Rack::App::Endpoint do
         :error_handler => ::Rack::App::ErrorHandler.new,
         :request_path => '/endpoint/path',
         :description => 'sample description for the endpoint',
-        :serializer => lambda { |object| object.inspect },
+        :serializer => Rack::App::Serializer.new.tap{|s| s.set_serialization_logic(lambda { |object| object.inspect }) },
         :app_class => app_class
     }
   end

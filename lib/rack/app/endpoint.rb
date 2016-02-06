@@ -5,7 +5,7 @@ class Rack::App::Endpoint
   def initialize(properties)
     @properties = properties
     @logic_block = properties[:user_defined_logic]
-    @serializer = properties[:serializer] || default_serializer
+    @serializer = properties[:serializer]
     @api_class = properties[:app_class]
     @error_handler = properties[:error_handler]
 
@@ -40,7 +40,7 @@ class Rack::App::Endpoint
   protected
 
   def add_response_body_if_missing(call_return, response)
-    response.write(String(@serializer.call(call_return))) if response.body.empty?
+    response.write(String(@serializer.serialize(call_return))) if response.body.empty?
   end
 
   def is_a_rack_response_finish?(call_return)
@@ -48,10 +48,6 @@ class Rack::App::Endpoint
         call_return.length == 3 and
         call_return[0].is_a?(Integer) and
         call_return[1].is_a?(Hash)
-  end
-
-  def default_serializer
-    lambda { |o| o.to_s }
   end
 
 end

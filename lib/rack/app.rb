@@ -9,6 +9,7 @@ class Rack::App
   require 'rack/app/params'
   require 'rack/app/router'
   require 'rack/app/endpoint'
+  require 'rack/app/serializer'
   require 'rack/app/error_handler'
   require 'rack/app/endpoint/not_found'
   require 'rack/app/request_configurator'
@@ -91,7 +92,7 @@ class Rack::App
           :request_method => request_method,
           :request_path => request_path,
           :description => @last_description,
-          :serializer => @serializer,
+          :serializer => serializer,
           :error_handler => error,
           :app_class => self
       }
@@ -115,8 +116,14 @@ class Rack::App
       return nil
     end
 
-    def serializer(&code)
-      @serializer = code
+    def serializer(&definition_how_to_serialize)
+      @serializer ||= Rack::App::Serializer.new
+
+      unless definition_how_to_serialize.nil?
+        @serializer.set_serialization_logic(definition_how_to_serialize)
+      end
+
+      return @serializer
     end
 
   end
