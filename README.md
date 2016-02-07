@@ -1,7 +1,7 @@
 # [Rack::App](http://rack-app.com/) [![Build Status][travis-image]][travis-link]
 
-[travis-image]: https://secure.travis-ci.org/adamluzsi/rack-app.rb.png?branch=master
-[travis-link]: http://travis-ci.org/adamluzsi/rack-app.rb
+[travis-image]: https://travis-ci.org/rack-app/rack-app.svg?branch=master
+[travis-link]: http://travis-ci.org/rack-app/rack-app
 [travis-home]: http://travis-ci.org/
 
 ![Rack::App](http://rack-app-website.herokuapp.com/image/msruby_new.png)
