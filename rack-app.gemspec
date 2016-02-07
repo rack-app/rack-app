@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = %q{Your next favourite, performance designed micro framework!}
   spec.description   = %q{Your next favourite rack based micro framework that is totally addition free! Have a cup of awesomeness with  your to performance designed framework!}
-  spec.homepage      = 'https://github.com/rack-app/rack-app'
+  spec.homepage      = 'https://github.com/rack-app'
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
