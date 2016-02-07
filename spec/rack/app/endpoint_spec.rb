@@ -8,6 +8,7 @@ describe Rack::App::Endpoint do
   let(:properties) do
     {
         :user_defined_logic => logic_block,
+        :default_headers => {},
         :request_method => 'GET',
         :error_handler => ::Rack::App::ErrorHandler.new,
         :request_path => '/endpoint/path',

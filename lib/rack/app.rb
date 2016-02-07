@@ -89,11 +89,12 @@ class Rack::App
 
       endpoint_properties = {
           :user_defined_logic => block,
+          :default_headers => headers,
           :request_method => request_method,
+          :error_handler => error,
           :request_path => request_path,
           :description => @last_description,
           :serializer => serializer,
-          :error_handler => error,
           :app_class => self
       }
 
@@ -124,6 +125,12 @@ class Rack::App
       end
 
       return @serializer
+    end
+
+    def headers(new_headers=nil)
+      @headers ||= {}
+      @headers.merge!(new_headers) if new_headers.is_a?(Hash)
+      @headers
     end
 
   end

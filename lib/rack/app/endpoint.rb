@@ -4,10 +4,12 @@ class Rack::App::Endpoint
 
   def initialize(properties)
     @properties = properties
+
+    @error_handler = properties[:error_handler]
     @logic_block = properties[:user_defined_logic]
     @serializer = properties[:serializer]
     @api_class = properties[:app_class]
-    @error_handler = properties[:error_handler]
+    @headers = properties[:default_headers]
 
     @path_params_matcher = {}
   end
@@ -18,6 +20,7 @@ class Rack::App::Endpoint
     request = Rack::Request.new(request_env)
     response = Rack::Response.new
 
+    add_default_headers(response)
     request_handler = @api_class.new
 
     request_handler.request = request
@@ -48,6 +51,12 @@ class Rack::App::Endpoint
         call_return.length == 3 and
         call_return[0].is_a?(Integer) and
         call_return[1].is_a?(Hash)
+  end
+
+  def add_default_headers(response)
+    @headers.each do |header,value|
+      response.header[header]=value
+    end
   end
 
 end

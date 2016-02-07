@@ -362,4 +362,28 @@ describe Rack::App do
 
   end
 
+  describe '.header' do
+
+    rack_app described_class do
+
+      headers 'Access-Control-Allow-Origin' => '*',
+              'Access-Control-Expose-Headers' => 'X-My-Custom-Header, X-Another-Custom-Header'
+
+
+      get '/Access-Control-Allow-Origin' do
+        response.header['Access-Control-Allow-Origin']
+      end
+
+      get '/Access-Control-Expose-Headers' do
+        response.header['Access-Control-Expose-Headers']
+      end
+
+    end
+
+    it {  expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*'  }
+
+    it {  expect(get(:url => '/Access-Control-Expose-Headers').body.join).to eq 'X-My-Custom-Header, X-Another-Custom-Header'  }
+
+  end
+
 end

@@ -5,11 +5,12 @@ not_found_properties = {
       response.write '404 Not Found'
       response.finish
     },
+    :default_headers => {},
     :request_method => 'GET',
+    :error_handler => Rack::App::ErrorHandler.new,
     :request_path => '\404',
     :description => 'page not found',
     :serializer => Rack::App::Serializer.new,
-    :error_handler => Rack::App::ErrorHandler.new,
     :app_class => app_class
 }
 
