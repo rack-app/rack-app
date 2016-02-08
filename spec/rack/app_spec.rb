@@ -331,6 +331,7 @@ describe Rack::App do
       end
 
       error StandardError do |ex|
+        response.status = 400
         'standard'
       end
 
@@ -353,7 +354,11 @@ describe Rack::App do
     end
 
     context 'when a subclass of the expected error class raised' do
-      it { expect(get(:url => '/handled_exception2').body.join).to eq 'standard' }
+      subject{ get(:url => '/handled_exception2') }
+
+      it { expect(subject.body.join).to eq 'standard' }
+
+      it { expect(subject.status).to eq 400 }
     end
 
     context 'when one of the unhandled exception happen in the endpoint' do

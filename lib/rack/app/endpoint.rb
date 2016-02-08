@@ -27,7 +27,7 @@ class Rack::App::Endpoint
     request_handler.response = response
     request.env['rack.app.path_params_matcher']= @path_params_matcher.dup
 
-    call_return = @error_handler.execute_with_error_handling { request_handler.instance_exec(&@logic_block) }
+    call_return = @error_handler.execute_with_error_handling_for(request_handler,&@logic_block)
 
     return call_return if is_a_rack_response_finish?(call_return)
     add_response_body_if_missing(call_return, response)

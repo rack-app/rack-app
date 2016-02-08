@@ -11,10 +11,10 @@ class Rack::App::ErrorHandler
     nil
   end
 
-  def execute_with_error_handling
-    yield
+  def execute_with_error_handling_for(instance, &block)
+    instance.instance_exec(&block)
   rescue *[Exception, @handlers.keys].flatten => ex
-    get_handler(ex).call(ex)
+    instance.instance_exec(ex, &get_handler(ex))
   end
 
   protected
