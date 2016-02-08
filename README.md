@@ -22,7 +22,7 @@ so if you that crazy to use more than 10k endpoint,
 you still dont have to worry about response speed.
 
 It was inspirited by sinatra, grape, and the pure use form of rack.
-It's in production, powering Back Ends on Heroku 
+It's in production, powering Back Ends on Heroku
 
 ## Installation
 
