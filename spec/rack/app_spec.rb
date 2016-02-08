@@ -391,4 +391,20 @@ describe Rack::App do
 
   end
 
+  describe 'return works in the endpoint block definition' do
+
+    rack_app described_class do
+
+      get '/return' do
+        return 'hello world'
+
+        'not happen'
+      end
+
+    end
+
+    it {  expect(get(:url => '/return').body.join).to eq 'hello world'  }
+
+  end
+
 end

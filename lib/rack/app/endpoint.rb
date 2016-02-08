@@ -1,3 +1,4 @@
+require 'securerandom'
 class Rack::App::Endpoint
 
   attr_reader :properties
@@ -6,14 +7,13 @@ class Rack::App::Endpoint
     @properties = properties
 
     @error_handler = properties[:error_handler]
-    @logic_block = properties[:user_defined_logic]
     @serializer = properties[:serializer]
     @api_class = properties[:app_class]
     @headers = properties[:default_headers]
 
     @path_params_matcher = {}
+    @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
   end
-
 
   def execute(request_env)
 
@@ -27,7 +27,7 @@ class Rack::App::Endpoint
     request_handler.response = response
     request.env['rack.app.path_params_matcher']= @path_params_matcher.dup
 
-    call_return = @error_handler.execute_with_error_handling_for(request_handler,&@logic_block)
+    call_return = @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
 
     return call_return if is_a_rack_response_finish?(call_return)
     add_response_body_if_missing(call_return, response)
@@ -54,9 +54,15 @@ class Rack::App::Endpoint
   end
 
   def add_default_headers(response)
-    @headers.each do |header,value|
+    @headers.each do |header, value|
       response.header[header]=value
     end
+  end
+
+  def register_method_to_app_class(proc)
+    method_name = SecureRandom.uuid
+    @api_class.__send__(:define_method, method_name, &proc)
+    return method_name
   end
 
 end
