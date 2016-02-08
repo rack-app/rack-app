@@ -68,4 +68,13 @@ describe Rack::App::Utils do
 
   end
 
+  describe '#uuid' do
+    subject{ instance.uuid }
+
+    it { is_expected.to match /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ }
+
+    it { is_expected.to_not eq instance.uuid }
+
+  end
+
 end

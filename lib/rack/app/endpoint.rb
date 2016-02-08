@@ -1,4 +1,3 @@
-require 'securerandom'
 class Rack::App::Endpoint
 
   attr_reader :properties
@@ -60,7 +59,7 @@ class Rack::App::Endpoint
   end
 
   def register_method_to_app_class(proc)
-    method_name = SecureRandom.uuid
+    method_name = ::Rack::App::Utils.uuid
     @api_class.__send__(:define_method, method_name, &proc)
     return method_name
   end
