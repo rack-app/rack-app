@@ -7,9 +7,9 @@
 ![Rack::App](http://rack-app-website.herokuapp.com/image/msruby_new.png)
 
 Your next favourite rack based micro framework that is totally addition free! 
-Have a cup of awesomeness with  your performance designed framework!
+Have a cup of awesomeness with your performance designed framework!
 
-The idea behind is simple. 
+The idea behind is simple.
 Keep the dependencies and everything as little as possible,
 while able to write pure rack apps,
 that will do nothing more than what you defined.
@@ -17,8 +17,12 @@ that will do nothing more than what you defined.
 If you want see fancy magic, you are in a bad place buddy!
 This includes that it do not have such core extensions like activesupport that monkey patch the whole world.
 
-Routing can handle large amount of endpoints so if you that crazy to use more than 10k endpoint,
+Routing can handle any amount of endpoints that can fit in the memory,
+so if you that crazy to use more than 10k endpoint,
 you still dont have to worry about response speed.
+
+It was inspirited by sinatra, grape, and the pure use form of rack.
+It's in production, powering Back Ends on Heroku 
 
 ## Installation
 
