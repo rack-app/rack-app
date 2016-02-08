@@ -159,10 +159,10 @@ end
 
 ## Example Apps To start with
 
-* [Basic](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/basic)
+* [Basic](https://github.com/rack-app/rack-app-example-basic)
   * bare bone simple example app 
   
-* [Escher Authorized Api](https://github.com/adamluzsi/rack-app.rb-examples/tree/master/escher_authorized)
+* [Escher Authorized Api](https://github.com/rack-app/rack-app-example-escher)
   * complex authorization for corporal level api use
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
