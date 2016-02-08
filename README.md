@@ -39,28 +39,70 @@ Or install it yourself as:
 ## Usage
 
 config.ru
+
+#### basic 
+
 ```ruby
 
-require 'rack/app'
+require './bootstrap.rb'
 
-class YourAwesomeApp < Rack::App
+class App < Rack::App
 
+  desc 'some hello endpoint'
   get '/hello' do
     'Hello World!'
   end
 
-  get '/users/:user_id' do
-    params['user_id'] #=> restful parameter :user_id
-    say #=> "hello world!" 
-  end 
-  
-  def say
-    'hello world!'
-  end 
-  
 end
 
-run YourAwesomeApp
+```
+
+#### complex
+
+```ruby
+
+require './bootstrap.rb' 
+
+class App < Rack::App
+
+  mount SomeAppClass
+
+  headers 'Access-Control-Allow-Origin' => '*',
+          'Access-Control-Expose-Headers' => 'X-My-Custom-Header, X-Another-Custom-Header'
+
+  serializer do |object|
+    object.to_s
+  end
+
+  desc 'some hello endpoint'
+  get '/hello' do
+    'Hello World!'
+  end
+
+  desc 'some restful endpoint'
+  get '/users/:user_id' do
+    response.status = 201
+    params['user_id'] #=> restful parameter :user_id
+    say #=> "hello world!"
+  end
+
+  desc 'some endpoint that has error and will be rescued'
+  get '/make_error' do
+    raise(StandardError,'error block rescued')
+  end
+
+
+  def say
+    "hello #{params['user_id']}!"
+  end
+
+  error StandardError, NoMethodError do |ex|
+    {:error=>ex.message}
+  end
+
+  root '/hello'
+
+end
 
 ```
 
@@ -78,23 +120,40 @@ for testing use rack/test or the bundled testing module for writing unit test fo
 require 'spec_helper'
 require 'rack/app/test'
 
-describe MyRackApp do
+describe App do
 
   include Rack::App::Test
-  
-  rack_app described_class
-  
-  describe '#something' do
-  
-    subject{ get(url: '/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}) }
 
-    it { expect(subject.body).to eq ['world']}
-    
+  rack_app described_class
+
+  describe '/hello' do
+    # example for params and headers and payload use
+    subject{ get(url: '/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}, payload: 'some string') }
+
+    it { expect(subject.status).to eq 200 }
+
+    it { expect(subject.body.join).to eq "Hello World!" }
+  end
+
+  describe '/users/:user_id' do
+    # restful endpoint example
+    subject{ get(url: '/users/1234') }
+
+    it { expect(subject.body.join).to eq 'hello 1234!'}
+
     it { expect(subject.status).to eq 201 }
-    
-  end 
-  
-end 
+
+  end
+
+  describe '/make_error' do
+    # error handled example
+    subject{ get(url: '/make_error') }
+
+    it { expect(subject.body.join).to eq '{:error=>"error block rescued"}' }
+  end
+
+end
+
 
 ```
 
@@ -107,7 +166,6 @@ end
   * complex authorization for corporal level api use
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
-
 
 * Dump duration with zero business logic or routing: 2.4184169999892074e-06 s
   * no routing
