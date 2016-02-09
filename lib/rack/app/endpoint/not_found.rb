@@ -2,8 +2,7 @@ app_class = Class.new(Rack::App)
 not_found_properties = {
     :user_defined_logic => lambda {
       response.status= 404
-      response.write '404 Not Found'
-      response.finish
+      return '404 Not Found'
     },
     :default_headers => {},
     :request_method => 'GET',

@@ -42,22 +42,23 @@ describe Rack::App do
           options '/hello' do
             response.status = 777
           end
+
           get '/hello' do
+
             'WORLD'
           end
+
+          root '/hello'
+
         end
       end
 
-      it 'should define GET endpoint that point to the given request path\'s endpoint' do
-        described_class.root '/hello'
-
+      it "should define GET endpoint that point to the given request path's endpoint" do
         response = described_class.call({'REQUEST_PATH' => '/', 'REQUEST_METHOD' => 'GET'})
-        expect(response.last.body).to eq ['WORLD']
+        expect(response.last.body.join).to eq 'WORLD'
       end
 
       it 'should define GET endpoint that point to the given request path\'s endpoint' do
-        described_class.root '/hello'
-
         response = described_class.call({'REQUEST_PATH' => '/', 'REQUEST_METHOD' => 'OPTIONS'})
         expect(response.last.status).to eq 777
       end

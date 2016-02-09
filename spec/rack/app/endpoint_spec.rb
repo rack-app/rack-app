@@ -30,9 +30,9 @@ describe Rack::App::Endpoint do
     body_content = [{:id => 1}]
 
     context 'when endpoint logic writes respond body already' do
-      let(:logic_block) { lambda { response.write(body_content.inspect) } }
+      let(:logic_block) { lambda { response.write(' -> '); body_content } }
 
-      it { expect(subject[2].body[0]).to eq '[{:id=>1}]' }
+      it { expect(subject[2].body.join).to eq ' -> [{:id=>1}]' }
     end
 
     context 'when endpoint logic does not write directly to response body' do
@@ -40,14 +40,6 @@ describe Rack::App::Endpoint do
 
       it "uses the block's serialized return value as response payload" do
         expect(subject[2].body[0]).to eq '[{:id=>1}]'
-      end
-    end
-
-    context 'when finish response, it should not take any more action than' do
-      let(:logic_block) { lambda { response.finish } }
-
-      it 'should use the block stringified return value as response payload' do
-        expect(subject[2].body[0]).to be nil
       end
     end
 

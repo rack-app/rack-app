@@ -2,6 +2,8 @@ class Rack::App::Endpoint
 
   attr_reader :properties
 
+  LAST_MODIFIED_HEADER = "Last-Modified".freeze
+
   def initialize(properties)
     @properties = properties
 
@@ -19,19 +21,20 @@ class Rack::App::Endpoint
     request = Rack::Request.new(request_env)
     response = Rack::Response.new
 
-    add_default_headers(response)
-    request_handler = @api_class.new
-
-    request_handler.request = request
-    request_handler.response = response
-    request.env['rack.app.path_params_matcher']= @path_params_matcher.dup
-
-    call_return = @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
-
-    return call_return if is_a_rack_response_finish?(call_return)
-    add_response_body_if_missing(call_return, response)
+    set_response_body(response, get_response_body(request, response))
 
     return response.finish
+
+  end
+
+  def get_response_body(rack_request, rack_response)
+
+    request_handler = @api_class.new
+    set_default_headers(rack_response)
+    request_handler.request = rack_request
+    request_handler.response = rack_response
+    rack_request.env['rack.app.path_params_matcher']= @path_params_matcher.dup
+    return @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
 
   end
 
@@ -41,18 +44,20 @@ class Rack::App::Endpoint
 
   protected
 
-  def add_response_body_if_missing(call_return, response)
-    response.write(String(@serializer.serialize(call_return))) if response.body.empty?
+  def set_response_body(response, result)
+    if result.is_a?(::Rack::App::File::Streamer)
+      response.length += result.length
+      response.headers[LAST_MODIFIED_HEADER]= result.mtime
+      response.body = result
+
+    else
+      response.write(String(@serializer.serialize(result)))
+
+    end
+    nil
   end
 
-  def is_a_rack_response_finish?(call_return)
-    call_return.is_a?(Array) and
-        call_return.length == 3 and
-        call_return[0].is_a?(Integer) and
-        call_return[1].is_a?(Hash)
-  end
-
-  def add_default_headers(response)
+  def set_default_headers(response)
     @headers.each do |header, value|
       response.header[header]=value
     end
