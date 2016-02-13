@@ -24,9 +24,9 @@ describe Rack::App::Endpoint do
 
   let(:request_env) { {} }
 
-  describe '#execute' do
+  describe '#call' do
 
-    subject { new_subject.execute(request_env) }
+    subject { new_subject.call(request_env) }
     body_content = [{:id => 1}]
 
     context 'when endpoint logic writes respond body already' do

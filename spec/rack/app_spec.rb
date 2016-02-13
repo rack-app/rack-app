@@ -66,19 +66,6 @@ describe Rack::App do
     end
   end
 
-  # describe '.add_route' do
-  #
-  #   let(:http_method) { 'GET' }
-  #   subject { described_class.add_route(http_method, request_path, &block) }
-  #
-  #   it { is_expected.to be_a Rack::App::Endpoint }
-  #
-  #   it "should create an endpoint entry under the right request_key based" do
-  #     is_expected.to be described_class.router.fetch_endpoint(http_method.to_s.upcase, request_path)
-  #   end
-  #
-  # end
-
   let(:request_env) { {} }
   let(:request) { Rack::Request.new(request_env) }
   let(:response) { Rack::Response.new }
@@ -355,7 +342,7 @@ describe Rack::App do
     end
 
     context 'when a subclass of the expected error class raised' do
-      subject{ get(:url => '/handled_exception2') }
+      subject { get(:url => '/handled_exception2') }
 
       it { expect(subject.body.join).to eq 'standard' }
 
@@ -386,9 +373,9 @@ describe Rack::App do
 
     end
 
-    it {  expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*'  }
+    it { expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*' }
 
-    it {  expect(get(:url => '/Access-Control-Expose-Headers').body.join).to eq 'X-My-Custom-Header, X-Another-Custom-Header'  }
+    it { expect(get(:url => '/Access-Control-Expose-Headers').body.join).to eq 'X-My-Custom-Header, X-Another-Custom-Header' }
 
   end
 
@@ -404,7 +391,30 @@ describe Rack::App do
 
     end
 
-    it {  expect(get(:url => '/return').body.join).to eq 'hello world'  }
+    it { expect(get(:url => '/return').body.join).to eq 'hello world' }
+
+  end
+
+  describe '.mount_folder' do
+
+    rack_app described_class do
+
+      serve_files_from '/spec/fixtures'
+
+    end
+
+    it { expect(get(:url => '/raw.txt')).to be_a ::Rack::File }
+
+    it 'should return an object which responds to each' do
+
+      response = get(:url => '/raw.txt')
+
+      content = ''
+      response.each { |line| content << line }
+
+      expect(content).to eq "hello world!\nhow you doing?"
+
+    end
 
   end
 

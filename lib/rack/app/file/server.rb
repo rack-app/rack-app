@@ -1,12 +1,13 @@
 class Rack::App::File::Server
 
+  attr_reader :namespace, :properties
+
   def initialize(root_folder, options={})
     require 'rack/file'
 
-    namespace = formatted_namespace(options)
-    namespace.freeze
-
-    @namespace_rgx = /#{Regexp.escape(namespace)}/.freeze
+    @properties = options
+    @namespace = formatted_namespace(options).freeze
+    @namespace_rgx = /#{Regexp.escape(@namespace)}/.freeze
     @rack_file_server = ::Rack::File.new(Rack::App::Utils.pwd(root_folder), {})
 
   end
@@ -14,6 +15,9 @@ class Rack::App::File::Server
   def call(env)
     env[::Rack::PATH_INFO]= clean_path_info(env).sub(@namespace_rgx, '')
     @rack_file_server.call(env)
+  end
+
+  def register_path_params_matcher(*args)
   end
 
   protected

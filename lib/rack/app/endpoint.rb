@@ -16,13 +16,12 @@ class Rack::App::Endpoint
     @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
   end
 
-  def execute(request_env)
+  def call(request_env)
 
     request = Rack::Request.new(request_env)
     response = Rack::Response.new
 
     set_response_body(response, get_response_body(request, response))
-
     return response.finish
 
   end

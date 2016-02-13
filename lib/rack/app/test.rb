@@ -66,6 +66,7 @@ module Rack::App::Test
         "REQUEST_METHOD" => request_method.to_s.upcase,
         "REQUEST_PATH" => url,
         "REQUEST_URI" => url,
+        "PATH_INFO" => url,
         "SERVER_PROTOCOL" => "HTTP/1.1",
         "CONTENT_LENGTH" => "0",
         "CONTENT_TYPE" => "application/x-www-form-urlencoded",

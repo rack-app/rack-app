@@ -37,4 +37,8 @@ module Rack::App::Utils
     "%08x-%04x-%04x-%04x-%04x%08x" % ary
   end
 
+  def join(*url_path_parts)
+    File.join(*url_path_parts).gsub(File::Separator,'/').sub(/^\/?(.*)$/,'/\1')
+  end
+
 end

@@ -24,7 +24,7 @@ class Rack::App
       endpoint = router.fetch_endpoint(
           request_env['REQUEST_METHOD'],
           request_env[Rack::App::Constants::NORMALIZED_REQUEST_PATH])
-      endpoint.execute(request_env)
+      endpoint.call(request_env)
     end
 
     def description(*description_texts)
@@ -64,18 +64,18 @@ class Rack::App
     def root(endpoint_path)
       options '/' do
         endpoint = self.class.router.fetch_endpoint('OPTIONS', Rack::App::Utils.normalize_path(endpoint_path))
-        endpoint.get_response_body(request,response)
+        endpoint.get_response_body(request, response)
       end
       get '/' do
         endpoint = self.class.router.fetch_endpoint('GET', Rack::App::Utils.normalize_path(endpoint_path))
-        endpoint.get_response_body(request,response)
+        endpoint.get_response_body(request, response)
       end
     end
 
-    def error(*exception_classes,&block)
+    def error(*exception_classes, &block)
       @error_handler ||= Rack::App::ErrorHandler.new
       unless block.nil?
-        @error_handler.register_handler(exception_classes,block)
+        @error_handler.register_handler(exception_classes, block)
       end
 
       return @error_handler
@@ -87,23 +87,27 @@ class Rack::App
 
     def add_route(request_method, request_path, &block)
 
-      endpoint_properties = {
-          :user_defined_logic => block,
-          :default_headers => headers,
-          :request_method => request_method,
-          :error_handler => error,
-          :request_path => request_path,
-          :description => @last_description,
-          :serializer => serializer,
-          :app_class => self
-      }
+      properties = endpoint_properties.merge(
+          {
+              :user_defined_logic => block,
+              :request_method => request_method,
+              :request_path => request_path,
+          }
+      )
 
-      endpoint = Rack::App::Endpoint.new(endpoint_properties)
+      endpoint = Rack::App::Endpoint.new(properties)
       router.add_endpoint(request_method, request_path, endpoint)
 
       @last_description = nil
       return endpoint
 
+    end
+
+    def serve_files_from(relative_path, options={})
+      options.merge!(endpoint_properties)
+      file_server = Rack::App::File::Server.new(relative_path, options)
+      request_path = Rack::App::Utils.join(file_server.namespace, '**', '*')
+      router.add_endpoint('GET', request_path, file_server)
     end
 
     def mount(api_class)
@@ -131,6 +135,18 @@ class Rack::App
       @headers ||= {}
       @headers.merge!(new_headers) if new_headers.is_a?(Hash)
       @headers
+    end
+
+    protected
+
+    def endpoint_properties
+      {
+          :default_headers => headers,
+          :error_handler => error,
+          :description => @last_description,
+          :serializer => serializer,
+          :app_class => self
+      }
     end
 
   end

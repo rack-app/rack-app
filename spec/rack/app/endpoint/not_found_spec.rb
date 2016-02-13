@@ -7,9 +7,9 @@ describe Rack::App::Endpoint::NOT_FOUND do
 
   let!(:request_env) { {} }
 
-  describe '.execute' do
+  describe '.call' do
 
-    subject { new_subject.execute(request_env) }
+    subject { new_subject.call(request_env) }
 
     it 'should set the response body to 404 Not Found' do
       expect(subject.last.body.join).to eq '404 Not Found'
