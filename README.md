@@ -40,6 +40,11 @@ Or install it yourself as:
 
     $ gem install rack-app
 
+
+## Is it Production ready?
+
+Yes, in fact it's already powering heroku hosted micro-services.
+
 ## Usage
 
 config.ru
