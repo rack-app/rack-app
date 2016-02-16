@@ -53,7 +53,7 @@ config.ru
 
 ```ruby
 
-require './bootstrap.rb'
+require 'rack/app'
 
 class App < Rack::App
 
@@ -70,7 +70,7 @@ end
 
 ```ruby
 
-require './bootstrap.rb' 
+require 'rack/app'
 
 class App < Rack::App
 
