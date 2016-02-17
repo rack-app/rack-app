@@ -62,12 +62,14 @@ class Rack::App
     end
 
     def root(endpoint_path)
+      normalized_path = Rack::App::Utils.normalize_path(endpoint_path)
+
       options '/' do
-        endpoint = self.class.router.fetch_endpoint('OPTIONS', Rack::App::Utils.normalize_path(endpoint_path))
+        endpoint = self.class.router.fetch_endpoint('OPTIONS', normalized_path)
         endpoint.get_response_body(request, response)
       end
       get '/' do
-        endpoint = self.class.router.fetch_endpoint('GET', Rack::App::Utils.normalize_path(endpoint_path))
+        endpoint = self.class.router.fetch_endpoint('GET', normalized_path)
         endpoint.get_response_body(request, response)
       end
     end
