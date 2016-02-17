@@ -88,13 +88,17 @@ class App < Rack::App
     return 'Hello World!'
   end
 
-  desc 'some restful endpoint'
-  get '/users/:user_id' do
-    response.status = 201
-    params['user_id'] #=> restful parameter :user_id
-    say #=> "hello world!"
+  namesapce '/users' do 
+  
+    desc 'some restful endpoint'
+    get '/:user_id' do
+      response.status = 201
+      params['user_id'] #=> restful parameter :user_id
+      say #=> "hello world!"
+    end
+    
   end
-
+   
   desc 'some endpoint that has error and will be rescued'
   get '/make_error' do
     raise(StandardError,'error block rescued')
