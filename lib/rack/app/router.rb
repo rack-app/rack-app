@@ -37,10 +37,17 @@ class Rack::App::Router
 
   end
 
-  def merge!(router)
+  def merge_router!(router,prop={})
     raise(ArgumentError, 'invalid router object, must implement :endpoints interface') unless router.respond_to?(:endpoints)
     router.endpoints.each do |endpoint|
-      register_endpoint!(endpoint[:request_method], endpoint[:request_path], endpoint[:description], endpoint[:endpoint])
+      request_path = ::Rack::App::Utils.join(prop[:namespaces], endpoint[:request_path])
+
+      register_endpoint!(
+          endpoint[:request_method],
+          request_path,
+          endpoint[:description],
+          endpoint[:endpoint]
+      )
     end
     nil
   end

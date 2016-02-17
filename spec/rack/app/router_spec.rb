@@ -80,9 +80,9 @@ describe Rack::App::Router do
 
   end
 
-  describe 'merge!' do
+  describe 'merge_router!' do
     let(:router) { described_class.new }
-    subject { router.merge!(other_router) }
+    subject { router.merge_router!(other_router) }
 
     context 'when not static router given' do
       let(:other_router) { 'nope, this is a string' }

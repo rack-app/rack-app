@@ -89,6 +89,8 @@ class Rack::App
 
     def add_route(request_method, request_path, &block)
 
+      request_path = ::Rack::App::Utils.join(@namespaces, request_path)
+
       properties = endpoint_properties.merge(
           {
               :user_defined_logic => block,
@@ -108,18 +110,19 @@ class Rack::App
     def serve_files_from(relative_path, options={})
       options.merge!(endpoint_properties)
       file_server = Rack::App::File::Server.new(relative_path, options)
-      request_path = Rack::App::Utils.join(file_server.namespace, '**', '*')
+      request_path = Rack::App::Utils.join(@namespaces, file_server.namespace, '**', '*')
       router.register_endpoint!('GET', request_path, @last_description, file_server)
       @last_description = nil
     end
 
-    def mount(api_class)
+    def mount(api_class,mount_prop={})
 
       unless api_class.is_a?(Class) and api_class <= Rack::App
         raise(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
 
-      router.merge!(api_class.router)
+      merge_prop = {:namespaces => [@namespaces,mount_prop[:to]].flatten}
+      router.merge_router!(api_class.router, merge_prop)
 
       return nil
     end
@@ -138,6 +141,15 @@ class Rack::App
       @headers ||= {}
       @headers.merge!(new_headers) if new_headers.is_a?(Hash)
       @headers
+    end
+
+    def namespace(request_path_namespace)
+      return unless block_given?
+      @namespaces ||= []
+      @namespaces.push(request_path_namespace)
+      yield
+      @namespaces.pop
+      nil
     end
 
     protected

@@ -38,6 +38,7 @@ module Rack::App::Utils
   end
 
   def join(*url_path_parts)
+    url_path_parts = [url_path_parts].flatten.compact
     File.join(*url_path_parts).gsub(File::Separator,'/').sub(/^\/?(.*)$/,'/\1')
   end
 

@@ -395,6 +395,48 @@ describe Rack::App do
 
   end
 
+  describe '.namespace' do
+
+    rack_app described_class do
+
+      namespace '/users' do
+
+        namespace '123' do
+          get '/hello' do
+            'yep'
+          end
+        end
+
+        get '/return' do
+          return 'hello world'
+        end
+
+        class SubController < Rack::App
+
+          get '/test' do
+            'hy'
+          end
+
+        end
+
+        mount SubController
+
+        mount SubController, :to => 'sub'
+
+      end
+
+    end
+
+    it { expect(get(:url => '/users/return').body.join).to eq 'hello world' }
+
+    it { expect(get(:url => '/users/123/hello').body.join).to eq 'yep' }
+
+    it { expect(get(:url => '/users/test').body.join).to eq 'hy' }
+
+    it { expect(get(:url => '/users/sub/test').body.join).to eq 'hy' }
+
+  end
+
   describe '.mount_folder' do
 
     rack_app described_class do
