@@ -1,32 +1,21 @@
-class Rack::App::Router::Static
-
-  #TD
-  attr_reader :endpoints
-
-  def add_endpoint(request_method, request_path, endpoint)
-    @endpoints[[request_method.to_s.upcase, Rack::App::Utils.normalize_path(request_path)]]= endpoint
-  end
+class Rack::App::Router::Static < Rack::App::Router::Base
 
   def fetch_endpoint(request_method, request_path)
-    @endpoints[[request_method, request_path]]
+    mapped_endpoint_routes[[request_method, request_path]]
   end
 
-  def merge!(static_router)
-    raise(ArgumentError, "Invalid argument given, must be instance of a #{self.class.to_s}") unless static_router.is_a?(self.class)
-    @endpoints.merge!(static_router.instance_variable_get(:@endpoints))
-    nil
-  end
-
-  def show_endpoints
-    @endpoints.map do |identifiers, endpoint|
-      [identifiers, endpoint.properties[:description]].flatten
+  def compile_registered_endpoints!
+    mapped_endpoint_routes.clear
+    endpoints.each do |endpoint|
+      request_method, request_path, endpoint_object = endpoint[:request_method], endpoint[:request_path], endpoint[:endpoint]
+      mapped_endpoint_routes[[request_method.to_s.upcase, request_path]]= endpoint_object
     end
   end
 
   protected
 
-  def initialize
-    @endpoints = {}
+  def mapped_endpoint_routes
+    @mapped_endpoint_routes ||= {}
   end
 
 end

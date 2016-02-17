@@ -38,6 +38,7 @@ class Rack::App::Endpoint
   end
 
   def register_path_params_matcher(params_matcher)
+    @path_params_matcher.clear
     @path_params_matcher.merge!(params_matcher)
   end
 

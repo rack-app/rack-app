@@ -17,9 +17,9 @@ describe Rack::App::Router do
     Rack::App::Endpoint.new(settings)
   end
 
-  describe 'add_endpoint' do
+  describe '#register_endpoint!' do
 
-    subject { instance.add_endpoint(request_method, defined_request_path, endpoint) }
+    subject { instance.register_endpoint!(request_method, defined_request_path, '', endpoint) }
 
     it { is_expected.to be endpoint }
 
@@ -29,7 +29,7 @@ describe Rack::App::Router do
       it 'should use dynamic router for register the new endpoint' do
         dynamic_router = Rack::App::Router::Dynamic.new
         expect(Rack::App::Router::Dynamic).to receive(:new).and_return(dynamic_router)
-        expect(dynamic_router).to receive(:add_endpoint).and_return(endpoint)
+        expect(dynamic_router).to receive(:register_endpoint!).and_return(endpoint)
 
         is_expected.to be endpoint
       end
@@ -42,7 +42,7 @@ describe Rack::App::Router do
       it 'should use dynamic router for register the new endpoint' do
         static_router = Rack::App::Router::Static.new
         expect(Rack::App::Router::Static).to receive(:new).and_return(static_router)
-        expect(static_router).to receive(:add_endpoint).and_return(endpoint)
+        expect(static_router).to receive(:register_endpoint!).and_return(endpoint)
 
         is_expected.to be endpoint
       end
@@ -57,15 +57,15 @@ describe Rack::App::Router do
     subject { router.fetch_endpoint(request_method, received_request_path) }
 
     context 'when matching route given' do
-      before { router.add_endpoint(request_method, defined_request_path, endpoint) }
+      before { router.register_endpoint!(request_method, defined_request_path, '', endpoint) }
 
       it { is_expected.to be endpoint }
     end
 
     context 'when multiple path given with partial matching' do
       let(:endpoint2) { endpoint.dup }
-      before { router.add_endpoint(request_method, defined_request_path, endpoint) }
-      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'), endpoint2) }
+      before { router.register_endpoint!(request_method, defined_request_path, '', endpoint) }
+      before { router.register_endpoint!(request_method, [defined_request_path, 'doc'].join('/'), '', endpoint2) }
 
       it { is_expected.to be endpoint }
       it { expect(router.fetch_endpoint(request_method, [received_request_path, 'doc'].join('/'))).to be endpoint2 }
@@ -87,11 +87,11 @@ describe Rack::App::Router do
     context 'when not static router given' do
       let(:other_router) { 'nope, this is a string' }
 
-      it { expect { subject }.to raise_error(ArgumentError, /#{Regexp.escape(described_class.to_s)}/) }
+      it { expect { subject }.to raise_error(ArgumentError, /must implement :endpoints interface/) }
     end
 
     context 'when static router given' do
-      let(:other_router) { described_class.new.tap { |r| r.add_endpoint(request_method, defined_request_path, endpoint) } }
+      let(:other_router) { described_class.new.tap { |r| r.register_endpoint!(request_method, defined_request_path, '', endpoint) } }
 
       it 'should have all the endpoints that the othere router got' do
         is_expected.to be nil
@@ -110,9 +110,9 @@ describe Rack::App::Router do
     rack_app
 
     context 'when endpoint is defined' do
-      before { instance.add_endpoint('GET', '/index.html', endpoint) }
+      before { instance.register_endpoint!('GET', '/index.html', 'desc', endpoint) }
 
-      it { is_expected.to eq ["GET   /index.html   "] }
+      it { is_expected.to eq ["GET   /index.html   desc"] }
     end
 
   end

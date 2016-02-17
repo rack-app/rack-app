@@ -96,7 +96,7 @@ class Rack::App
       )
 
       endpoint = Rack::App::Endpoint.new(properties)
-      router.add_endpoint(request_method, request_path, endpoint)
+      router.register_endpoint!(request_method, request_path, @last_description, endpoint)
 
       @last_description = nil
       return endpoint
@@ -107,7 +107,8 @@ class Rack::App
       options.merge!(endpoint_properties)
       file_server = Rack::App::File::Server.new(relative_path, options)
       request_path = Rack::App::Utils.join(file_server.namespace, '**', '*')
-      router.add_endpoint('GET', request_path, file_server)
+      router.register_endpoint!('GET', request_path, @last_description, file_server)
+      @last_description = nil
     end
 
     def mount(api_class)
@@ -171,7 +172,7 @@ class Rack::App
 
       payload = ''
       while chunk = @request.body.gets
-        payload += chunk
+        payload << chunk
       end
       @request.body.rewind
 

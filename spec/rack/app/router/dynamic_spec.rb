@@ -16,8 +16,8 @@ describe Rack::App::Router::Dynamic do
     Rack::App::Endpoint.new(settings)
   end
 
-  describe 'add_endpoint' do
-    subject { described_class.new.add_endpoint(request_method, defined_request_path, endpoint) }
+  describe '#register_endpoint!' do
+    subject { described_class.new.register_endpoint!(request_method, defined_request_path, 'desc', endpoint) }
 
     it { is_expected.to be endpoint }
 
@@ -34,7 +34,7 @@ describe Rack::App::Router::Dynamic do
     subject { router.fetch_endpoint(request_method, received_request_path) }
 
     context 'when matching route given' do
-      before { router.add_endpoint(request_method, defined_request_path, endpoint) }
+      before { router.register_endpoint!(request_method, defined_request_path,'desc', endpoint) }
 
       it { is_expected.to be endpoint }
     end
@@ -45,8 +45,8 @@ describe Rack::App::Router::Dynamic do
 
     context 'when multiple path given with partial matching' do
       let(:endpoint2) { endpoint.dup }
-      before { router.add_endpoint(request_method, defined_request_path, endpoint) }
-      before { router.add_endpoint(request_method, [defined_request_path, 'doc'].join('/'), endpoint2) }
+      before { router.register_endpoint!(request_method, defined_request_path,'desc', endpoint) }
+      before { router.register_endpoint!(request_method, [defined_request_path, 'doc'].join('/'),'desc', endpoint2) }
 
       it { is_expected.to be endpoint }
       it { expect(router.fetch_endpoint(request_method, [received_request_path, 'doc'].join('/'))).to be endpoint2 }
@@ -54,42 +54,20 @@ describe Rack::App::Router::Dynamic do
     end
 
     context 'when partial matching is defined' do
-      before { router.add_endpoint(request_method, '/assets/**/*', endpoint) }
+      before { router.register_endpoint!(request_method, '/assets/**/*','desc', endpoint) }
 
       context 'and the received request is targeting the partial match highest layer' do
-        let(:received_request_path){ '/assets/some.js' }
+        let(:received_request_path) { '/assets/some.js' }
 
         it { is_expected.to be endpoint }
       end
 
       context 'and the received request is targeting the partial match deep layer' do
-        let(:received_request_path){ '/assets/some/folder/to/deal/with/some.js' }
+        let(:received_request_path) { '/assets/some/folder/to/deal/with/some.js' }
 
         it { is_expected.to be endpoint }
       end
 
-    end
-
-  end
-
-  describe 'merge!' do
-    let(:router) { described_class.new }
-    subject { router.merge!(other_router) }
-
-    context 'when not static router given' do
-      let(:other_router) { 'nope, this is a string' }
-
-      it { expect { subject }.to raise_error(ArgumentError, /#{Regexp.escape(described_class.to_s)}/) }
-    end
-
-    context 'when static router given' do
-      let(:other_router) { described_class.new.tap { |r| r.add_endpoint(request_method, defined_request_path, endpoint) } }
-
-      it 'should have all the endpoints that the othere router got' do
-        is_expected.to be nil
-
-        expect(router.fetch_endpoint(request_method, received_request_path)).to be endpoint
-      end
     end
 
   end
