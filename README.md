@@ -88,7 +88,7 @@ class App < Rack::App
     return 'Hello World!'
   end
 
-  namesapce '/users' do 
+  namespace '/users' do 
   
     desc 'some restful endpoint'
     get '/:user_id' do
