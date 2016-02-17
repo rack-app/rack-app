@@ -20,13 +20,13 @@ describe '#Performance Benchmark' do
     context 'when static endpoint is requested' do
       let(:request_path) { '/' }
 
-      it { is_expected.to be < 5 }
+      it { is_expected.to be < 8 }
     end
 
     context 'when dynamic endpoint is requested' do
       let(:request_path) { '/' }
 
-      it { is_expected.to be < 5 }
+      it { is_expected.to be < 8 }
     end
 
   end
