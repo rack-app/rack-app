@@ -423,6 +423,8 @@ describe Rack::App do
 
         mount SubController, :to => 'sub'
 
+        serve_files_from '/spec/fixtures', :to => 'static'
+
       end
 
     end
@@ -434,6 +436,8 @@ describe Rack::App do
     it { expect(get(:url => '/users/test').body.join).to eq 'hy' }
 
     it { expect(get(:url => '/users/sub/test').body.join).to eq 'hy' }
+
+    it { expect(get(:url => '/users/static/raw.txt')).to be_a ::Rack::File }
 
   end
 

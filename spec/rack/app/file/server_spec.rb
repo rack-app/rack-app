@@ -123,15 +123,15 @@ describe Rack::App::File::Server do
 
       end
 
-      context 'and requested file exist' do
+      context 'and requested file not exist' do
         let(:path_info) { '/something/invalid.txt' }
 
-        it 'should answer with status 200' do
+        it 'should answer with status 404' do
           expect(subject[0]).to eq 404
         end
 
         it 'should include the file content' do
-          expect(subject[2].join).to eq "File not found: /invalid.txt\n"
+          expect(subject[2].join).to match /File not found/
         end
 
       end

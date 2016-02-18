@@ -4,16 +4,21 @@ class Rack::App::File::Server
 
   def initialize(root_folder, options={})
     require 'rack/file'
-
-    @properties = options
-    @namespace = formatted_namespace(options).freeze
-    @namespace_rgx = /#{Regexp.escape(@namespace)}/.freeze
-    @rack_file_server = ::Rack::File.new(Rack::App::Utils.pwd(root_folder), {})
-
+    @raw_root_folder = root_folder
+    @root_folder = Rack::App::Utils.pwd(@raw_root_folder)
+    @relative_file_paths = Dir.glob(File.join(@root_folder,'**','*')).map{|file_path| file_path.sub(@root_folder,'') }.sort_by{|str| str.length }.reverse
+    @rack_file_server = ::Rack::File.new(@root_folder, {})
   end
 
   def call(env)
-    env[::Rack::PATH_INFO]= clean_path_info(env).sub(@namespace_rgx, '')
+    path_info = clean_path_info(env)
+
+    @relative_file_paths.each do |relative_file_path|
+      if path_info =~ /#{Regexp.escape(relative_file_path)}$/
+        env[::Rack::PATH_INFO]= relative_file_path
+      end
+    end
+
     @rack_file_server.call(env)
   end
 
@@ -21,16 +26,6 @@ class Rack::App::File::Server
   end
 
   protected
-
-  def raw_namespace(options)
-    options[:to] || '/'
-  end
-
-  def formatted_namespace(options)
-    namespace = raw_namespace(options).to_s.sub(/^\//, '').sub(/\/$/, '')
-    namespace += '/' unless namespace.empty?
-    namespace
-  end
 
   def clean_path_info(env)
     path_info = ::Rack::Utils.unescape(env[::Rack::PATH_INFO])
