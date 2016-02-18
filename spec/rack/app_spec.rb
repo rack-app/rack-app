@@ -441,7 +441,7 @@ describe Rack::App do
 
   end
 
-  describe '.mount_folder' do
+  describe '.serve_files_from' do
 
     rack_app described_class do
 
