@@ -5,6 +5,10 @@ class RackApp < Rack::App
     'hello'
   end
 
+  get '/users/:user_id' do
+    'dynamic'
+  end
+
   500.times do |index|
     get "/#{index}" do
       'hello'

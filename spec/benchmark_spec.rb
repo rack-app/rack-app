@@ -16,6 +16,7 @@ describe '#Performance Benchmark' do
 
   describe 'speed difference measured from empty rack class' do
     subject { rack_app_result.real / raw_rack_result.real }
+    before{ puts(subject) }
 
     context 'when static endpoint is requested' do
       let(:request_path) { '/' }
@@ -24,7 +25,7 @@ describe '#Performance Benchmark' do
     end
 
     context 'when dynamic endpoint is requested' do
-      let(:request_path) { '/' }
+      let(:request_path) { '/users/123' }
 
       it { is_expected.to be < 8 }
     end
