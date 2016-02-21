@@ -1,8 +1,8 @@
 require 'spec_helper'
 
 describe Rack::App::File::Server do
-  let(:instance) { described_class.new(root_folder, :to => namespace) }
-  let(:root_folder) { '/spec/fixtures' }
+  let(:instance) { described_class.new(root_folder) }
+  let(:root_folder) { Rack::App::Utils.pwd('spec','fixtures') }
   let(:request_method) { 'GET' }
 
   let(:env) do

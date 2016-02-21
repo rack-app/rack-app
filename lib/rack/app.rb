@@ -91,13 +91,18 @@ class Rack::App
 
       request_path = ::Rack::App::Utils.join(@namespaces, request_path)
 
-      properties = endpoint_properties.merge(
-          {
-              :user_defined_logic => block,
-              :request_method => request_method,
-              :request_path => request_path,
-          }
-      )
+      properties = {
+          :user_defined_logic => block,
+          :request_method => request_method,
+          :request_path => request_path,
+
+          :default_headers => headers,
+          :error_handler => error,
+          :description => @last_description,
+          :serializer => serializer,
+          :app_class => self
+      }
+
 
       endpoint = Rack::App::Endpoint.new(properties)
       router.register_endpoint!(request_method, request_path, @last_description, endpoint)
@@ -107,10 +112,9 @@ class Rack::App
 
     end
 
-    def serve_files_from(relative_path, options={})
-      options.merge!(endpoint_properties)
-      file_server = Rack::App::File::Server.new(relative_path, options)
-      request_path = Rack::App::Utils.join(@namespaces, options[:to], file_server.namespace, '**', '*')
+    def serve_files_from(file_path, options={})
+      file_server = Rack::App::File::Server.new(Rack::App::Utils.expand_path(file_path))
+      request_path = Rack::App::Utils.join(@namespaces, options[:to], '**', '*')
       router.register_endpoint!('GET', request_path, @last_description, file_server)
       @last_description = nil
     end
@@ -150,18 +154,6 @@ class Rack::App
       yield
       @namespaces.pop
       nil
-    end
-
-    protected
-
-    def endpoint_properties
-      {
-          :default_headers => headers,
-          :error_handler => error,
-          :description => @last_description,
-          :serializer => serializer,
-          :app_class => self
-      }
     end
 
   end

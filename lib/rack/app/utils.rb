@@ -18,15 +18,26 @@ module Rack::App::Utils
     path
   end
 
+  # Based on ActiveSupport, removed inflections.
+  # https://github.com/rails/rails/blob/v4.1.0.rc1/activesupport/lib/active_support/inflector/methods.rb
+  def underscore(camel_cased_word)
+    word = camel_cased_word.to_s.gsub('::', '/')
+    word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')
+    word.gsub!(/([a-z\d])([A-Z])/, '\1_\2')
+    word.tr!("-", "_")
+    word.downcase!
+    word
+  end
+
   def pwd(*path_parts)
 
-    root_folder =if ENV['BUNDLE_GEMFILE']
-                   ENV['BUNDLE_GEMFILE'].split(File::Separator)[0..-2].join(File::Separator)
-                 else
-                   Dir.pwd.to_s
-                 end
+    root_folder = if ENV['BUNDLE_GEMFILE']
+                    ENV['BUNDLE_GEMFILE'].split(File::Separator)[0..-2].join(File::Separator)
+                  else
+                    Dir.pwd.to_s
+                  end
 
-    return File.join(root_folder,*path_parts)
+    return File.join(root_folder, *path_parts)
 
   end
 
@@ -39,7 +50,22 @@ module Rack::App::Utils
 
   def join(*url_path_parts)
     url_path_parts = [url_path_parts].flatten.compact
-    File.join(*url_path_parts).gsub(File::Separator,'/').sub(/^\/?(.*)$/,'/\1')
+    File.join(*url_path_parts).gsub(File::Separator, '/').sub(/^\/?(.*)$/, '/\1')
+  end
+
+  def expand_path(file_path)
+    case file_path
+
+      when /^\.\//
+        File.expand_path(File.join(File.dirname(caller[1]),file_path))
+
+      when /^[^\/]/
+        File.join(caller[1].split(/\.(?:rb|ru)/)[0],file_path)
+
+      when /^\//
+        pwd(file_path)
+
+    end
   end
 
 end

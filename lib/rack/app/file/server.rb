@@ -1,11 +1,8 @@
 class Rack::App::File::Server
 
-  attr_reader :namespace, :properties
-
-  def initialize(root_folder, options={})
+  def initialize(root_folder)
     require 'rack/file'
-    @raw_root_folder = root_folder
-    @root_folder = Rack::App::Utils.pwd(@raw_root_folder)
+    @root_folder = root_folder
     @relative_file_paths = Dir.glob(File.join(@root_folder,'**','*')).map{|file_path| file_path.sub(@root_folder,'') }.sort_by{|str| str.length }.reverse
     @rack_file_server = ::Rack::File.new(@root_folder, {})
   end

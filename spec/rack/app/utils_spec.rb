@@ -1,5 +1,5 @@
 require 'spec_helper'
-
+require File.join(File.dirname(__FILE__), 'utils_spec_helper.rb')
 describe Rack::App::Utils do
 
   let(:instance) { Object.new.tap { |o| o.extend(described_class) } }
@@ -35,7 +35,7 @@ describe Rack::App::Utils do
 
 
   describe '#pwd' do
-    let(:path_parts){[]}
+    let(:path_parts) { [] }
     subject { instance.pwd(*path_parts) }
 
     context 'when rails is not present' do
@@ -69,11 +69,34 @@ describe Rack::App::Utils do
   end
 
   describe '#uuid' do
-    subject{ instance.uuid }
+    subject { instance.uuid }
 
     it { is_expected.to match /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ }
 
     it { is_expected.to_not eq instance.uuid }
+
+  end
+
+  describe '#expand_path' do
+    subject { UtilsSpecHelper.expand_path(file_path) }
+
+    context 'when "app_scope_relative_path" given which includes the current application file name based folder path' do
+      let(:file_path) { 'app_scope_relative' }
+
+      it { is_expected.to eq Rack::App::Utils.pwd('spec', 'rack', 'app', 'utils_spec', 'app_scope_relative') }
+    end
+
+    context 'when "relative_path" given from the app location' do
+      let(:file_path) { './relative' }
+
+      it { is_expected.to eq Rack::App::Utils.pwd('spec', 'rack', 'app', 'relative') }
+    end
+
+    context 'when "absolute_path" given which means root folder as project folder' do
+      let(:file_path) { '/absolute_path' }
+
+      it { is_expected.to eq Rack::App::Utils.pwd('absolute_path') }
+    end
 
   end
 

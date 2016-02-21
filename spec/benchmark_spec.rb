@@ -16,7 +16,7 @@ describe '#Performance Benchmark' do
 
   describe 'speed difference measured from empty rack class' do
     subject { rack_app_result.real / raw_rack_result.real }
-    before{ puts(subject) }
+    before{ puts(subject) } if ENV['VERBOSE'] =~ /^t/i
 
     context 'when static endpoint is requested' do
       let(:request_path) { '/' }
