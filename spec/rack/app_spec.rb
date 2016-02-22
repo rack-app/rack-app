@@ -355,7 +355,7 @@ describe Rack::App do
 
   end
 
-  describe '.header' do
+  describe '.headers' do
 
     rack_app described_class do
 

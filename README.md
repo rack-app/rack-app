@@ -45,17 +45,42 @@ Or install it yourself as:
 
 Yes, in fact it's already powering heroku hosted micro-services.
 
+## Principles
+
+* Keep It Simple
+* No Code bloat
+* No on run time processing, or keep at the bare minimum
+* Fully BDD (Behaviour Driven Design)
+  * build in test module to ease the development with easy to use tests
+* Easy to Learn
+  * rack-app use well known and easy to understand conventions, such as sinatra like DSL
+* Principle Of Least Surprise
+* Modular design
+* Only dependency is rack, nothing more
+* Open development
+* Try to create Examples for every feature so even the "sketch to learn new" types can feel in comfort
+
 ## Features
 
-* Null time routing that allows as many endpoint you just want without impact on route look up
-* Unified Error handling for class level where you can describe error rescues for your endpoints
-* simple Sinatra inspirited endpoint definition syntax sugar methods on class singleton level
- * get
- * post
- * put
- * delete
- * options
- * patch 
+* easy to understand syntax 
+  * module method level endpoint definition by inspirited heavily the Sinatra DSL
+  * unified error handling
+  * syntax sugar for default header definitions 
+  * namespaces for endpoint request path declarations so it can be dry and unified
+
+* no Class method bloat, so you can enjoy pure ruby without any surprises 
+
+* App mounting so you can crete separated controllers for different task  
+
+* Null time look up routing
+  * allows as many endpoint registration to you as you want, without impact on route look up
+
+* only basic sets for instance method lvl for the must need tools, such as params, payload
+
+* simple to use class level response serializer 
+  * so you can choose what type of serialization you want without any enforced convention
+
+* static file serving so you can mount even filesystem based endpoints too
 
 
 ## Usage
@@ -213,21 +238,6 @@ the benchmarking was taken on the following hardware specification:
 | rails                  | 58.843                 | 0.0006839808153554279  | 2.4028776978980613e-05 | 0.0007080095923087499  | 0.0007334601023317118  |
 | camping                | 75.113                 | 0.000893834281092368   | 1.7831031681169243e-05 | 0.0009116653127801263  | 0.000936258097467815   |
 | cuba                   | 108.272                | 0.0012919824140475418  | 1.5931254995760534e-05 | 0.001307913669066536   | 0.0013495860959551855  |
-
-## Principles
-
-* Keep It Simple
-* No Code bloat
-* No on run time processing, or keep at the bare minimum
-* Fully BDD (Behaviour Driven Design)
-  * build in test module to ease the development with easy to use tests
-* Easy to Learn
-  * rack-app use well known and easy to understand conventions, such as sinatra like DSL
-* Principle Of Least Surprise
-* Modular design
-* Only dependency is rack, nothing more
-* Open development
-* Try to create Examples for every feature so even the "sketch to learn new" types can feel in comfort
 
 ## Roadmap 
 
