@@ -193,6 +193,11 @@ end
 
 ## [Benchmarking](https://github.com/adamluzsi/rack-app.rb-benchmark)
 
+the benchmarking was taken on the following hardware specification:
+* Processor: 2,7 GHz Intel Core i5
+* Memory: 16 GB 1867 MHz DDR3
+
+
 | name                   | user                   | system                 | total                  | real                   | current / fastest      |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
 | rack                   | 1.1654381654675966e-05 | 2.4570024569497616e-07 | 1.1900081900005149e-05 | 1.2464733825060753e-05 | 1.0                    |
