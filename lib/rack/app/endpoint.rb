@@ -7,16 +7,25 @@ class Rack::App::Endpoint
   def initialize(properties)
     @properties = properties
 
-    @error_handler = properties[:error_handler]
-    @serializer = properties[:serializer]
     @api_class = properties[:app_class]
-    @headers = properties[:default_headers]
+    @error_handler = properties[:error_handler] || Rack::App::ErrorHandler.new
+    @serializer = properties[:serializer] || Rack::App::Serializer.new
+    @headers = properties[:default_headers] || {}
+
+    @middleware = (properties[:middleware] || Rack::Builder.new).dup
+    @middleware.run(lambda { |env| self.execute(env) })
 
     @path_params_matcher = {}
     @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
+
+    @app = @middleware.to_app
   end
 
-  def call(request_env)
+  def call(env)
+    @app.call(env)
+  end
+
+  def execute(request_env)
 
     request = Rack::Request.new(request_env)
     response = Rack::Response.new

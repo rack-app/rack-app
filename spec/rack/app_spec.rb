@@ -464,4 +464,38 @@ describe Rack::App do
 
   end
 
+  describe '.middleware' do
+    subject { rack_app.middleware }
+
+    rack_app described_class do
+
+      middleware_object = Class.new
+      middleware_object.class_eval do
+        def initialize(app)
+          @stack = app
+        end
+        def call(env)
+          env['custom']= 'value'
+          @stack.call(env)
+        end
+      end
+
+      middleware do |builder|
+
+        builder.use(middleware_object)
+
+      end
+
+      get '/' do
+        request.env['custom']
+      end
+
+    end
+
+    it { expect(subject.respond_to?(:call)).to be true }
+
+    it { expect(get(:url => '/').body.join).to eq 'value' }
+
+  end
+
 end

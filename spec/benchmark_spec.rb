@@ -10,7 +10,7 @@ describe '#Performance Benchmark' do
 
   include Rack::App::Test
 
-  let(:test_amount) { 10000 }
+  let(:test_amount) { 100000 }
   let(:rack_app_result) { Benchmark.measure { test_amount.times { RackApp.call(request_env_by('GET', request_path, {})) } } }
   let(:raw_rack_result) { Benchmark.measure { test_amount.times { RackSkeleton.call(request_env_by('GET', request_path, {})) } } }
 

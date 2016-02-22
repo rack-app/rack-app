@@ -77,6 +77,8 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * static file serving so you can mount even filesystem based endpoints too
 * built in testing module so your app can easily written with BDD approach
 * made with performance in mind so your app don't lose time by your framework
+* per endpoint middleware definitions
+  * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
 
 ## Usage
 

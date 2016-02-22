@@ -1,4 +1,5 @@
 require 'rack'
+require 'rack/builder'
 require 'rack/request'
 require 'rack/response'
 class Rack::App
@@ -100,6 +101,7 @@ class Rack::App
           :error_handler => error,
           :description => @last_description,
           :serializer => serializer,
+          :middleware => middleware,
           :app_class => self
       }
 
@@ -154,6 +156,12 @@ class Rack::App
       yield
       @namespaces.pop
       nil
+    end
+
+    def middleware(&block)
+      @builder ||= Rack::Builder.new
+      block.call(@builder) unless block.nil?
+      @builder
     end
 
   end
