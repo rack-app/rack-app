@@ -214,6 +214,18 @@ the benchmarking was taken on the following hardware specification:
 | camping                | 75.113                 | 0.000893834281092368   | 1.7831031681169243e-05 | 0.0009116653127801263  | 0.000936258097467815   |
 | cuba                   | 108.272                | 0.0012919824140475418  | 1.5931254995760534e-05 | 0.001307913669066536   | 0.0013495860959551855  |
 
+## Principles
+
+* Keep It Simple
+* Fully BDD (Behaviour Driven Design)
+* easy to learn
+  * rack-app use well known and easy to understand conventions, such as sinatra like DSL
+* Principle Of Least Surprise
+* Modular design
+* Only dependency is rack, nothing more
+* Open development
+* Trying to create Examples for every feature so even the sketch to learn types can feel in comfort
+
 ## Roadmap 
 
 ### Team [Backlog](https://docs.google.com/spreadsheets/d/19GGX51i6uCQQz8pQ-lvsIxu43huKCX-eC1526-RL3YA/edit?usp=sharing)
