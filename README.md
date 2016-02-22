@@ -75,6 +75,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * simple to use class level response serializer 
   * so you can choose what type of serialization you want without any enforced convention
 * static file serving so you can mount even filesystem based endpoints too
+* built in testing module so your app can easily written with BDD approach
 
 ## Usage
 
