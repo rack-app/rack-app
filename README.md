@@ -196,6 +196,7 @@ end
 the benchmarking was taken on the following hardware specification:
 * Processor: 2,7 GHz Intel Core i5
 * Memory: 16 GB 1867 MHz DDR3
+* Ruby: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin15.0]
 
 
 | name                   | current / fastest      | user                   | system                 | total                  | real                   |
