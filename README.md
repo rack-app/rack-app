@@ -217,14 +217,17 @@ the benchmarking was taken on the following hardware specification:
 ## Principles
 
 * Keep It Simple
+* No Code bloat
+* No on run time processing, or keep at the bare minimum
 * Fully BDD (Behaviour Driven Design)
-* easy to learn
+  * build in test module to ease the development with easy to use tests
+* Easy to Learn
   * rack-app use well known and easy to understand conventions, such as sinatra like DSL
 * Principle Of Least Surprise
 * Modular design
 * Only dependency is rack, nothing more
 * Open development
-* Trying to create Examples for every feature so even the sketch to learn types can feel in comfort
+* Try to create Examples for every feature so even the "sketch to learn new" types can feel in comfort
 
 ## Roadmap 
 
