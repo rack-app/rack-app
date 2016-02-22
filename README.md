@@ -63,7 +63,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 ## Features
 
 * easy to understand syntax 
-  * module method level endpoint definition inspirited heavily the Sinatra DSL
+  * module method level endpoint definition inspirited heavily by the Sinatra DSL
   * unified error handling
   * syntax sugar for default header definitions 
   * namespaces for endpoint request path declarations so it can be dry and unified
