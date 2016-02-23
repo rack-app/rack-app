@@ -480,13 +480,17 @@ describe Rack::App do
         end
       end
 
+      get '/before_middlewares' do
+        request.env['custom']
+      end
+
       middleware do |builder|
 
         builder.use(middleware_object)
 
       end
 
-      get '/' do
+      get '/after_middlewares' do
         request.env['custom']
       end
 
@@ -494,7 +498,9 @@ describe Rack::App do
 
     it { expect(subject.respond_to?(:call)).to be true }
 
-    it { expect(get(:url => '/').body.join).to eq 'value' }
+    it { expect(get(:url => '/before_middlewares').body.join).to eq '' }
+
+    it { expect(get(:url => '/after_middlewares').body.join).to eq 'value' }
 
   end
 
