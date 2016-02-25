@@ -1,5 +1,7 @@
 class Rack::App::ErrorHandler
 
+  attr_reader :handlers
+
   def initialize
     @handlers = {}
   end

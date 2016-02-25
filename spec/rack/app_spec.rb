@@ -465,7 +465,7 @@ describe Rack::App do
   end
 
   describe '.middleware' do
-    subject { rack_app.middleware }
+    subject { rack_app.middlewares }
 
     rack_app described_class do
 
@@ -484,7 +484,7 @@ describe Rack::App do
         request.env['custom']
       end
 
-      middleware do |builder|
+      middlewares do |builder|
 
         builder.use(middleware_object)
 
@@ -496,7 +496,7 @@ describe Rack::App do
 
     end
 
-    it { expect(subject.respond_to?(:call)).to be true }
+    it { expect(subject).to be_a Array }
 
     it { expect(get(:url => '/before_middlewares').body.join).to eq '' }
 

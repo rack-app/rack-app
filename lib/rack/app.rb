@@ -20,6 +20,64 @@ class Rack::App
 
   class << self
 
+    def inherited(klass)
+
+      error.handlers.each do |ex_class, block|
+        klass.error(ex_class, &block)
+      end
+
+      klass.serializer(&serializer.logic)
+      middlewares.each { |builder_block| klass.middlewares(&builder_block) }
+      klass.headers.merge!(headers)
+
+    end
+
+    def serializer(&definition_how_to_serialize)
+      @serializer ||= Rack::App::Serializer.new
+
+      unless definition_how_to_serialize.nil?
+        @serializer.set_serialization_logic(definition_how_to_serialize)
+      end
+
+      return @serializer
+    end
+
+    def headers(new_headers=nil)
+      @headers ||= {}
+      @headers.merge!(new_headers) if new_headers.is_a?(Hash)
+      @headers
+    end
+
+    def middlewares(&block)
+      @middlewares ||= []
+      @middlewares << block unless block.nil?
+      @middlewares
+    end
+
+    alias middleware middlewares
+
+    def error(*exception_classes, &block)
+      @error_handler ||= Rack::App::ErrorHandler.new
+      unless block.nil?
+        @error_handler.register_handler(exception_classes, block)
+      end
+
+      return @error_handler
+    end
+
+    def namespace(request_path_namespace)
+      return unless block_given?
+      @namespaces ||= []
+      @namespaces.push(request_path_namespace)
+      yield
+      @namespaces.pop
+      nil
+    end
+
+    def router
+      @router ||= Rack::App::Router.new
+    end
+
     def call(request_env)
       Rack::App::RequestConfigurator.configure(request_env)
       endpoint = router.fetch_endpoint(
@@ -75,22 +133,14 @@ class Rack::App
       end
     end
 
-    def error(*exception_classes, &block)
-      @error_handler ||= Rack::App::ErrorHandler.new
-      unless block.nil?
-        @error_handler.register_handler(exception_classes, block)
-      end
-
-      return @error_handler
-    end
-
-    def router
-      @router ||= Rack::App::Router.new
-    end
-
     def add_route(request_method, request_path, &block)
 
       request_path = ::Rack::App::Utils.join(@namespaces, request_path)
+
+      builder = Rack::Builder.new
+      middlewares.each do |builder_block|
+        builder_block.call(builder)
+      end
 
       properties = {
           :user_defined_logic => block,
@@ -101,7 +151,7 @@ class Rack::App
           :error_handler => error,
           :description => @last_description,
           :serializer => serializer,
-          :middleware => middleware,
+          :middleware => builder,
           :app_class => self
       }
 
@@ -131,37 +181,6 @@ class Rack::App
       router.merge_router!(api_class.router, merge_prop)
 
       return nil
-    end
-
-    def serializer(&definition_how_to_serialize)
-      @serializer ||= Rack::App::Serializer.new
-
-      unless definition_how_to_serialize.nil?
-        @serializer.set_serialization_logic(definition_how_to_serialize)
-      end
-
-      return @serializer
-    end
-
-    def headers(new_headers=nil)
-      @headers ||= {}
-      @headers.merge!(new_headers) if new_headers.is_a?(Hash)
-      @headers
-    end
-
-    def namespace(request_path_namespace)
-      return unless block_given?
-      @namespaces ||= []
-      @namespaces.push(request_path_namespace)
-      yield
-      @namespaces.pop
-      nil
-    end
-
-    def middleware(&block)
-      @builder ||= Rack::Builder.new
-      block.call(@builder) unless block.nil?
-      @builder
     end
 
   end
