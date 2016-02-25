@@ -464,7 +464,7 @@ describe Rack::App do
 
   end
 
-  describe '.middleware' do
+  describe '.middlewares' do
     subject { rack_app.middlewares }
 
     rack_app described_class do
