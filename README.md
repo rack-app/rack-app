@@ -222,11 +222,13 @@ the benchmarking was taken on the following hardware specification:
 
 ### number of declared endpoints: 100
 
+### number of declared endpoints: 100
+
 | name                   | version                | current / fastest      | real                   |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
 | rack                   | 1.6.4                  | 1.0                    | 1.6755999999997824e-06 |
 | rack-app               | 0.23.0                 | 12.949                 | 2.169760000000045e-05  |
-| ramaze                 | 2012.12.08             | 23.622                 | 3.9581600000001146e-05 |
+| ramaze                 | 2012.12.08             | 24.828                 | 4.1601999999999315e-05 |
 | hobbit                 | 0.6.1                  | 40.391                 | 6.76790000000015e-05   |
 | brooklyn               | 0.0.1                  | 72.983                 | 0.00012229050000000643 |
 | nancy                  | 0.3.0                  | 91.488                 | 0.00015329779999998726 |
