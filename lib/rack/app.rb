@@ -22,14 +22,25 @@ class Rack::App
 
     def inherited(klass)
 
+      klass.serializer(&serializer.logic)
+      klass.headers.merge!(headers)
+      klass.middlewares.push(*middlewares)
+
+      on_inheritance.each do |block|
+        block.call(self, klass)
+        klass.on_inheritance(&block)
+      end
+
       error.handlers.each do |ex_class, block|
         klass.error(ex_class, &block)
       end
 
-      klass.serializer(&serializer.logic)
-      middlewares.each { |builder_block| klass.middlewares(&builder_block) }
-      klass.headers.merge!(headers)
+    end
 
+    def on_inheritance(&block)
+      @on_inheritance ||= []
+      @on_inheritance << block unless block.nil?
+      @on_inheritance
     end
 
     def serializer(&definition_how_to_serialize)

@@ -88,5 +88,35 @@ describe Rack::App do
 
     it { expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*'.inspect }
 
+    context 'when on_inheritance block defined in parent' do
+
+      before do
+        parent = RackAppInheritanceChild
+        parent.on_inheritance do |parent, child|
+          child.instance_variable_set(:@dog, 'bark')
+        end
+
+        parent.on_inheritance do |parent, child|
+          child.instance_variable_set(:@cat, 'meow')
+        end
+      end
+
+      it 'should fire the registered on_inheritance blocks on inheritance' do
+        child = Class.new(RackAppInheritanceChild)
+        expect(child.instance_variable_get(:@dog)).to eq 'bark'
+        expect(child.instance_variable_get(:@cat)).to eq 'meow'
+      end
+
+      it 'should fire the registered block on multiple inheritance' do
+        child1 = Class.new(RackAppInheritanceChild)
+        child2 = Class.new(child1)
+
+        expect(child2.instance_variable_get(:@dog)).to eq 'bark'
+        expect(child2.instance_variable_get(:@cat)).to eq 'meow'
+      end
+
+    end
+
+
   end
 end
