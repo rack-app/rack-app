@@ -57,15 +57,17 @@ module Rack::App::Utils
     case file_path
 
       when /^\.\//
-        File.expand_path(File.join(File.dirname(caller[1]),file_path))
+        File.expand_path(File.join(File.dirname(caller[1]), file_path))
 
       when /^[^\/]/
-        File.join(caller[1].split(/\.(?:rb|ru)/)[0],file_path)
+        File.join(caller[1].split(/\.(?:rb|ru)/)[0], file_path)
 
       when /^\//
-        pwd(file_path)
+        from_project_root_path = pwd(file_path)
+        File.exist?(from_project_root_path) ? from_project_root_path : file_path
 
     end
+
   end
 
 end

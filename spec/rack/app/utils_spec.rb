@@ -38,7 +38,7 @@ describe Rack::App::Utils do
     let(:path_parts) { [] }
     subject { instance.pwd(*path_parts) }
 
-    context 'when rails is not present' do
+    context 'when gemfile path is present' do
 
       context 'and bundler already set the env file with the gem file path' do
         before { allow(ENV).to receive(:[]).with('BUNDLE_GEMFILE').and_return('/path/to/folder/Gemfile') }
@@ -94,6 +94,12 @@ describe Rack::App::Utils do
 
     context 'when "absolute_path" given which means root folder as project folder' do
       let(:file_path) { '/absolute_path' }
+
+      it { is_expected.to eq Rack::App::Utils.pwd('absolute_path') }
+    end
+
+    context 'when "absolute_path" given which meant from the system root' do
+      let(:file_path) { Rack::App::Utils.pwd('absolute_path') }
 
       it { is_expected.to eq Rack::App::Utils.pwd('absolute_path') }
     end
