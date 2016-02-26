@@ -222,8 +222,6 @@ the benchmarking was taken on the following hardware specification:
 
 ### number of declared endpoints: 100
 
-### number of declared endpoints: 100
-
 | name                   | version                | current / fastest      | real                   |
 | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
 | rack                   | 1.6.4                  | 1.0                    | 1.6755999999997824e-06 |
