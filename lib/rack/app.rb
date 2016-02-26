@@ -120,16 +120,17 @@ class Rack::App
       add_route('PATCH', path, &block)
     end
 
-    def root(endpoint_path)
-      normalized_path = Rack::App::Utils.normalize_path(endpoint_path)
-
-      options '/' do
-        endpoint = self.class.router.fetch_endpoint('OPTIONS', normalized_path)
-        endpoint.get_response_body(request, response)
+    def alias_endpoint(new_request_path, original_request_path)
+      router.endpoints.select { |ep| ep[:request_path] == original_request_path }.each do |endpoint|
+        router.register_endpoint!(endpoint[:request_method], new_request_path, endpoint[:description], endpoint[:endpoint])
       end
-      get '/' do
-        endpoint = self.class.router.fetch_endpoint('GET', normalized_path)
-        endpoint.get_response_body(request, response)
+    end
+
+    def root(endpoint_path)
+      %W[GET POST PUT DELETE OPTIONS PATCH HEAD].each do |request_method|
+        endpoint = router.fetch_endpoint(request_method, endpoint_path)
+        next if endpoint == Rack::App::Endpoint::NOT_FOUND
+        router.register_endpoint!(request_method, '/', 'Root endpoint', endpoint)
       end
     end
 
@@ -185,11 +186,11 @@ class Rack::App
 
   end
 
+  attr_writer :request, :response
+
   def params
     @__params__ ||= Rack::App::Params.new(request.env).to_hash
   end
-
-  attr_writer :request, :response
 
   def request
     @request || raise("request object is not set for #{self.class}")
@@ -211,6 +212,13 @@ class Rack::App
 
       return payload
     }.call
+  end
+
+  def redirect_to(url)
+    url = "#{url}?#{request.env['QUERY_STRING']}" unless request.env['QUERY_STRING'].empty?
+    response.status = 301
+    response.headers.merge!({'Location' => url})
+    'See Ya!'
   end
 
 end
