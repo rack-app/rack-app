@@ -93,9 +93,9 @@ describe Rack::App::Utils do
     end
 
     context 'when "absolute_path" given which means root folder as project folder' do
-      let(:file_path) { '/absolute_path' }
+      let(:file_path) { '/spec/fixtures/raw.txt' }
 
-      it { is_expected.to eq Rack::App::Utils.pwd('absolute_path') }
+      it { is_expected.to eq Rack::App::Utils.pwd('spec', 'fixtures', 'raw.txt') }
     end
 
     context 'when "absolute_path" given which meant from the system root' do
