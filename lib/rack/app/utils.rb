@@ -60,7 +60,7 @@ module Rack::App::Utils
         File.expand_path(File.join(File.dirname(caller[1]), file_path))
 
       when /^[^\/]/
-        File.join(caller[1].split(/\.(?:rb|ru)/)[0], file_path)
+        File.join(namespace_folder(caller[1]), file_path)
 
       when /^\//
         from_project_root_path = pwd(file_path)
@@ -68,6 +68,12 @@ module Rack::App::Utils
 
     end
 
+  end
+
+  def namespace_folder(file_path_info)
+    basename = File.basename(file_path_info).split('.')[0]
+    directory = File.dirname(file_path_info)
+    File.join(directory,basename)
   end
 
 end

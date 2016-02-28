@@ -106,4 +106,11 @@ describe Rack::App::Utils do
 
   end
 
+  describe '#namespace_folder' do
+    subject { instance.namespace_folder(file_path_info) }
+    let(:file_path_info) { "/rack-app/front_end/spec/rack/app/front_end_spec/layout.html.erb:2:in `block in singleton class'" }
+
+    it { is_expected.to eq "/rack-app/front_end/spec/rack/app/front_end_spec/layout" }
+  end
+
 end
