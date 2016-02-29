@@ -67,7 +67,6 @@ module Rack::App::Utils
         File.exist?(from_project_root_path) ? from_project_root_path : file_path
 
     end
-
   end
 
   def namespace_folder(file_path_info)
