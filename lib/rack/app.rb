@@ -197,12 +197,12 @@ class Rack::App
         raise(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
 
-      merge_prop = {:namespaces => [@namespaces, mount_prop[:to]].flatten}
-      router.merge_router!(api_class.router, merge_prop)
-
       api_class.on_mounted.each do |on_mount|
         on_mount.call(self, mount_prop)
       end
+
+      merge_prop = {:namespaces => [@namespaces, mount_prop[:to]].flatten}
+      router.merge_router!(api_class.router, merge_prop)
 
       return nil
     end

@@ -484,11 +484,16 @@ describe Rack::App do
           builder.use(SampleMiddleware,'inject',options[:test])
         end
 
+        get '/on_mounted_deceleration' do
+          'yo'
+        end
+
       end
 
     end
 
     rack_app do
+
       mount mounted_class, :to => '/mount_point', :test => 'hello'
 
       get '/' do
@@ -498,6 +503,8 @@ describe Rack::App do
     end
 
     it { expect(get(:url => '/').body.join).to eq 'hello' }
+
+    it { expect(get(:url => '/mount_point/on_mounted_deceleration').body.join).to eq 'yo' }
 
   end
 
