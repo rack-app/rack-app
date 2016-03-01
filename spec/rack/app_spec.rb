@@ -1,4 +1,17 @@
 require 'spec_helper'
+
+class SampleMiddleware
+  def initialize(app,k,v)
+    @stack = app
+    @k,@v = k,v
+  end
+
+  def call(env)
+    env[@k.dup]= @v.dup
+    @stack.call(env)
+  end
+end
+
 describe Rack::App do
 
   let(:described_class) { Class.new(Rack::App) }
@@ -436,24 +449,13 @@ describe Rack::App do
 
     rack_app described_class do
 
-      middleware_object = Class.new
-      middleware_object.class_eval do
-        def initialize(app)
-          @stack = app
-        end
-        def call(env)
-          env['custom']= 'value'
-          @stack.call(env)
-        end
-      end
-
       get '/before_middlewares' do
         request.env['custom']
       end
 
       middlewares do |builder|
 
-        builder.use(middleware_object)
+        builder.use(SampleMiddleware,'custom','value')
 
       end
 
@@ -468,6 +470,34 @@ describe Rack::App do
     it { expect(get(:url => '/before_middlewares').body.join).to eq '' }
 
     it { expect(get(:url => '/after_middlewares').body.join).to eq 'value' }
+
+  end
+
+  describe '.on_mounted' do
+
+    mounted_class = Class.new(Rack::App)
+    mounted_class.class_eval do
+
+      on_mounted do |class_who_mount_us, options|
+
+        class_who_mount_us.middlewares do |builder|
+          builder.use(SampleMiddleware,'inject',options[:test])
+        end
+
+      end
+
+    end
+
+    rack_app do
+      mount mounted_class, :to => '/mount_point', :test => 'hello'
+
+      get '/' do
+        request.env['inject']
+      end
+
+    end
+
+    it { expect(get(:url => '/').body.join).to eq 'hello' }
 
   end
 

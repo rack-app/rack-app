@@ -37,6 +37,14 @@ class Rack::App
 
     end
 
+    def on_mounted(&block)
+      @on_mounted ||= []
+      @on_mounted << block unless block.nil?
+      @on_mounted
+    end
+
+    alias while_being_mounted on_mounted
+
     def on_inheritance(&block)
       @on_inheritance ||= []
       @on_inheritance << block unless block.nil?
@@ -191,6 +199,10 @@ class Rack::App
 
       merge_prop = {:namespaces => [@namespaces, mount_prop[:to]].flatten}
       router.merge_router!(api_class.router, merge_prop)
+
+      api_class.on_mounted.each do |on_mount|
+        on_mount.call(self, mount_prop)
+      end
 
       return nil
     end
