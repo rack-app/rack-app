@@ -158,10 +158,6 @@ describe Rack::App do
       it { is_expected.to eq "hello\nworld" }
     end
 
-    context 'when payload is not included in the request env' do
-      it { is_expected.to eq nil }
-    end
-
   end
 
   describe '.mount' do
