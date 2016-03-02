@@ -13,7 +13,6 @@ class Rack::App
   require 'rack/app/endpoint'
   require 'rack/app/serializer'
   require 'rack/app/file_server'
-  require 'rack/app/file_streamer'
   require 'rack/app/error_handler'
   require 'rack/app/endpoint/not_found'
   require 'rack/app/request_configurator'
