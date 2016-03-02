@@ -140,4 +140,18 @@ describe Rack::App::FileServer do
 
   end
 
+  describe '#serve_file' do
+
+    it 'should serve file' do
+
+      rack_resp = described_class.serve_file({},Rack::App::Utils.pwd('spec/fixtures/raw.txt'))
+
+      expect(rack_resp[0]).to eq 200
+      expect(rack_resp[1].keys).to match_array(["Last-Modified","Content-Type","Content-Length"])
+      expect(rack_resp[2]).to be_a ::Rack::File
+
+    end
+
+  end
+
 end

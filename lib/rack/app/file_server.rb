@@ -3,7 +3,7 @@ class Rack::App::FileServer
   def initialize(root_folder)
     require 'rack/file'
     @root_folder = root_folder
-    @relative_file_paths = Dir.glob(File.join(@root_folder,'**','*')).map{|file_path| file_path.sub(@root_folder,'') }.sort_by{|str| str.length }.reverse
+    @relative_file_paths = Dir.glob(File.join(@root_folder, '**', '*')).map { |file_path| file_path.sub(@root_folder, '') }.sort_by { |str| str.length }.reverse
     @rack_file_server = ::Rack::File.new(@root_folder, {})
   end
 
@@ -19,7 +19,12 @@ class Rack::App::FileServer
     @rack_file_server.call(env)
   end
 
-  def register_path_params_matcher(*args)
+  def self.serve_file(env, file_path)
+    file_server = self.new(File.dirname(file_path))
+    env = env.dup
+    env[::Rack::REQUEST_METHOD]= 'GET'
+    env[::Rack::PATH_INFO]= file_path
+    file_server.call(env)
   end
 
   protected

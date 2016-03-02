@@ -89,7 +89,9 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
     end
 
     current_cluster[:endpoint]= endpoint
-    current_cluster[:endpoint].register_path_params_matcher(path_params)
+    if current_cluster[:endpoint].respond_to?(:register_path_params_matcher)
+      current_cluster[:endpoint].register_path_params_matcher(path_params)
+    end
 
     endpoint
   end

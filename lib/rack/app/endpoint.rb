@@ -54,16 +54,9 @@ class Rack::App::Endpoint
   protected
 
   def set_response_body(response, result)
-    if result.is_a?(::Rack::App::FileStreamer)
-      response.length += result.length
-      response.headers[LAST_MODIFIED_HEADER]= result.mtime
-      response.body = result
+    return nil unless response.body.is_a?(Array)
 
-    else
-      response.write(String(@serializer.serialize(result)))
-
-    end
-    nil
+    response.write(String(@serializer.serialize(result)))
   end
 
   def set_default_headers(response)
