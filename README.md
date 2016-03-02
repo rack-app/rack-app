@@ -79,7 +79,8 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * made with performance in mind so your app don't lose time by your framework
 * per endpoint middleware definitions
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
-* File streaming as response
+* File Upload and file download in a efficient and elegant way with minimal memory consuming
+  * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usualy solution which includes buffering in memory
 
 ## Usage
 
