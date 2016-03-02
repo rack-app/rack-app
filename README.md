@@ -79,6 +79,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * made with performance in mind so your app don't lose time by your framework
 * per endpoint middleware definitions
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
+* File streaming as response
 
 ## Usage
 
