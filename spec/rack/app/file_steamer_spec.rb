@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Rack::App::File::Streamer do
+describe Rack::App::FileStreamer do
 
   let(:file_path) { Rack::App::Utils.pwd('spec', 'fixtures', 'raw.txt') }
   let(:instance) { described_class.new(file_path) }

@@ -1,4 +1,4 @@
-class Rack::App::File::Streamer
+class Rack::App::FileStreamer
 
   include Enumerable
 

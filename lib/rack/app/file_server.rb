@@ -1,4 +1,4 @@
-class Rack::App::File::Server
+class Rack::App::FileServer
 
   def initialize(root_folder)
     require 'rack/file'

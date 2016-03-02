@@ -1,4 +1,3 @@
 module Rack::App::Constants
   NORMALIZED_REQUEST_PATH = 'NORMALIZED_REQUEST_PATH'
-
 end

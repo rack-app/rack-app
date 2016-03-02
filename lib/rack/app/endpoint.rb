@@ -54,7 +54,7 @@ class Rack::App::Endpoint
   protected
 
   def set_response_body(response, result)
-    if result.is_a?(::Rack::App::File::Streamer)
+    if result.is_a?(::Rack::App::FileStreamer)
       response.length += result.length
       response.headers[LAST_MODIFIED_HEADER]= result.mtime
       response.body = result
