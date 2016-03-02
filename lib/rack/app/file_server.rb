@@ -13,6 +13,7 @@ class Rack::App::FileServer
     @relative_file_paths.each do |relative_file_path|
       if path_info =~ /#{Regexp.escape(relative_file_path)}$/
         env[::Rack::PATH_INFO]= relative_file_path
+        break
       end
     end
 
