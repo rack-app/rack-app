@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 class SampleMiddleware
-  def initialize(app,k,v)
+  def initialize(app, k, v)
     @stack = app
-    @k,@v = k,v
+    @k, @v = k, v
   end
 
   def call(env)
@@ -440,6 +440,19 @@ describe Rack::App do
 
   end
 
+  describe '.mount_directory' do
+
+    rack_app described_class do
+
+      mount_directory '/spec/fixtures', :to => '/test'
+
+    end
+
+    it { expect(get(:url => '/test/raw.txt').status).to eq 200 }
+    it { expect(get(:url => '/test/raw.txt').body).to be_a ::Rack::File }
+
+  end
+
   describe '.middlewares' do
     subject { rack_app.middlewares }
 
@@ -451,7 +464,7 @@ describe Rack::App do
 
       middlewares do |builder|
 
-        builder.use(SampleMiddleware,'custom','value')
+        builder.use(SampleMiddleware, 'custom', 'value')
 
       end
 
@@ -477,7 +490,7 @@ describe Rack::App do
       on_mounted do |class_who_mount_us, options|
 
         class_who_mount_us.middlewares do |builder|
-          builder.use(SampleMiddleware,'inject',options[:test])
+          builder.use(SampleMiddleware, 'inject', options[:test])
         end
 
         get '/on_mounted_deceleration' do
