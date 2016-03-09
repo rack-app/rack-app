@@ -413,7 +413,7 @@ describe Rack::App do
 
     it { expect(get(:url => '/users/sub/test').body.join).to eq 'hy' }
 
-    it { expect(get(:url => '/users/static/raw.txt')).to be_a ::Rack::File }
+    it { expect(get(:url => '/users/static/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
 
   end
 
@@ -425,18 +425,7 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/raw.txt')).to be_a ::Rack::File }
-
-    it 'should return an object which responds to each' do
-
-      response = get(:url => '/raw.txt')
-
-      content = ''
-      response.each { |line| content << line }
-
-      expect(content).to eq "hello world!\nhow you doing?"
-
-    end
+    it { expect(get(:url => '/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
 
   end
 
@@ -449,7 +438,7 @@ describe Rack::App do
     end
 
     it { expect(get(:url => '/test/raw.txt').status).to eq 200 }
-    it { expect(get(:url => '/test/raw.txt').body).to be_a ::Rack::File }
+    it { expect(get(:url => '/test/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
 
   end
 
