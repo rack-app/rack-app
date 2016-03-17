@@ -24,9 +24,6 @@ matrix:
       before_install:
         - 'gem update --system 2.4.8'
 
-    - rvm: jruby-head
-      before_install:
-        - 'gem update --system 2.4.8'
 
   allow_failures:
     - rvm: ruby-head
