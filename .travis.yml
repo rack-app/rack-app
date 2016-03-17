@@ -1,6 +1,9 @@
 language: ruby
 script: rspec spec
 
+install:
+  - gem update bundler
+
 rvm:
   - 1.8
   - 1.9
