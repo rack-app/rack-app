@@ -3,6 +3,7 @@ script: rspec spec
 
 install:
   - gem update bundler
+  - bundle install
 
 rvm:
   - 1.8
