@@ -6,10 +6,21 @@ install:
   - bundle install
 
 rvm:
-  - 1.8
-  - 1.9
-  - 2.0
-  - 2.1
+
+  - 1.8.6
+  - 1.8.7
+  - 1.8-head
+
+  - 1.9.1
+  - 1.9.2
+  - 1.9.3
+  - 1.9-head
+
+  - 2.0.0
+  - 2.1.1
+  - 2.1.2
+  - 2.1-head
+
   - jruby-18mode
   - jruby-19mode
   - ree
@@ -18,13 +29,6 @@ rvm:
   - jruby-head
 
 matrix:
-  include:
-
-    - rvm: ruby-head
-      before_install:
-        - 'gem update --system 2.4.8'
-
-
   allow_failures:
     - rvm: ruby-head
     - rvm: jruby-head
