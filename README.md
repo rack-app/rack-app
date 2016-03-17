@@ -4,7 +4,7 @@
 [travis-link]: http://travis-ci.org/rack-app/rack-app
 [travis-home]: http://travis-ci.org/
 
-![Rack::App](http://rack-app-website.herokuapp.com/image/msruby_old.png)
+![Rack::App](http://rack-app-website.herokuapp.com/img/msruby_old.png)
 
 Your next favourite rack based micro framework that is totally addition free! 
 Have a cup of awesomeness with your performance designed framework!
@@ -81,6 +81,10 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
 * File Upload and file download in a efficient and elegant way with minimal memory consuming
   * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usualy solution which includes buffering in memory
+
+## [Contributors](CONTRIBUTORS.md)
+
+## [Contributing](CONTRIBUTING.md)
 
 ## Usage
 

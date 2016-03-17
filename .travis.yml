@@ -13,6 +13,11 @@ rvm:
   - ruby-head
   - jruby-head
 
+matrix:
+  allow_failures:
+    - rvm: ruby-head
+    - rvm: jruby-head
+
 env:
   global:
     - VERBOSE=true
