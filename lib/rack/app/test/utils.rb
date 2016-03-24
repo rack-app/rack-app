@@ -9,13 +9,34 @@ module Rack::App::Test::Utils
     properties
   end
 
-  def request_env_by(request_method, url, raw_properties)
+  def rack_app_by(*args, &constructor)
+    subject_app = nil
 
-    properties = format_properties(raw_properties)
-    additional_headers = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+    rack_app_class = args.shift
 
-    payload = raw_properties.delete(:payload)
+    if constructor.nil?
+      subject_app = rack_app_class
+    else
+      subject_app = Class.new(rack_app_class || ::Rack::App)
+      subject_app.class_eval(&constructor)
+    end
 
+    subject_app
+  end
+
+  def env_by(properties)
+
+    properties = format_properties(properties)
+    env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+    payload = properties.delete(:payload)
+    env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
+    env["QUERY_STRING"]= encode_www_form(properties[:params].to_a)
+
+    env
+
+  end
+
+  def string_io_for(payload)
     io = case payload
 
            when IO
@@ -28,8 +49,16 @@ module Rack::App::Test::Utils
              StringIO.new('')
 
          end
+  end
 
-    additional_headers["rack.input"]= ::Rack::Lint::InputWrapper.new(io)
+  def request_env_by(request_method, url, raw_properties)
+
+    properties = format_properties(raw_properties)
+    additional_headers = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+
+    payload = raw_properties.delete(:payload)
+
+    additional_headers["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
 
     {
         "REMOTE_ADDR" => "192.168.56.1",

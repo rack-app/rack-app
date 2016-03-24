@@ -1,5 +1,11 @@
 module Rack::App::SingletonMethods::RouteHandling
 
+  def router
+    @router ||= Rack::App::Router.new
+  end
+
+  protected
+
   def root(endpoint_path)
     %W[GET POST PUT DELETE OPTIONS PATCH HEAD].each do |request_method|
       endpoint = router.fetch_endpoint(request_method, endpoint_path)
@@ -52,10 +58,6 @@ module Rack::App::SingletonMethods::RouteHandling
     yield
     @namespaces.pop
     nil
-  end
-
-  def router
-    @router ||= Rack::App::Router.new
   end
 
 end

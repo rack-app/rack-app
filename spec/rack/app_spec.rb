@@ -1,17 +1,4 @@
 require 'spec_helper'
-
-class SampleMiddleware
-  def initialize(app, k, v)
-    @stack = app
-    @k, @v = k, v
-  end
-
-  def call(env)
-    env[@k.dup]= @v.dup
-    @stack.call(env)
-  end
-end
-
 describe Rack::App do
 
   let(:described_class) { Class.new(Rack::App) }
@@ -157,43 +144,6 @@ describe Rack::App do
 
       it { is_expected.to eq "hello\nworld" }
     end
-
-  end
-
-  describe '.mount' do
-    subject { described_class.mount(to_be_mounted_api_class) }
-
-    context 'when valid api class given' do
-
-      let(:to_be_mounted_api_class) do
-        klass = Class.new(Rack::App)
-        klass.class_eval do
-
-          get '/endpoint' do
-            'hello world!'
-          end
-
-        end
-        klass
-      end
-
-      it 'should merge the mounted class endpoints to its own collection' do
-        is_expected.to be nil
-
-        expect(described_class.router.fetch_endpoint('GET', '/endpoint')).to_not be nil
-      end
-
-    end
-
-    context 'when invalid class given' do
-      let(:to_be_mounted_api_class) { 'nope this is a string' }
-
-      it 'should raise argument error' do
-        expect { subject }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
-      end
-
-    end
-
 
   end
 
@@ -443,7 +393,6 @@ describe Rack::App do
   end
 
   describe '.middlewares' do
-    subject { rack_app.middlewares }
 
     rack_app described_class do
 
@@ -463,47 +412,11 @@ describe Rack::App do
 
     end
 
-    it { expect(subject).to be_a Array }
-
     it { expect(get(:url => '/before_middlewares').body.join).to eq '' }
 
     it { expect(get(:url => '/after_middlewares').body.join).to eq 'value' }
 
   end
 
-  describe '.on_mounted' do
-
-    mounted_class = Class.new(Rack::App)
-    mounted_class.class_eval do
-
-      on_mounted do |class_who_mount_us, options|
-
-        class_who_mount_us.middlewares do |builder|
-          builder.use(SampleMiddleware, 'inject', options[:test])
-        end
-
-        get '/on_mounted_deceleration' do
-          'yo'
-        end
-
-      end
-
-    end
-
-    rack_app do
-
-      mount mounted_class, :to => '/mount_point', :test => 'hello'
-
-      get '/' do
-        request.env['inject']
-      end
-
-    end
-
-    it { expect(get(:url => '/').body.join).to eq 'hello' }
-
-    it { expect(get(:url => '/mount_point/on_mounted_deceleration').body.join).to eq 'yo' }
-
-  end
 
 end

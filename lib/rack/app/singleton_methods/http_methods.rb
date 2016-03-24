@@ -1,5 +1,7 @@
 module Rack::App::SingletonMethods::HttpMethods
 
+  protected
+
   def get(path = '/', &block)
     add_route('GET', path, &block)
   end

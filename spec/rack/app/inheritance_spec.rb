@@ -92,13 +92,17 @@ describe Rack::App do
 
       before do
         parent = RackAppInheritanceChild
-        parent.on_inheritance do |parent, child|
-          child.instance_variable_set(:@dog, 'bark')
+
+        parent.class_eval do
+          on_inheritance do |parent, child|
+            child.instance_variable_set(:@dog, 'bark')
+          end
+
+          on_inheritance do |parent, child|
+            child.instance_variable_set(:@cat, 'meow')
+          end
         end
 
-        parent.on_inheritance do |parent, child|
-          child.instance_variable_set(:@cat, 'meow')
-        end
       end
 
       it 'should fire the registered on_inheritance blocks on inheritance' do

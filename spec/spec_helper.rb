@@ -101,3 +101,23 @@ $LOAD_PATH.unshift(rack_api_lib_folder)
 require 'rack/app'
 
 # Dir.glob(File.join(File.dirname(__FILE__), 'support', '**', '*.rb')).each { |file_path| require(file_path) }
+
+class SampleMiddleware
+  def initialize(app, k, v)
+    @stack = app
+    @k, @v = k, v
+  end
+
+  def call(env)
+    env[@k.dup]= @v.dup
+    @stack.call(env)
+  end
+end
+
+module SampleMethods
+
+  def hello_world
+    'hello world'
+  end
+
+end

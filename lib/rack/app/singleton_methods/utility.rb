@@ -1,5 +1,7 @@
 module Rack::App::SingletonMethods::Utility
 
+  protected
+
   def serializer(&definition_how_to_serialize)
     @serializer ||= Rack::App::Serializer.new
 

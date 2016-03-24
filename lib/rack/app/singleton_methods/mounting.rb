@@ -1,13 +1,5 @@
 module Rack::App::SingletonMethods::Mounting
 
-  def on_mounted(&block)
-    @on_mounted ||= []
-    @on_mounted << block unless block.nil?
-    @on_mounted
-  end
-
-  alias while_being_mounted on_mounted
-
   def mount(api_class, mount_prop={})
 
     unless api_class.is_a?(Class) and api_class <= Rack::App
@@ -51,5 +43,15 @@ module Rack::App::SingletonMethods::Mounting
     router.register_endpoint!('GET', request_path, @last_description, file_server)
     @last_description = nil
   end
+
+  protected
+
+  def on_mounted(&block)
+    @on_mounted ||= []
+    @on_mounted << block unless block.nil?
+    @on_mounted
+  end
+
+  alias while_being_mounted on_mounted
 
 end

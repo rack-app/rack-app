@@ -1,5 +1,7 @@
 module Rack::App::SingletonMethods::RackInterface
 
+  public
+
   def call(request_env)
     Rack::App::RequestConfigurator.configure(request_env)
     endpoint = router.fetch_endpoint(

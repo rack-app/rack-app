@@ -1,5 +1,7 @@
 module Rack::App::SingletonMethods::Inheritance
 
+  protected
+
   def inherited(klass)
 
     klass.serializer(&serializer.logic)
