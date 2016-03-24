@@ -2,19 +2,31 @@ module Rack::App::SingletonMethods::Inheritance
 
   protected
 
-  def inherited(klass)
+  def inherited(child)
 
-    klass.serializer(&serializer.logic)
-    klass.headers.merge!(headers)
-    klass.middlewares.push(*middlewares)
+    parent = self
 
-    on_inheritance.each do |block|
-      block.call(self, klass)
-      klass.on_inheritance(&block)
-    end
+    parent_serializer_logic = serializer.logic
+    parent_headers = headers
+    parent_middlewares = middlewares
+    parent_inheritance_blocks = on_inheritance
+    parent_error_handlers = error.handlers
 
-    error.handlers.each do |ex_class, block|
-      klass.error(ex_class, &block)
+    child.class_eval do
+
+      serializer(&parent_serializer_logic)
+      headers.merge!(parent_headers)
+      middlewares.push(*parent_middlewares)
+
+      parent_inheritance_blocks.each do |block|
+        block.call(parent, self)
+        on_inheritance(&block)
+      end
+
+      parent_error_handlers.each do |ex_class, block|
+        error(ex_class, &block)
+      end
+
     end
 
   end

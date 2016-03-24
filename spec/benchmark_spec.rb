@@ -3,8 +3,8 @@ require File.join(File.dirname(__FILE__), 'benchmark_spec', 'rack_skeleton')
 
 require 'spec_helper'
 require 'benchmark'
-
 require 'rack/app/test'
+
 describe '#Performance Benchmark' do
 
   let(:test_amount) { 100000 }

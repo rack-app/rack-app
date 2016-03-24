@@ -7,6 +7,7 @@ class Rack::App
   require 'rack/app/version'
   require 'rack/app/constants'
 
+  require 'rack/app/test'
   require 'rack/app/utils'
   require 'rack/app/params'
   require 'rack/app/router'
@@ -22,5 +23,14 @@ class Rack::App
 
   require 'rack/app/instance_methods'
   include Rack::App::InstanceMethods
+
+  error
+  router
+  headers
+  serializer
+  middleware
+  on_inheritance
+
+  freeze
 
 end

@@ -1,19 +1,6 @@
 require 'spec_helper'
 require 'rack/app/test'
 
-class SimpleSetterMiddleware
-
-  def initialize(app, k, v)
-    @app, @k, @v = app, k, v
-  end
-
-  def call(env)
-    env[@k] = @v
-    @app.call(env)
-  end
-
-end
-
 class RackAppInheritanceParent < Rack::App
 
   EXCEPTION = Class.new(Exception)
@@ -120,7 +107,6 @@ describe Rack::App do
       end
 
     end
-
 
   end
 end

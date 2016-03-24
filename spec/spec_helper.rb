@@ -121,3 +121,16 @@ module SampleMethods
   end
 
 end
+
+class SimpleSetterMiddleware
+
+  def initialize(app, k, v)
+    @app, @k, @v = app, k, v
+  end
+
+  def call(env)
+    env[@k] = @v
+    @app.call(env)
+  end
+
+end
