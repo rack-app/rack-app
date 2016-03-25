@@ -16,20 +16,11 @@ module Rack::App::Test
 
       properties ||= Hash.new
       url = properties.delete(:url)
-      request_env = Rack::App::Test::Utils.request_env_by(request_method, url, properties)
 
-      # request = Rack::MockRequest.new(rack_app)
-      # Rack::App::Test::Utils.
-      # @last_response = request.__send__(request_method, url, env)
+      request = Rack::MockRequest.new(rack_app)
+      env = Rack::App::Test::Utils.env_by(properties)
 
-      raw_response = rack_app.call(request_env)
-
-      body = []
-      raw_response[2].each do |e|
-        body << e
-      end
-
-      return Rack::Response.new(body, raw_response[0], raw_response[1])
+      return @last_response = request.__send__(request_method, url, env)
 
     end
   end

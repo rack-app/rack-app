@@ -28,7 +28,7 @@ describe Rack::App do
 
       subject { send(http_method, {:url => "/hello_#{http_method}"}) }
 
-      it { expect(subject.body).to eq [String(http_method)] }
+      it { expect(subject.body).to eq String(http_method) }
 
     end
   end
@@ -83,48 +83,52 @@ describe Rack::App do
 
 
   describe '#params' do
-    subject { new_subject.params }
+
+    require 'yaml'
+
+    rack_app described_class do
+
+      get '/params' do
+        YAML.dump(params)
+      end
+
+      get '/users/:user_id' do
+        YAML.dump(params)
+      end
+
+    end
+
+    let(:request) { {:url => '/params', :env => {}} }
+
+    subject { YAML.load(get(request).body) }
 
     context 'when query string given in request env' do
 
       context 'with single value' do
-        before { request_env['QUERY_STRING']= 'a=2' }
+        before { request[:params]= {'a' => 2} }
 
         it { is_expected.to eq({"a" => "2"}) }
       end
 
       context 'with array value' do
-        before { request_env['QUERY_STRING']= 'a[]=2&a[]=3' }
+        before { request[:env][::Rack::QUERY_STRING]= 'a[]=2&a[]=3' }
 
         it { is_expected.to eq({"a" => ["2", "3"]}) }
       end
 
       context 'with multiple value' do
-        before { request_env['QUERY_STRING']= 'a=2&a=3' }
+        before { request[:env][::Rack::QUERY_STRING]= 'a=2&a=3' }
 
         it { is_expected.to eq({"a" => ["2", "3"]}) }
       end
 
       context 'when dynamic path given with restful param' do
-        subject { new_subject.params }
+        before { request[:url]= '/users/123' }
 
-        before { request_env['REQUEST_PATH']='/users/123' }
-        before { request_env['rack.app.path_params_matcher']= {2 => 'user_id'} }
-
-        before do
-          described_class.class_eval do
-
-            get '/users/:user_id' do
-              params['user_id']
-            end
-
-          end
-        end
+        before { request[:env]= {'rack.app.path_params_matcher' => {2 => 'user_id'}} }
 
         it { is_expected.to eq({"user_id" => '123'}) }
-
       end
-
 
     end
 
@@ -149,52 +153,32 @@ describe Rack::App do
 
   describe '.call' do
 
-    let(:request_method) { 'GET' }
-    let(:request_path) { '/hello' }
+    rack_app described_class do
 
-    let(:request_env) do
-      {
-          'REQUEST_METHOD' => request_method,
-          'REQUEST_PATH' => request_path
-      }
+      get '/hello' do
+        response.status = 201
+
+        'valid_endpoint'
+      end
+
     end
 
-    let(:api_class) do
-      klass = Class.new(described_class)
+    subject { ::Rack::MockRequest.new(rack_app).get(path_info) }
 
-      klass.class_eval do
+    context 'when there is a valid endpoint for the request' do
+      let(:path_info) { '/hello' }
 
-        get '/hello' do
-          response.status = 201
+      it { expect(subject.body).to eq 'valid_endpoint' }
 
-          'valid_endpoint'
-        end
-
-      end
-
-      klass
+      it { expect(subject.status).to eq 201 }
     end
 
-    describe '#response_for' do
-      subject { api_class.call(request_env) }
+    context 'when there is no endpoint registered for the given request' do
+      let(:path_info) { '/unknown/endpoint/path' }
 
-      let(:response_body) { subject[2].body[0] }
-      let(:response_status) { subject[2].status }
+      it { expect(subject.body).to eq '404 Not Found' }
 
-      context 'when there is a valid endpoint for the request' do
-        it { expect(response_body).to eq 'valid_endpoint' }
-
-        it { expect(response_status).to eq 201 }
-      end
-
-      context 'when there is no endpoint registered for the given request' do
-        before { request_env['REQUEST_PATH']= '/unknown/endpoint/path' }
-
-        it { expect(response_body).to eq '404 Not Found' }
-
-        it { expect(response_status).to eq 404 }
-      end
-
+      it { expect(subject.status).to eq 404 }
     end
 
   end
@@ -211,7 +195,7 @@ describe Rack::App do
 
       end
 
-      it { expect(get(:url => '/serialized').body.join).to eq 'to_s' }
+      it { expect(get(:url => '/serialized').body).to eq 'to_s' }
 
     end
 
@@ -229,7 +213,7 @@ describe Rack::App do
 
       end
 
-      it { expect(get(:url => '/serialized').body.join).to eq '{:HELLO=>:WORLD}' }
+      it { expect(get(:url => '/serialized').body).to eq '{:HELLO=>:WORLD}' }
 
     end
 
@@ -264,13 +248,13 @@ describe Rack::App do
     end
 
     context 'when expected error class raised' do
-      it { expect(get(:url => '/handled_exception1').body.join).to eq 'range' }
+      it { expect(get(:url => '/handled_exception1').body).to eq 'range' }
     end
 
     context 'when a subclass of the expected error class raised' do
       subject { get(:url => '/handled_exception2') }
 
-      it { expect(subject.body.join).to eq 'standard' }
+      it { expect(subject.body).to eq 'standard' }
 
       it { expect(subject.status).to eq 400 }
     end
@@ -299,9 +283,9 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*' }
+    it { expect(get(:url => '/Access-Control-Allow-Origin').body).to eq '*' }
 
-    it { expect(get(:url => '/Access-Control-Expose-Headers').body.join).to eq 'X-My-Custom-Header, X-Another-Custom-Header' }
+    it { expect(get(:url => '/Access-Control-Expose-Headers').body).to eq 'X-My-Custom-Header, X-Another-Custom-Header' }
 
   end
 
@@ -317,7 +301,7 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/return').body.join).to eq 'hello world' }
+    it { expect(get(:url => '/return').body).to eq 'hello world' }
 
   end
 
@@ -355,15 +339,15 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/users/return').body.join).to eq 'hello world' }
+    it { expect(get(:url => '/users/return').body).to eq 'hello world' }
 
-    it { expect(get(:url => '/users/123/hello').body.join).to eq 'yep' }
+    it { expect(get(:url => '/users/123/hello').body).to eq 'yep' }
 
-    it { expect(get(:url => '/users/test').body.join).to eq 'hy' }
+    it { expect(get(:url => '/users/test').body).to eq 'hy' }
 
-    it { expect(get(:url => '/users/sub/test').body.join).to eq 'hy' }
+    it { expect(get(:url => '/users/sub/test').body).to eq 'hy' }
 
-    it { expect(get(:url => '/users/static/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
+    it { expect(get(:url => '/users/static/raw.txt').body).to eq "hello world!\nhow you doing?" }
 
   end
 
@@ -375,7 +359,7 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
+    it { expect(get(:url => '/raw.txt').body).to eq "hello world!\nhow you doing?" }
 
   end
 
@@ -388,7 +372,8 @@ describe Rack::App do
     end
 
     it { expect(get(:url => '/test/raw.txt').status).to eq 200 }
-    it { expect(get(:url => '/test/raw.txt').body).to eq ["hello world!\nhow you doing?"] }
+
+    it { expect(get(:url => '/test/raw.txt').body).to eq "hello world!\nhow you doing?" }
 
   end
 
@@ -412,9 +397,9 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/before_middlewares').body.join).to eq '' }
+    it { expect(get(:url => '/before_middlewares').body).to eq '' }
 
-    it { expect(get(:url => '/after_middlewares').body.join).to eq 'value' }
+    it { expect(get(:url => '/after_middlewares').body).to eq 'value' }
 
   end
 

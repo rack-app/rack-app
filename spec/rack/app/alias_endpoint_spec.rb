@@ -17,7 +17,7 @@ describe Rack::App do
 
   describe '.alias_endpoint' do
 
-    it{ expect(get(:url => '/b').body.join).to eq 'this is "A"' }
+    it{ expect(get(:url => '/b').body).to eq 'this is "A"' }
 
   end
 
@@ -39,7 +39,7 @@ describe Rack::App do
       end
 
       it "should define GET endpoint that point to the given request path's endpoint" do
-        expect(get(:url => '/').body.join).to eq 'WORLD'
+        expect(get(:url => '/').body).to eq 'WORLD'
       end
 
       it 'should define GET endpoint that point to the given request path\'s endpoint' do

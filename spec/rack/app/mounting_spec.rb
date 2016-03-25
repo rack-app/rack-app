@@ -32,9 +32,9 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/').body.join).to eq 'original' }
+    it { expect(get(:url => '/').body).to eq 'original' }
 
-    it { expect(get(:url => '/mount_point').body.join).to eq 'hello' }
+    it { expect(get(:url => '/mount_point').body).to eq 'hello' }
 
     it { expect(rack_app.hello_world).to eq 'hello world' }
 

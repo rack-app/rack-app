@@ -55,7 +55,7 @@ describe Rack::App::Test do
 
     subject { get(:url => '/hello') }
 
-    it { expect(subject.body).to eq ['world'] }
+    it { expect(subject.body).to eq 'world' }
     it { expect(subject.status).to eq 201 }
 
   end
@@ -64,7 +64,7 @@ describe Rack::App::Test do
 
     subject { post(:url => '/hello') }
 
-    it { expect(subject.body).to eq ['sup?'] }
+    it { expect(subject.body).to eq 'sup?' }
     it { expect(subject.status).to eq 202 }
 
   end
@@ -73,7 +73,7 @@ describe Rack::App::Test do
 
     subject { put(:url => '/this') }
 
-    it { expect(subject.body).to eq ['in'] }
+    it { expect(subject.body).to eq 'in' }
     it { expect(subject.status).to eq 200 }
 
   end
@@ -82,7 +82,7 @@ describe Rack::App::Test do
 
     subject { delete(:url => '/destroy') }
 
-    it { expect(subject.body).to eq ['find'] }
+    it { expect(subject.body).to eq 'find' }
     it { expect(subject.status).to eq 200 }
 
   end
@@ -91,27 +91,33 @@ describe Rack::App::Test do
 
     subject { options(:url => '/destroy') }
 
-    it { expect(subject.body).to eq ['options stuff'] }
+    it { expect(subject.body).to eq 'options stuff' }
     it { expect(subject.status).to eq 200 }
 
   end
 
   describe '#headers' do
-    subject { get :url =>'/headers', :headers => {'X-Header' => 'cat'} }
+    subject { get :url => '/headers', :headers => {'X-Header' => 'cat'} }
 
-    it { expect(subject.body).to eq ['cat'] }
+    it { expect(subject.body).to eq 'cat' }
   end
 
   describe '#params' do
     subject { get :url => '/params', :params => {'dog' => 'meat'} }
 
-    it { expect(subject.body).to eq ['meat'] }
+    it { expect(subject.body).to eq 'meat' }
   end
 
   describe '#payload' do
     subject { get :url => '/payload', :payload => "hello\nworld" }
 
-    it { expect(subject.body).to eq ["hello\nworld"]}
+    it { expect(subject.body).to eq "hello\nworld" }
+  end
+
+  describe '#env' do
+    subject { get :url => '/payload', :env => {'rack.input' => ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld"))} }
+
+    it { expect(subject.body).to eq "hello\nworld" }
   end
 
 end

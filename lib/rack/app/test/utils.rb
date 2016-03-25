@@ -1,4 +1,5 @@
 module Rack::App::Test::Utils
+
   extend self
 
   def format_properties(properties)
@@ -30,56 +31,26 @@ module Rack::App::Test::Utils
     env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
     payload = properties.delete(:payload)
     env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
-    env["QUERY_STRING"]= encode_www_form(properties[:params].to_a)
+    env[::Rack::QUERY_STRING]= encode_www_form(properties[:params].to_a)
+    env.merge!(properties[:env] || {})
+
 
     env
-
   end
 
   def string_io_for(payload)
-    io = case payload
+    case payload
 
-           when IO
-             payload
+      when IO
+        payload
 
-           when String
-             StringIO.new(payload.to_s)
+      when String
+        StringIO.new(payload.to_s)
 
-           else
-             StringIO.new('')
+      else
+        StringIO.new('')
 
-         end
-  end
-
-  def request_env_by(request_method, url, raw_properties)
-
-    properties = format_properties(raw_properties)
-    additional_headers = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
-
-    payload = raw_properties.delete(:payload)
-
-    additional_headers["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
-
-    {
-        "REMOTE_ADDR" => "192.168.56.1",
-        "REQUEST_METHOD" => request_method.to_s.upcase,
-        "REQUEST_PATH" => url,
-        "REQUEST_URI" => url,
-        "PATH_INFO" => url,
-        "SERVER_PROTOCOL" => "HTTP/1.1",
-        "CONTENT_LENGTH" => "0",
-        "CONTENT_TYPE" => "application/x-www-form-urlencoded",
-        "SERVER_NAME" => "hds-dev.ett.local",
-        "SERVER_PORT" => "80",
-        "QUERY_STRING" => encode_www_form(properties[:params].to_a),
-        "HTTP_VERSION" => "HTTP/1.1",
-        "HTTP_USER_AGENT" => "spec",
-        "HTTP_HOST" => "spec.local",
-        "HTTP_ACCEPT_ENCODING" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
-        "HTTP_ACCEPT" => "*/*",
-        "HTTP_CONNECTION" => "close"
-    }.merge(additional_headers)
-
+    end
   end
 
   def encode_www_form(enum)
@@ -122,9 +93,8 @@ module Rack::App::Test::Utils
 
   def encode_www_form_component(str)
     str = str.to_s.dup
-
-    TBLENCWWWCOMP_.each do |from,to|
-      str.gsub!(from,to)
+    TBLENCWWWCOMP_.each do |from, to|
+      str.gsub!(from, to)
     end
     str
   end

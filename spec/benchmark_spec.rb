@@ -8,12 +8,12 @@ require 'rack/app/test'
 describe '#Performance Benchmark' do
 
   let(:test_amount) { 100000 }
-  let(:rack_app_result) { Benchmark.measure { test_amount.times { RackApp.call(Rack::App::Test::Utils.request_env_by('GET', request_path, {})) } } }
-  let(:raw_rack_result) { Benchmark.measure { test_amount.times { RackSkeleton.call(Rack::App::Test::Utils.request_env_by('GET', request_path, {})) } } }
+  let(:rack_app_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackApp).get(request_path) } } }
+  let(:raw_rack_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackSkeleton).get(request_path) } } }
 
   describe 'speed difference measured from empty rack class' do
     subject { rack_app_result.real / raw_rack_result.real }
-    before{ puts(subject) } if ENV['VERBOSE'] =~ /^t/i
+    before { puts(subject) } if ENV['VERBOSE'] =~ /^t/i
 
     context 'when static endpoint is requested' do
       let(:request_path) { '/' }

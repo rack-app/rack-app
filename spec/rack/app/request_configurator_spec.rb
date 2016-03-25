@@ -6,14 +6,13 @@ describe Rack::App::RequestConfigurator do
 
   let(:request_env) do
     {
-        'REQUEST_PATH' => '/hello/world'
+        ::Rack::PATH_INFO => '/hello/world'
     }
   end
   describe '#configure' do
     subject { instance.configure(request_env) }
 
-    it { is_expected.to include({Rack::App::Constants::NORMALIZED_REQUEST_PATH => '/hello/world'}) }
+    it { is_expected.to include({Rack::App::Constants::NORMALIZED_PATH_INFO => '/hello/world'}) }
   end
 
 end
-

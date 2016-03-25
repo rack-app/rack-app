@@ -31,12 +31,8 @@ describe Rack::App::InstanceMethods do
       response = get(:url => '/serve_file')
 
       expect(response.status).to eq 200
-      expect(response.body).to eq ["hello world!\nhow you doing?"]
-
-      content = ''
-      response.body.each { |chunk| content << chunk }
-
-      expect(content).to eq "hello world!\nhow you doing?"
+      expect(response.body).to eq "hello world!\nhow you doing?"
+      expect(response.body).to eq "hello world!\nhow you doing?"
 
       new_response = get(:url => '/serve_file',
                          :headers => { 'IF_MODIFIED_SINCE' => response.headers["Last-Modified"] })

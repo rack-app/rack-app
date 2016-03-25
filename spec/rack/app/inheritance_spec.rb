@@ -65,15 +65,15 @@ describe Rack::App do
 
     it { expect(get(:url => '/parent_endpoint').status).to eq 404 }
 
-    it { expect(get(:url => '/error').body.join).to eq 'error with parent class method'.inspect }
+    it { expect(get(:url => '/error').body).to eq 'error with parent class method'.inspect }
 
-    it { expect(get(:url => '/serialized').body.join).to eq 'this is serialized from parent'.inspect }
+    it { expect(get(:url => '/serialized').body).to eq 'this is serialized from parent'.inspect }
 
-    it { expect(get(:url => '/mw_parent').body.join).to eq 'yes'.inspect }
+    it { expect(get(:url => '/mw_parent').body).to eq 'yes'.inspect }
 
-    it { expect(get(:url => '/mw_child').body.join).to eq 'true'.inspect }
+    it { expect(get(:url => '/mw_child').body).to eq 'true'.inspect }
 
-    it { expect(get(:url => '/Access-Control-Allow-Origin').body.join).to eq '*'.inspect }
+    it { expect(get(:url => '/Access-Control-Allow-Origin').body).to eq '*'.inspect }
 
     context 'when on_inheritance block defined in parent' do
 
