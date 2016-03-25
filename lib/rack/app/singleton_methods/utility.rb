@@ -1,5 +1,14 @@
 module Rack::App::SingletonMethods::Utility
 
+  def error(*exception_classes, &block)
+    @error_handler ||= Rack::App::ErrorHandler.new
+    unless block.nil?
+      @error_handler.register_handler(exception_classes, block)
+    end
+
+    return @error_handler
+  end
+
   protected
 
   def serializer(&definition_how_to_serialize)
@@ -25,14 +34,5 @@ module Rack::App::SingletonMethods::Utility
   end
 
   alias middleware middlewares
-
-  def error(*exception_classes, &block)
-    @error_handler ||= Rack::App::ErrorHandler.new
-    unless block.nil?
-      @error_handler.register_handler(exception_classes, block)
-    end
-
-    return @error_handler
-  end
 
 end

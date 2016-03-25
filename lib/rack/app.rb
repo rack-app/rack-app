@@ -24,13 +24,4 @@ class Rack::App
   require 'rack/app/instance_methods'
   include Rack::App::InstanceMethods
 
-  error
-  router
-  headers
-  serializer
-  middleware
-  on_inheritance
-
-  freeze
-
 end
