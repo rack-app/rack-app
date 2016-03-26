@@ -51,6 +51,27 @@ describe Rack::App::Test do
 
   rack_app RackTEST
 
+  describe 'url in test helpers' do
+
+    context 'as string argument' do
+      subject { get('/hello') }
+
+      it { expect(subject.body).to eq 'world' }
+
+      it { expect(subject.status).to eq 201 }
+    end
+
+    context 'as hash :url key value' do
+      subject { get(:url => '/hello') }
+
+      it { expect(subject.body).to eq 'world' }
+
+      it { expect(subject.status).to eq 201 }
+    end
+
+
+  end
+
   describe '#get' do
 
     subject { get(:url => '/hello') }

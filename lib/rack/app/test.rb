@@ -12,11 +12,10 @@ module Rack::App::Test
   attr_reader :last_response
 
   [:get, :post, :put, :delete, :options, :patch].each do |request_method|
-    define_method(request_method) do |properties|
+    define_method(request_method) do |*args|
 
-      properties ||= Hash.new
-      url = properties.delete(:url)
-
+      properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)
+      url = args.select { |e| e.is_a?(String) }.first || properties.delete(:url)
       request = Rack::MockRequest.new(rack_app)
       env = Rack::App::Test::Utils.env_by(properties)
 
