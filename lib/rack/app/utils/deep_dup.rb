@@ -49,12 +49,12 @@ class Rack::App::Utils::DeepDup
   end
 
   def dup_array(object)
-    duplication = registration(object, object.dup)
+    duplication = dup_object(object)
     duplication.map!{ |e| dup(e) }
   end
 
   def dup_hash(object)
-    duplication = registration(object, object.dup)
+    duplication = dup_object(object)
     object.reduce(duplication) { |hash, (k, v)| hash.merge!(dup(k) => dup(v)) }
   end
 
