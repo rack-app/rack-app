@@ -12,6 +12,7 @@ class Rack::App
   require 'rack/app/params'
   require 'rack/app/router'
   require 'rack/app/endpoint'
+  require 'rack/app/extension'
   require 'rack/app/serializer'
   require 'rack/app/file_server'
   require 'rack/app/error_handler'
