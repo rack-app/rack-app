@@ -7,7 +7,7 @@ require 'rack/app/test'
 
 describe '#Performance Benchmark' do
 
-  let(:test_amount) { 100000 }
+  let(:test_amount) { (ENV['BENCHMARK_QUANTITY'] || 100).to_i }
   let(:rack_app_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackApp).get(request_path) } } }
   let(:raw_rack_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackSkeleton).get(request_path) } } }
 

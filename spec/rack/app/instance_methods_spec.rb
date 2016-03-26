@@ -35,7 +35,7 @@ describe Rack::App::InstanceMethods do
       expect(response.body).to eq "hello world!\nhow you doing?"
 
       new_response = get(:url => '/serve_file',
-                         :headers => { 'IF_MODIFIED_SINCE' => response.headers["Last-Modified"] })
+                         :headers => {'IF_MODIFIED_SINCE' => response.headers["Last-Modified"]})
 
       expect(new_response.status).to eq 304
 
@@ -45,12 +45,16 @@ describe Rack::App::InstanceMethods do
 
   describe '#stream_payload_to' do
 
+    file_size_in_mb = (ENV['STREAM_FILE_SIZE'] || 128).to_i
+
     before do
       [in_file, out_file].each { |fp| File.delete(fp) if File.exist?(fp) }
 
-      example_line_str = "o" * 1024 * 1024
+      line_size = 1024 * 1024
+      example_line_str = "o" * line_size
+
       File.open(in_file, 'w') do |file|
-        1024.times do
+        file_size_in_mb.times do
           line = example_line_str
 
           file.puts(line)
@@ -59,7 +63,7 @@ describe Rack::App::InstanceMethods do
 
     end
 
-    it 'should be easy and memory efficient to steam 1Gb payload into a file' do
+    it "should be easy and memory efficient to steam #{file_size_in_mb} MByte payload into a file" do
       get(:url => '/payload_to_file', :payload => File.open(in_file))
 
       expect(File.size(in_file)).to eq File.size(out_file)

@@ -87,4 +87,52 @@ describe Rack::App do
 
   end
 
+  describe '.mount_rack_based_application' do
+
+    rack_app do
+
+      mount_rack_based_application RackBasedApplication
+
+      namespace :mount do
+
+        mount_rack_based_application RackBasedApplication, to: '/point'
+
+      end
+
+      get '/' do
+        'endpoints have bigger priority than mounted applications'
+      end
+
+      get '/hello/world/:text' do
+        'partially matching endpoint'
+      end
+
+    end
+
+    it { expect(get('/').body).to eq 'endpoints have bigger priority than mounted applications' }
+
+    it { expect(get('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(post('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(put('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(delete('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(patch('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(head('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+    it { expect(options('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
+
+    it 'should mount to the correct namespace and mount point' do
+      pending(
+          [
+              'requires modify path_info in rack env before passing to RackBasedApplication',
+              'so the path_info namespacing can be redirected to the original one',
+              'how it was used while the application was designed'
+          ].join(' ')
+      )
+
+      expect(get('/mount/point/hello/world/test/endpoint').body).to eq 'Hello, World!'
+    end
+
+    it { expect(get('/hello/world/to_you').body).to eq 'partially matching endpoint' }
+
+  end
+
 end

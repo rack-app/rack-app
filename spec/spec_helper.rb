@@ -147,10 +147,16 @@ class RackBasedApplication
 
     if request_path == '/'
       ['200', {'Content-Type' => 'text/html'}, ['static endpoint']]
+
     elsif request_path =~ /^\/users\/.*/
       ['200', {'Content-Type' => 'text/html'}, ['dynamic endpoint']]
+
+    elsif request_path == '/hello/world/test/endpoint'
+      ['200', {'Content-Type' => 'text/html'}, ['Hello, World!']]
+
     else
-      ['404', {}, ['404 Not Found']]
+      ['404', {}, ['404 Not Found!']]
+
     end
 
   end

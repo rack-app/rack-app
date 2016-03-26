@@ -47,6 +47,18 @@ module Rack::App::SingletonMethods::Mounting
     @last_description = nil
   end
 
+  def mount_rack_based_application(rack_based_app, options={})
+    router.register_endpoint!(
+        ::Rack::App::Constants::HTTP::ANY,
+        Rack::App::Utils.join(@namespaces, options[:to], ::Rack::App::Constants::RACK_BASED_APPLICATION),
+        @last_description,
+        rack_based_app)
+
+    @last_description = nil
+  end
+
+  alias mount_app mount_rack_based_application
+
   protected
 
   def on_mounted(&block)

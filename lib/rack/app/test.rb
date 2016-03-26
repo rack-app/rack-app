@@ -11,7 +11,7 @@ module Rack::App::Test
 
   attr_reader :last_response
 
-  [:get, :post, :put, :delete, :options, :patch].each do |request_method|
+  [:get, :post, :put, :delete, :options, :patch, :head].each do |request_method|
     define_method(request_method) do |*args|
 
       properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)

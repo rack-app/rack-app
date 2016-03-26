@@ -51,7 +51,7 @@ module Rack::App::Utils
   end
 
   def join(*url_path_parts)
-    url_path_parts = [url_path_parts].flatten.compact
+    url_path_parts = [url_path_parts].flatten.compact.map(&:to_s)
     File.join(*url_path_parts).gsub(File::Separator, '/').sub(/^\/?(.*)$/, '/\1')
   end
 
@@ -80,6 +80,21 @@ module Rack::App::Utils
 
   def deep_dup(object)
     ::Rack::App::Utils::DeepDup.new(object).to_dup
+  end
+
+  def deep_merge(hash,oth_hash)
+    oth_hash.each_pair do |current_key, other_value|
+
+      this_value = hash[current_key]
+
+      hash[current_key] = if this_value.is_a?(Hash) && other_value.is_a?(Hash)
+                            deep_merge(this_value, other_value)
+                          else
+                            other_value
+                          end
+    end
+
+    hash
   end
 
 end

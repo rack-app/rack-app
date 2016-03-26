@@ -61,7 +61,7 @@ class Rack::App::Router
 
   def defined_path_is_dynamic?(path_str)
     path_str = Rack::App::Utils.normalize_path(path_str)
-    !!(path_str.to_s =~ /\/:\w+/i) or !!(path_str.to_s =~ /\/\*/i)
+    !!(path_str.to_s =~ /\/:\w+/i) or !!(path_str.to_s =~ /\/\*/i) or path_str.include?(Rack::App::Constants::RACK_BASED_APPLICATION)
   end
 
 end
