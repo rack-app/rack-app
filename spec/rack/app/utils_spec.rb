@@ -4,6 +4,33 @@ describe Rack::App::Utils do
 
   let(:instance) { Object.new.tap { |o| o.extend(described_class) } }
 
+  describe '#deep_dup' do
+
+    subject { instance.deep_dup(rack_app) }
+
+    require 'rack/app/test'
+    include Rack::App::Test
+
+    rack_app do
+
+      def self.test
+        @test ||= {}
+      end
+
+      test[:hy]= 'no'
+
+      get '/' do
+        self.class
+      end
+
+    end
+
+    it { expect(subject.object_id).to_not eq rack_app.object_id }
+
+    it { expect(subject.test[:hy].object_id).to_not eq rack_app.test[:hy].object_id }
+
+  end
+
   describe '#normalize_path' do
     subject { instance.normalize_path(request_path) }
 

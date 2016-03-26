@@ -2,6 +2,8 @@ require 'securerandom'
 module Rack::App::Utils
   extend self
 
+  require 'rack/app/utils/deep_dup'
+
   # Normalizes URI path.
   #
   # Strips off trailing slash and ensures there is a leading slash.
@@ -73,6 +75,11 @@ module Rack::App::Utils
     basename = File.basename(file_path_info).split('.')[0]
     directory = File.dirname(file_path_info)
     File.join(directory,basename)
+  end
+
+
+  def deep_dup(object)
+    ::Rack::App::Utils::DeepDup.new(object).to_dup
   end
 
 end
