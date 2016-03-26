@@ -1,4 +1,4 @@
-module Rack::App::SingletonMethods::Utility
+module Rack::App::SingletonMethods::Settings
 
   protected
 

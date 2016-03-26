@@ -9,16 +9,19 @@ describe Rack::App do
     mounted_class = Class.new(Rack::App)
     mounted_class.class_eval do
 
-      on_mounted do |class_who_mount_us, options|
+      on_mounted do |options|
 
-        class_who_mount_us.extend(SampleMethods)
+        get "/#{options[:endpoint]}" do
+          'works'
+        end
+
+        options.delete(:to)
 
       end
 
       get '/' do
         'hello'
       end
-
 
     end
 
@@ -28,7 +31,7 @@ describe Rack::App do
         'original'
       end
 
-      mount mounted_class, :to => '/mount_point', :test => 'hello'
+      mount mounted_class, :to => '/mount_point', :test => 'hello', :endpoint => 'hy'
 
     end
 
@@ -36,7 +39,11 @@ describe Rack::App do
 
     it { expect(get(:url => '/mount_point').body).to eq 'hello' }
 
-    it { expect(rack_app.hello_world).to eq 'hello world' }
+    it { expect(get('/mount_point/hy').body).to eq 'works' }
+
+    it 'should NEVER ALLOW any change in the source App class that being mounte, even if dynamic endpoint deceleration included based on the option' do
+      expect(Rack::MockRequest.new(mounted_class).get('/hy').status).to eq 404
+    end
 
   end
 
@@ -51,6 +58,10 @@ describe Rack::App do
 
           get '/endpoint' do
             'hello world!'
+          end
+
+          on_mounted do |options|
+
           end
 
         end
@@ -73,7 +84,6 @@ describe Rack::App do
       end
 
     end
-
 
   end
 
