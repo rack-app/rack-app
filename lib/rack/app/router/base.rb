@@ -7,7 +7,7 @@ class Rack::App::Router::Base
   def register_endpoint!(request_method, request_path, description, endpoint)
     endpoints.push(
         {
-            :request_method => request_method.to_s.upcase,
+            :request_method => request_method,
             :request_path => Rack::App::Utils.normalize_path(request_path),
             :description => description,
             :endpoint => endpoint

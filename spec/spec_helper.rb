@@ -134,3 +134,25 @@ class SimpleSetterMiddleware
   end
 
 end
+
+class RackBasedApplication
+
+  def self.call(env)
+    new.call(env)
+  end
+
+  def call(env)
+
+    request_path = env[::Rack::PATH_INFO]
+
+    if request_path == '/'
+      ['200', {'Content-Type' => 'text/html'}, ['static endpoint']]
+    elsif request_path =~ /^\/users\/.*/
+      ['200', {'Content-Type' => 'text/html'}, ['dynamic endpoint']]
+    else
+      ['404', {}, ['404 Not Found']]
+    end
+
+  end
+
+end
