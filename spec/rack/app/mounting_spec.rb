@@ -95,7 +95,7 @@ describe Rack::App do
 
       namespace :mount do
 
-        mount_rack_based_application RackBasedApplication, to: '/point'
+        mount_rack_based_application RackBasedApplication, :to => '/point'
 
       end
 
