@@ -10,16 +10,14 @@ module Rack::App::Test::Utils
     properties
   end
 
-  def rack_app_by(*args, &constructor)
+  def rack_app_by(rack_app_class, constructors)
     subject_app = nil
 
-    rack_app_class = args.shift
-
-    if constructor.nil?
+    if constructors.empty?
       subject_app = rack_app_class
     else
       subject_app = Class.new(rack_app_class || ::Rack::App)
-      subject_app.class_eval(&constructor)
+      constructors.each { |constructor| subject_app.class_eval(&constructor) }
     end
 
     subject_app

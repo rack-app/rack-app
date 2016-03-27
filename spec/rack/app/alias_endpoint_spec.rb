@@ -11,13 +11,16 @@ describe Rack::App do
       'this is "A"'
     end
 
-    alias_endpoint '/b', '/a'
+    alias_endpoint '/c', '/a'
+    alias_endpoint '/b/', '/a/'
 
   end
 
   describe '.alias_endpoint' do
 
     it{ expect(get(:url => '/b').body).to eq 'this is "A"' }
+
+    it{ expect(get(:url => '/c').body).to eq 'this is "A"' }
 
   end
 

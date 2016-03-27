@@ -7,11 +7,7 @@ module Rack::App::SingletonMethods::RouteHandling
   protected
 
   def root(endpoint_path)
-    %W[GET POST PUT DELETE OPTIONS PATCH HEAD].each do |request_method|
-      endpoint = router.fetch_endpoint(request_method, endpoint_path)
-      next if endpoint == Rack::App::Endpoint::NOT_FOUND
-      router.register_endpoint!(request_method, '/', 'Root endpoint', endpoint)
-    end
+    alias_endpoint '/', endpoint_path
   end
 
   def description(*description_texts)

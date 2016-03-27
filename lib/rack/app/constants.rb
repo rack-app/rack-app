@@ -11,8 +11,9 @@ module Rack::App::Constants
     OPTIONS = 'OPTIONS'.freeze
   end
 
-  NORMALIZED_PATH_INFO = 'rack-app.path_info'.freeze
+  ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
   PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
   RACK_BASED_APPLICATION = '[Mounted Rack Application]'.freeze
+  MOUNTED_DIRECTORY = '[Mounted Directory]'.freeze
 
 end

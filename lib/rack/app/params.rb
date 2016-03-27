@@ -50,7 +50,7 @@ class Rack::App::Params
   end
 
   def request_path_parts
-    @request_env[::Rack::App::Constants::NORMALIZED_PATH_INFO].split('/')
+    @request_env[::Rack::PATH_INFO].split('/')
   end
 
   def path_params_matcher

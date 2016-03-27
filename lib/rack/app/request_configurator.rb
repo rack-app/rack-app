@@ -2,9 +2,17 @@ module Rack::App::RequestConfigurator
 
   extend self
 
-  def configure(request_env)
-    request_env[Rack::App::Constants::NORMALIZED_PATH_INFO]= Rack::App::Utils.normalize_path(request_env[::Rack::PATH_INFO])
-    request_env
+  def configure(env)
+    path_info(env)
+    env
+  end
+
+  protected
+
+  def path_info(env)
+    path_info = env[::Rack::PATH_INFO]
+    env[::Rack::App::Constants::ORIGINAL_PATH_INFO]= path_info
+    env[::Rack::PATH_INFO]= Rack::App::Utils.normalize_path(path_info)
   end
 
 end

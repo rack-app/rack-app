@@ -162,3 +162,6 @@ class RackBasedApplication
   end
 
 end
+
+require 'rack/app/test'
+require 'yaml'

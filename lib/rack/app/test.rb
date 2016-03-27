@@ -24,5 +24,12 @@ module Rack::App::Test
     end
   end
 
+  def rack_app(&block)
+    app_class = defined?(__rack_app_class__) ? __rack_app_class__ : nil
+    constructors = []
+    constructors << __rack_app_constructor__ if defined?(__rack_app_constructor__) and __rack_app_constructor__.is_a?(Proc)
+    constructors << block unless block.nil?
+    Rack::App::Test::Utils.rack_app_by(app_class, constructors)
+  end
 
 end

@@ -1,5 +1,21 @@
 class Rack::App::Router::Base
 
+  def call(env)
+
+    request_method= env[Rack::REQUEST_METHOD]
+    path_info= env[Rack::PATH_INFO]
+
+    context = fetch_context(request_method, path_info)
+    return unless context.is_a?(Hash) and not context[:endpoint].nil?
+
+    format_env(context, env)
+    context[:endpoint].call(env)
+
+  end
+
+  def format_env(context, env)
+  end
+
   def endpoints
     @endpoints ||= []
   end
@@ -18,11 +34,11 @@ class Rack::App::Router::Base
     return endpoint
   end
 
-  def fetch_endpoint(request_method, request_path)
+  protected
+
+  def fetch_context(request_method, request_path)
     raise('IMPLEMENTATION MISSING ERROR')
   end
-
-  protected
 
   def compile_registered_endpoints!
     raise('IMPLEMENTATION MISSING ERROR')

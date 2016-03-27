@@ -1,73 +1,61 @@
 require 'spec_helper'
-
 describe Rack::App::Router::Dynamic do
 
-  let(:defined_request_path) { '/users/:user_id' }
-  let(:received_request_path) { '/users/123' }
-  let(:request_method) { 'GET' }
+  include Rack::App::Test
 
-  let(:endpoint) do
-    settings = {
-        :app_class => Class.new(Rack::App),
-        :user_defined_logic => lambda { 'hello world!' },
-        :request_method => 'GET',
-        :request_path => '\404'
-    }
-    Rack::App::Endpoint.new(settings)
-  end
+  rack_app do
 
-  describe '#register_endpoint!' do
-    subject { described_class.new.register_endpoint!(request_method, defined_request_path, 'desc', endpoint) }
+    get '/hello' do
+      'world'
+    end
 
-    it { is_expected.to be endpoint }
+    get '/users/:user_id' do
+      YAML.dump(params)
+    end
 
-    it 'should add path params matcher to the endpoint' do
-      expect(endpoint).to receive(:register_path_params_matcher).with({2 => 'user_id'})
-
-      is_expected.to be endpoint
+    get '/users/:user_id/documents/:document_id' do
+      YAML.dump(params)
     end
 
   end
 
-  describe 'fetch_endpoint' do
-    let(:router) { described_class.new }
-    subject { router.fetch_endpoint(request_method, received_request_path) }
+  describe '#call' do
 
-    context 'when matching route given' do
-      before { router.register_endpoint!(request_method, defined_request_path,'desc', endpoint) }
-
-      it { is_expected.to be endpoint }
+    it 'should return the the path parameter' do
+      expect(YAML.load(get('/users/1').body)).to eq({'user_id' => '1'})
     end
 
-    context 'when no matching route given' do
-      it { is_expected.to be nil }
+    it 'should return the the path parameter even on multiple partially matching endpoints' do
+      expect(YAML.load(get('/users/1/documents/2').body)).to eq({'user_id' => '1', 'document_id' => '2'})
     end
 
-    context 'when multiple path given with partial matching' do
-      let(:endpoint2) { endpoint.dup }
-      before { router.register_endpoint!(request_method, defined_request_path,'desc', endpoint) }
-      before { router.register_endpoint!(request_method, [defined_request_path, 'doc'].join('/'),'desc', endpoint2) }
+    context 'when file handler registered' do
 
-      it { is_expected.to be endpoint }
-      it { expect(router.fetch_endpoint(request_method, [received_request_path, 'doc'].join('/'))).to be endpoint2 }
+      rack_app do
 
-    end
+        serve_files_from '/spec/fixtures'
 
-    context 'when partial matching is defined' do
-      before { router.register_endpoint!(request_method, '/assets/**/*','desc', endpoint) }
-
-      context 'and the received request is targeting the partial match highest layer' do
-        let(:received_request_path) { '/assets/some.js' }
-
-        it { is_expected.to be endpoint }
       end
 
-      context 'and the received request is targeting the partial match deep layer' do
-        let(:received_request_path) { '/assets/some/folder/to/deal/with/some.js' }
-
-        it { is_expected.to be endpoint }
+      it 'should return mounted directory handler' do
+        expect(YAML.load(get('/hello/world').body)).to eq('Hello, World!')
       end
 
+      it 'should return mounted directory handler even with partially matching path' do
+        expect(YAML.load(get('/hello/test/awesome.js').body)).to eq("console.log('hello world');")
+      end
+
+      it 'should return nothing so the 404 handler can be returned' do
+        path_info = '/hello/world/not_found'
+        expect(get(path_info).body).to match(/^File not found/)
+        expect(get(path_info).status).to eq(404)
+      end
+
+    end
+
+    it 'should return nothing so the 404 handler can be returned' do
+      expect(get('/users/1/documents/2/dog').body).to eq("404 Not Found")
+      expect(get('/users/1/documents/2/dog').status).to eq(404)
     end
 
   end

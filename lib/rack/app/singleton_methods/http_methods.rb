@@ -31,6 +31,9 @@ module Rack::App::SingletonMethods::HttpMethods
   end
 
   def alias_endpoint(new_request_path, original_request_path)
+    new_request_path = Rack::App::Utils.normalize_path(new_request_path)
+    original_request_path = Rack::App::Utils.normalize_path(original_request_path)
+
     router.endpoints.select { |ep| ep[:request_path] == original_request_path }.each do |endpoint|
       router.register_endpoint!(endpoint[:request_method], new_request_path, endpoint[:description], endpoint[:endpoint])
     end

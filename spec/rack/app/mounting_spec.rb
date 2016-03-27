@@ -48,39 +48,34 @@ describe Rack::App do
   end
 
   describe '.mount' do
+
     subject { described_class.mount(to_be_mounted_api_class) }
 
     context 'when valid api class given' do
 
-      let(:to_be_mounted_api_class) do
+      rack_app do
+
         klass = Class.new(Rack::App)
         klass.class_eval do
-
           get '/endpoint' do
-            'hello world!'
+            'mounted endpoint'
           end
-
-          on_mounted do |options|
-
-          end
-
         end
-        klass
+
+        mount klass
+
       end
 
       it 'should merge the mounted class endpoints to its own collection' do
-        is_expected.to be nil
-
-        expect(described_class.router.fetch_endpoint('GET', '/endpoint')).to_not be nil
+        expect(get('/endpoint').body).to eq 'mounted endpoint'
       end
 
     end
 
     context 'when invalid class given' do
-      let(:to_be_mounted_api_class) { 'nope this is a string' }
 
       it 'should raise argument error' do
-        expect { subject }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
+        expect { rack_app{ mount('nope this is a string') } }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
 
     end
@@ -120,14 +115,6 @@ describe Rack::App do
     it { expect(options('/hello/world/test/endpoint').body).to eq 'Hello, World!' }
 
     it 'should mount to the correct namespace and mount point' do
-      pending(
-          [
-              'requires modify path_info in rack env before passing to RackBasedApplication',
-              'so the path_info namespacing can be redirected to the original one',
-              'how it was used while the application was designed'
-          ].join(' ')
-      )
-
       expect(get('/mount/point/hello/world/test/endpoint').body).to eq 'Hello, World!'
     end
 

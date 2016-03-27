@@ -23,22 +23,6 @@ describe Rack::App::Router::Static do
     it { is_expected.to be endpoint }
   end
 
-  describe 'fetch_endpoint' do
-    let(:router) { described_class.new }
-    subject { router.fetch_endpoint(request_method, request_path) }
-
-    context 'when matching route given' do
-      before { router.register_endpoint!(request_method, request_path, 'desc', endpoint) }
-
-      it { is_expected.to be endpoint }
-    end
-
-    context 'when no matching route given' do
-      it { is_expected.to be nil }
-    end
-
-  end
-
   describe '#endpoints' do
     subject { instance.endpoints }
 
