@@ -10,17 +10,13 @@ module Rack::App::Test::Utils
     properties
   end
 
-  def rack_app_by(rack_app_class, constructors)
-    subject_app = nil
+  def rack_app_by(subject_class, constructors, &block)
 
-    if constructors.empty?
-      subject_app = rack_app_class
-    else
-      subject_app = Class.new(rack_app_class || ::Rack::App)
-      constructors.each { |constructor| subject_app.class_eval(&constructor) }
-    end
+    app_class = subject_class.respond_to?(:call) ? subject_class : Rack::App
+    app = Rack::App::Utils.deep_dup(app_class)
+    constructors.each { |constructor| app.class_eval(&constructor) }
 
-    subject_app
+    block.is_a?(Proc) ? app.instance_exec(&block) : app
   end
 
   def env_by(properties)

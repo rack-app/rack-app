@@ -20,13 +20,21 @@ module Rack::App::SingletonMethods::Settings
 
   def extensions(*extensions)
     extensions.each do |ext|
-      if ext.is_a?(::Class) && ext < (::Rack::App::Extension)
+
+      if ext.is_a?(Symbol)
+        ext = Rack::App::Extension::Factory::find_for(ext)
+      end
+
+      if ext.is_a?(::Class) && ext < ::Rack::App::Extension
 
         ext.includes.each { |m| include(m) }
         ext.extends.each { |m| extend(m) }
         ext.inheritances.each { |block| on_inheritance(&block) }
 
+      else
+        raise("unsupported extension reference: #{ext.inspect}")
       end
+
     end
   end
 

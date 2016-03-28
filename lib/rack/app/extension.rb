@@ -1,5 +1,20 @@
 class Rack::App::Extension
+
+  require 'rack/app/extension/factory'
+
   class << self
+
+    def names
+      @names ||= []
+    end
+
+    def name(extension_name_alias)
+      names << extension_name_alias.to_s.to_sym
+    end
+
+    def inherited(klass)
+      klass.name(Rack::App::Utils.snake_case(klass.to_s.split('::').last).to_sym)
+    end
 
     def includes
       @includes ||= []
