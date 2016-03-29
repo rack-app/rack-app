@@ -6,15 +6,11 @@ class Rack::App::Router
   require 'rack/app/router/not_found'
 
   def call(env)
-    response = nil
-    registered_endpoint_routers.find do |router|
-      response = router.call(env)
-    end
-    return response
+    @static.call(env) or @dynamic.call(env) or @not_found.call(env)
   end
 
   def endpoints
-    registered_endpoint_routers.map(&:endpoints).reduce([],:+)
+    [@static, @dynamic, @not_found].map(&:endpoints).reduce([], :+)
   end
 
   def show_endpoints
@@ -61,10 +57,6 @@ class Rack::App::Router
     @static = Rack::App::Router::Static.new
     @dynamic = Rack::App::Router::Dynamic.new
     @not_found = Rack::App::Router::NotFound.new
-  end
-
-  def registered_endpoint_routers
-    [@static, @dynamic, @not_found]
   end
 
   def router_for(request_path)
