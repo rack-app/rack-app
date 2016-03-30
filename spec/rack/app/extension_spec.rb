@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative 'extension_spec/example-rack_app_extension'
+require File.join(File.dirname(__FILE__),'extension_spec','example-rack_app_extension')
 describe Rack::App::Extension do
 
   require 'rack/app/test'
