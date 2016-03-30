@@ -10,7 +10,7 @@ module Rack::App::SingletonMethods::Mounting
     duplication = ::Rack::App::Utils.deep_dup(api_class)
 
     duplication.on_mounted.each do |on_mount|
-      duplication.instance_exec(mount_prop, &on_mount)
+      duplication.class_exec(mount_prop,&on_mount)
     end
 
     merge_prop = {:namespaces => [@namespaces, mount_to_path].flatten}

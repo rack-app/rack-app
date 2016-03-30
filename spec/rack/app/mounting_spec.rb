@@ -1,4 +1,5 @@
 require 'spec_helper'
+Dir.glob(File.join(File.dirname(__FILE__), 'mounting_spec', '*.rb')).each { |file_path| require(file_path) }
 describe Rack::App do
 
   require 'rack/app/test'
@@ -75,8 +76,31 @@ describe Rack::App do
     context 'when invalid class given' do
 
       it 'should raise argument error' do
-        expect { rack_app{ mount('nope this is a string') } }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
+        expect { rack_app { mount('nope this is a string') } }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
+
+    end
+
+    context 'when mounting application to multiple mount point with different options, and the application instance handling states' do
+
+      rack_app do
+
+        mount OnMountSelfModifyingApp, :endpoint => 'hello'
+        mount OnMountSelfModifyingApp, :endpoint => 'world'
+        mount OnMountSelfModifyingApp, :endpoint => 'test', :to => '/mount_point'
+
+      end
+
+      it { expect(get('/hello').body).to eq 'works!' }
+      it { expect(get('/world').body).to eq 'works!' }
+      it { expect(get('/mount_point/test').body).to eq 'works!' }
+      it { expect(get('/mount_point/hello').status).to eq 404 }
+      it { expect(get('/mount_point/world').status).to eq 404 }
+
+      it { expect { rack_app.method(:new_method) }.to raise_error(NameError) }
+
+      it { expect(get('/world/singleton').body).to eq 'singleton_method_definition' }
+      it { expect(get('/world/instance').body).to eq 'instance_method_definition' }
 
     end
 
@@ -121,5 +145,6 @@ describe Rack::App do
     it { expect(get('/hello/world/to_you').body).to eq 'partially matching endpoint' }
 
   end
+
 
 end
