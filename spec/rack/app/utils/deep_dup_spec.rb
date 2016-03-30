@@ -1,9 +1,9 @@
 require 'spec_helper'
 describe Rack::App::Utils::DeepDup do
 
-  describe '#dup' do
+  describe '.duplicate' do
 
-    subject { described_class.new(value).to_dup }
+    subject { described_class.duplicate(value) }
 
     context 'when value is a Object' do
       let(:value) { Object.new.tap{|s| s.instance_eval{ @dog = 'bark' } } }

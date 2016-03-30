@@ -81,7 +81,7 @@ module Rack::App::Utils
 
 
   def deep_dup(object)
-    ::Rack::App::Utils::DeepDup.new(object).to_dup
+    ::Rack::App::Utils::DeepDup.duplicate(object)
   end
 
   def deep_merge(hash,oth_hash)

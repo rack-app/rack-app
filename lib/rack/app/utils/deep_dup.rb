@@ -1,87 +1,85 @@
-class Rack::App::Utils::DeepDup
+module Rack::App::Utils::DeepDup
 
-  def initialize(object)
-    @object = object
-  end
+  extend self
 
-  def to_dup
-    @register = {}
+  def duplicate(object)
+    register = {}
 
-    dup(@object)
+    dup(register, object)
   end
 
   protected
 
-  def registration(object, duplicate)
-    @register[object.object_id]= duplicate
+  def registered(object, register)
+    register[object.object_id]
+  end
+
+  def register_duplication(register, object, duplicate)
+    register[object.object_id]= duplicate
     duplicate
   end
 
-  def registered(object)
-    @register[object.object_id]
-  end
+  def dup(register, object)
 
-  def dup(object)
-
-    return registered(object) if registered(object)
+    return registered(object, register) if registered(object, register)
 
     case object
 
       when Array
-        dup_array(object)
+        dup_array(register, object)
 
       when Hash
-        dup_hash(object)
+        dup_hash(register, object)
 
       when Range
-        dup_range(object)
+        dup_range(register, object)
 
       when Struct
-        dup_struct(object)
+        dup_struct(register, object)
 
       when NilClass, Symbol, Numeric, TrueClass, FalseClass
-        registration(object, object)
+        register_duplication(register, object, object)
 
       else
-        dup_object(object)
+        dup_object(register, object)
 
     end
   end
 
-  def dup_array(object)
-    duplication = dup_object(object)
-    duplication.map!{ |e| dup(e) }
+  def dup_array(register, object)
+    duplication = dup_object(register, object)
+    duplication.map! { |e| dup(register, e) }
   end
 
-  def dup_hash(object)
-    duplication = dup_object(object)
-    object.reduce(duplication) { |hash, (k, v)| hash.merge!(dup(k) => dup(v)) }
+  def dup_hash(register, object)
+    duplication = dup_object(register, object)
+    object.reduce(duplication) { |hash, (k, v)| hash.merge!(dup(register, k) => dup(register, v)) }
   end
 
-  def dup_range(range)
-    registration(range, range.class.new(dup(range.first), dup(range.last)))
+  def dup_range(register, range)
+    register_duplication(register, range, range.class.new(dup(register, range.first), dup(register, range.last)))
   rescue
-    registration(range, range.dup)
+    register_duplication(register, range, range.dup)
   end
 
-  def dup_struct(struct)
-    duplication = registration(struct, struct.dup)
+  def dup_struct(register, struct)
+    duplication = register_duplication(register, struct, struct.dup)
 
     struct.each_pair do |attr, value|
-      duplication.__send__("#{attr}=", dup(value))
+      duplication.__send__("#{attr}=", dup(register, value))
     end
 
     duplication
   end
 
-  def dup_object(object)
-    dup_instance_variables(object, registration(object, object.dup))
+  def dup_object(register, object)
+    dup_instance_variables(register, object, register_duplication(register, object, object.dup))
   end
 
-  def dup_instance_variables(object, duplicate)
+  def dup_instance_variables(register, object, duplicate)
     object.instance_variables.each do |instance_variable|
       value = object.instance_variable_get(instance_variable)
-      duplicate.instance_variable_set(instance_variable, dup(value))
+      duplicate.instance_variable_set(instance_variable, dup(register, value))
     end
 
     return duplicate
