@@ -215,14 +215,16 @@ describe Rack::App::Utils::DeepDup do
     end
 
     context 'when basic object given' do
+
       let(:value) do
-        bo = BasicObject.new
+        bo = ::BasicObject.new
         bo.instance_eval { @var = 'Hello, World!' }
         bo
       end
 
       it { is_expected.to be value }
-    end
+
+    end unless RUBY_VERSION =~ /^1\.8/
 
     context 'when object not accept instance_variable get/set' do
 
