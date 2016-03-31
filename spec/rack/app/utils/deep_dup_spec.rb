@@ -214,6 +214,44 @@ describe Rack::App::Utils::DeepDup do
       it { expect(subject.call).to eq 'hy' }
     end
 
+    context 'when basic object given' do
+      let(:value) do
+        bo = BasicObject.new
+        bo.instance_eval { @var = 'Hello, World!' }
+        bo
+      end
+
+      it { is_expected.to be value }
+    end
+
+    context 'when object not accept instance_variable get/set' do
+
+      let(:value) do
+
+        c = Class.new
+        c.class_eval do
+
+          def dog
+            @dog
+          end
+
+          undef :instance_variable_set
+          undef :instance_variable_get
+
+        end
+
+        o = c.new
+        o.instance_eval { @dog = 'bark' }
+
+        o
+      end
+
+      it { is_expected.to_not be value }
+      it { expect(subject.dog).to eq 'bark' }
+      it { expect(subject.dog).to_not be value.dog }
+
+    end
+
   end
 
 end
