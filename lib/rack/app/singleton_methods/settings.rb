@@ -1,5 +1,11 @@
 module Rack::App::SingletonMethods::Settings
 
+  def cli(&block)
+    @cli ||= Rack::App::CLI.new
+    @cli.instance_exec(&block) unless block.nil?
+    @cli
+  end
+
   protected
 
   def serializer(&definition_how_to_serialize)
@@ -18,24 +24,8 @@ module Rack::App::SingletonMethods::Settings
     @headers
   end
 
-  def extensions(*extensions)
-    extensions.each do |ext|
-
-      if ext.is_a?(Symbol)
-        ext = Rack::App::Extension::Factory::find_for(ext)
-      end
-
-      if ext.is_a?(::Class) && ext < ::Rack::App::Extension
-
-        ext.includes.each { |m| include(m) }
-        ext.extends.each { |m| extend(m) }
-        ext.inheritances.each { |block| on_inheritance(&block) }
-
-      else
-        raise("unsupported extension reference: #{ext.inspect}")
-      end
-
-    end
+  def extensions(*extension_names)
+    Rack::App::Extension.apply_extensions(self,*extension_names)
   end
 
   def error(*exception_classes, &block)

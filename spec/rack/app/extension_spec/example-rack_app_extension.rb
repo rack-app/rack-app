@@ -1,33 +1,27 @@
-module Example
-  class RackAppExtension < Rack::App::Extension
+module ExampleExtensionClassMethods
+  def hello
+    'hello world'
+  end
+end
 
-    module ClassMethods
+module ExampleExtensionEndpointMethods
+  def sup
+    'all good thanks!'
+  end
+end
 
-      def hello
-        'hello world'
-      end
+Rack::App::Extension.register('rack_app_extension') do
 
-    end
+  includes ExampleExtensionEndpointMethods
 
-    module EndpointMethods
+  extends ExampleExtensionClassMethods
 
-      def sup
-        'all good thanks!'
-      end
+  extend_application_inheritance_with do |parent, child|
 
-    end
-
-    include EndpointMethods
-
-    extend ClassMethods
-
-    on_inheritance do |parent, child|
-
-      def child.hello
-        'world'
-      end
-
+    def child.hello
+      'world'
     end
 
   end
+
 end
