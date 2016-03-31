@@ -6,7 +6,7 @@ describe Rack::App::Utils::DeepDup do
     subject { described_class.duplicate(value) }
 
     context 'when value is a Object' do
-      let(:value) { Object.new.tap{|s| s.instance_eval{ @dog = 'bark' } } }
+      let(:value) { Object.new.tap { |s| s.instance_eval { @dog = 'bark' } } }
 
       it { expect(subject).to_not eq value }
 
@@ -190,6 +190,28 @@ describe Rack::App::Utils::DeepDup do
         expect(subject[:self].object_id).to eq subject.object_id
       end
 
+    end
+
+    context 'when object is a method' do
+      let(:value) do
+        klass = Class.new
+        klass.class_eval do
+          def self.hello
+            'world'
+          end
+        end
+        klass.method(:hello)
+      end
+
+      it { is_expected.to be value }
+    end
+
+    context 'when object is a proc' do
+      let(:value) { Proc.new { 'hy' } }
+
+      it { is_expected.to be_a Proc }
+      it { is_expected.to_not be value }
+      it { expect(subject.call).to eq 'hy' }
     end
 
   end

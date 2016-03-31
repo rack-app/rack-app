@@ -37,7 +37,7 @@ module Rack::App::Utils::DeepDup
       when Struct
         dup_struct(register, object)
 
-      when NilClass, Symbol, Numeric, TrueClass, FalseClass
+      when NilClass, Symbol, Numeric, TrueClass, FalseClass, Method
         register_duplication(register, object, object)
 
       else
