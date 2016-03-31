@@ -81,21 +81,20 @@ module Rack::App::Utils::DeepDup
   end
 
   def dup_object(register, object)
-    dup_instance_variables(register, object, register_duplication(register, object, object.dup))
+    dup_instance_variables(register, object, register_duplication(register, object, try_dup(object)))
   end
+
   def dup_instance_variables(register, object, duplication)
-    return duplication unless object.respond_to?(:instance_variables)
+    return duplication unless respond_to_instance_variables?(object)
 
     object.instance_variables.each do |instance_variable|
       value = get_instance_variable(object, instance_variable)
 
-      set_instance_variable(register, duplication, instance_variable, dup(register, value))
+      set_instance_variable(duplication, instance_variable, dup(register, value))
     end
 
     return duplication
   end
-
-  private
 
   def get_instance_variable(object, instance_variable_name)
     object.instance_variable_get(instance_variable_name)
@@ -103,11 +102,22 @@ module Rack::App::Utils::DeepDup
     object.instance_eval("#{instance_variable_name}")
   end
 
-  def set_instance_variable(register, duplicate, instance_variable_name, value_to_set)
+  def set_instance_variable(duplicate, instance_variable_name, value_to_set)
     duplicate.instance_variable_set(instance_variable_name, value_to_set)
   rescue NoMethodError
-    duplicate.instance_eval { @__duplicate__fallback__cache__ = value_to_set }
-    duplicate.instance_eval("#{instance_variable_name} = @__duplicate__fallback__cache__")
+    duplicate.instance_eval("#{instance_variable_name} = Marshal.load(#{Marshal.dump(value_to_set).inspect})")
+  end
+
+  def try_dup(object)
+    object.dup
+  rescue NoMethodError, TypeError
+    object
+  end
+
+  def respond_to_instance_variables?(object)
+    object.respond_to?(:instance_variables)
+  rescue NoMethodError
+    false
   end
 
 end
