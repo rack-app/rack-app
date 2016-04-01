@@ -32,7 +32,7 @@ class Rack::App::FileServer
 
   def clean_path_info(env)
     path_info = ::Rack::Utils.unescape(env[::Rack::PATH_INFO])
-    return clean_path_info = ::Rack::Utils.clean_path_info(path_info)
+    ::Rack::Utils.clean_path_info(path_info)
   end
 
 end
