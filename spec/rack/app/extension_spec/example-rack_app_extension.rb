@@ -12,16 +12,27 @@ end
 
 Rack::App::Extension.register('rack_app_extension') do
 
-  includes ExampleExtensionEndpointMethods
+  include ExampleExtensionEndpointMethods
+  extend ExampleExtensionClassMethods
 
-  extends ExampleExtensionClassMethods
-
-  extend_application_inheritance_with do |parent, child|
+  on_inheritance do |parent, child|
 
     def child.hello
       'world'
     end
 
   end
+
+  # cli do
+  #
+  #   command :hello_world do
+  #
+  #     desc 'hello world cli'
+  #     action do |some,input,argv|
+  #       puts 'Hello, World!'
+  #     end
+  #   end
+  #
+  # end
 
 end

@@ -37,8 +37,6 @@ module Rack::App::SingletonMethods::Settings
     return @error_handler
   end
 
-  private
-
   def middlewares(&block)
     @middlewares ||= []
     @middlewares << block unless block.nil?

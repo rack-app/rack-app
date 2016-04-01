@@ -30,7 +30,7 @@ class Rack::App::ErrorHandler
   end
 
   def parent(ex)
-    handler = @handlers.find { |exception_class, handler| ex.class <= exception_class }
+    handler = @handlers.find { |exception_class, _| ex.class <= exception_class }
     return handler.nil? ? nil : handler.last
   end
 

@@ -13,6 +13,8 @@ module Rack::App::SingletonMethods::Mounting
       duplication.class_exec(mount_prop,&on_mount)
     end
 
+    cli.merge!(duplication.cli)
+
     merge_prop = {:namespaces => [@namespaces, mount_to_path].flatten}
     router.merge_router!(duplication.router, merge_prop)
 

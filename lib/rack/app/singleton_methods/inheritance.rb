@@ -12,7 +12,7 @@ module Rack::App::SingletonMethods::Inheritance
 
     child.serializer(&serializer.logic)
     child.headers.merge!(headers)
-    child.__send__(:middlewares).push(*middlewares)
+    child.middlewares.push(*middlewares)
 
     on_inheritance.each do |block|
       block.call(self, child)

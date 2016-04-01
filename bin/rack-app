@@ -1,0 +1,3 @@
+#!/usr/bin/env ruby
+require 'rack/app/cli'
+Rack::App::CLI.start(ARGV)

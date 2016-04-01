@@ -7,6 +7,7 @@ class Rack::App
   require 'rack/app/version'
   require 'rack/app/constants'
 
+  require 'rack/app/cli'
   require 'rack/app/test'
   require 'rack/app/utils'
   require 'rack/app/params'
