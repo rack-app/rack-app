@@ -1,0 +1,46 @@
+AllCops:
+  Exclude:
+    - 'vendor/**/*'
+    - 'spec/fixtures/**/*'
+    - 'tmp/**/*'
+
+Style/AndOr:
+  Enabled: false
+
+Style/HashSyntax:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Style/TrailingBlankLines:
+  Enabled: false
+
+Style/SpaceAroundOperators:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/EmptyLinesAroundClassBody:
+  Enabled: false
+
+Style/EmptyLinesAroundModuleBody:
+  Enabled: false
+
+Style/EmptyLinesAroundMethodBody:
+  Enabled: false
+
+Style/SpaceInsideHashLiteralBraces:
+  Enabled: false
+
+Style/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+#  Enabled: false
+#  Enabled: false
+#  Enabled: false
+#  Enabled: false
