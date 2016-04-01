@@ -8,7 +8,7 @@ class Rack::App::CLI
     @argv = Rack::App::Utils.deep_dup(argv)
 
     context = {}
-    Kernel.__send__(:define_method,:run) {|app, *_| context[:app]= app }
+    Kernel.__send__(:define_method, :run) { |app, *_| context[:app]= app }
     config_ru_file_path = Rack::App::Utils.pwd('config.ru')
     load(config_ru_file_path) if File.exist?(config_ru_file_path)
 
@@ -17,16 +17,20 @@ class Rack::App::CLI
 
   def start(argv)
     command_name = argv.shift
-    command = commands.find{|command| command.name == command_name }
+    command = find_command_for(command_name)
     command && command.start(argv)
+  end
+
+  protected
+
+  def find_command_for(command_name)
+    commands.find { |command| command.name == command_name }
   end
 
   def merge!(cli)
     commands.push(*cli.commands)
     self
   end
-
-  protected
 
   def commands
     @commands ||= []
