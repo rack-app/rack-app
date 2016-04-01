@@ -21,15 +21,15 @@ class Rack::App::CLI
     command && command.start(argv)
   end
 
+  def merge!(cli)
+    commands.push(*cli.commands)
+    self
+  end
+
   protected
 
   def find_command_for(command_name)
     commands.find { |command| command.name == command_name }
-  end
-
-  def merge!(cli)
-    commands.push(*cli.commands)
-    self
   end
 
   def commands
