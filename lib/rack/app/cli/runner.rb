@@ -38,6 +38,8 @@ class Rack::App::CLI::Runner
   end
 
   def command_for(name)
+    return if name.nil?
+
     commands[name.to_s.to_sym]
   end
 
