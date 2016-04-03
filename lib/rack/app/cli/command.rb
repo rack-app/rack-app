@@ -70,7 +70,7 @@ class Rack::App::CLI::Command
     banner.sub!('[options]', "#{@name} [options]")
 
     # [[:req, :a], [:opt, :b], [:rest, :c], [:keyreq, :d], [:keyrest, :e]]
-    method(:action).parameters.each do |type, keyword|
+    (method(:action).parameters rescue []).each do |type, keyword|
       case type
         when :req
           banner.concat(" <#{keyword}>")
