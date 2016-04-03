@@ -5,7 +5,7 @@ class MountedApp < Rack::App
 
       description "hello world cli"
       action do |word|
-        "hello #{word}!"
+        $stdout.puts "hello #{word}!"
       end
 
     end
@@ -32,7 +32,7 @@ App.cli  do
     action do |file_path|
       options[:append] ||= 'default'
 
-      [file_path, options[:append]]
+      $stdout.puts [file_path, options[:append]].join(' ')
     end
 
   end

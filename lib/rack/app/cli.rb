@@ -3,43 +3,46 @@ require 'optparse'
 class Rack::App::CLI
 
   require 'rack/app/cli/command'
+  require 'rack/app/cli/default_commands'
+  require 'rack/app/cli/runner'
 
-  def self.start(argv)
-    @argv = Rack::App::Utils.deep_dup(argv)
+  class << self
 
-    context = {}
-    Kernel.__send__(:define_method, :run) { |app, *_| context[:app]= app }
-    config_ru_file_path = Rack::App::Utils.pwd('config.ru')
-    load(config_ru_file_path) if File.exist?(config_ru_file_path)
+    def start(argv)
+      runner.start(argv)
+    end
 
-    context[:app].cli.start(argv)
-  end
+    def runner
+      Rack::App::CLI::Runner.new(rack_app)
+    end
 
-  def start(argv)
-    command_name = argv.shift
-    command = find_command_for(command_name)
-    command && command.start(argv)
+    def rack_app
+      @rack_app ||= lambda {
+        context = {}
+        Kernel.__send__(:define_method, :run) { |app, *_| context[:app]= app }
+        config_ru_file_path = Rack::App::Utils.pwd('config.ru')
+        load(config_ru_file_path) if File.exist?(config_ru_file_path)
+        context[:app]
+      }.call
+    end
+
   end
 
   def merge!(cli)
-    commands.push(*cli.commands)
+    commands.merge!(cli.commands)
     self
+  end
+
+  def commands
+    @commands ||= {}
   end
 
   protected
 
-  def find_command_for(command_name)
-    commands.find { |command| command.name == command_name }
-  end
-
-  def commands
-    @commands ||= []
-  end
-
   def command(name, &block)
-    command_prototype = Rack::App::Utils.deep_dup(Rack::App::CLI::Command)
-    command_prototype.instance_exec(&block)
-    commands << command_prototype.new(name)
+    command_prototype = Class.new(Rack::App::CLI::Command)
+    command_prototype.class_exec(&block)
+    commands[name.to_s.to_sym]= command_prototype.new(name.to_s.to_sym)
   end
 
 end
