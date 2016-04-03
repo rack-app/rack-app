@@ -1,5 +1,5 @@
 require 'spec_helper'
-require File.join(File.dirname(__FILE__), 'extension_spec', 'example-rack_app_extension')
+Dir.glob(File.join(File.dirname(__FILE__), 'extension_spec', '*.rb')).each { |path| require(path) }
 describe Rack::App::Extension do
 
   require 'rack/app/test'
@@ -19,6 +19,7 @@ describe Rack::App::Extension do
 
   it { expect(Class.new(rack_app).hello).to eq 'world' }
 
+  it { expect { rack_app { apply_extensions :reference_to_a } }.to_not raise_error }
 
   context 'when unsupported extension reference given' do
 

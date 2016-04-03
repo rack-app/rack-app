@@ -23,16 +23,4 @@ Rack::App::Extension.register('rack_app_extension') do
 
   end
 
-  # cli do
-  #
-  #   command :hello_world do
-  #
-  #     desc 'hello world cli'
-  #     action do |some,input,argv|
-  #       puts 'Hello, World!'
-  #     end
-  #   end
-  #
-  # end
-
 end

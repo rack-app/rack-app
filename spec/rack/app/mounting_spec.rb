@@ -104,6 +104,21 @@ describe Rack::App do
 
     end
 
+    context 'when application on_mounted alters options' do
+
+      rack_app do
+
+        mount OptionsModifier,
+              :delete => :endpoint,
+              :endpoint => 'hello'
+
+      end
+
+      it 'shold never affect one on_mount to an anothere, even by altering the mounting properties' do
+        expect(get('/hello').status).to eq 200
+      end
+
+    end
   end
 
   describe '.mount_rack_based_application' do

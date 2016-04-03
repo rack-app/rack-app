@@ -1,21 +1,17 @@
 module Rack::App::SingletonMethods::Mounting
 
-  def mount(api_class, mount_prop={})
-    mount_to_path = ::Rack::App::Utils.deep_dup(mount_prop[:to])
-
+  def mount(api_class, properties={})
     unless api_class.is_a?(Class) and api_class <= Rack::App
       raise(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
     end
 
     duplication = ::Rack::App::Utils.deep_dup(api_class)
-
     duplication.on_mounted.each do |on_mount|
-      duplication.class_exec(mount_prop, &on_mount)
+      duplication.class_exec(::Rack::App::Utils.deep_dup(properties), &on_mount)
     end
 
     cli.merge!(duplication.cli)
-
-    merge_prop = {:namespaces => [@namespaces, mount_to_path].flatten}
+    merge_prop = {:namespaces => [@namespaces, properties[:to]].flatten}
     router.merge_router!(duplication.router, merge_prop)
 
     nil

@@ -24,10 +24,6 @@ module Rack::App::SingletonMethods::Settings
     @headers
   end
 
-  def extensions(*extension_names)
-    Rack::App::Extension.apply_extensions(self,*extension_names)
-  end
-
   def error(*exception_classes, &block)
     @error_handler ||= Rack::App::ErrorHandler.new
     unless block.nil?
