@@ -13,8 +13,6 @@ class Rack::App::Endpoint
 
     @middleware = (properties[:middleware] || Rack::Builder.new).dup
     @middleware.run(lambda { |env| self.execute(env) })
-
-    @path_params_matcher = {}
     @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
 
     @app = @middleware.to_app
@@ -40,14 +38,8 @@ class Rack::App::Endpoint
     request_handler.request = rack_request
     request_handler.response = rack_response
 
-    rack_request.env[::Rack::App::Constants::PATH_PARAMS_MATCHER]= @path_params_matcher.dup
     return @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
 
-  end
-
-  def register_path_params_matcher(params_matcher)
-    @path_params_matcher.clear
-    @path_params_matcher.merge!(params_matcher)
   end
 
   protected

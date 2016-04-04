@@ -145,6 +145,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
   def format_env(context, env)
     mount_path = context[:options][:mount_path] rescue ''
+    env[::Rack::App::Constants::PATH_PARAMS_MATCHER]= context[:options][:path_params].dup
     env[::Rack::PATH_INFO].sub!(mount_path, '')
   end
 
