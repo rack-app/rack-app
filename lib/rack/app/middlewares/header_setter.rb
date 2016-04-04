@@ -12,17 +12,16 @@ class Rack::App::Middlewares::HeaderSetter
       response.headers[header] ||= value
     end
 
-    protocol_headers.each do |header|
-      response.headers[header]= @headers[header]
-    end
+    set_content_type(response)
 
     response.finish
   end
 
   protected
 
-  def protocol_headers
-    [::Rack::CONTENT_TYPE].select { |header| @headers[header] }
+  def set_content_type(response)
+    return unless @headers[::Rack::CONTENT_TYPE]
+    response.headers[::Rack::CONTENT_TYPE]= @headers[::Rack::CONTENT_TYPE]
   end
 
   def rack_response(raw_response)
