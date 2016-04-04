@@ -35,6 +35,10 @@ class RackAppInheritanceChild < RackAppInheritanceParent
     b.use SimpleSetterMiddleware, 'child', 'true'
   end
 
+  get '/' do
+    'root endpoint'
+  end
+
   get '/error' do
     raise_error('error with parent class method')
   end
@@ -49,10 +53,6 @@ class RackAppInheritanceChild < RackAppInheritanceParent
 
   get '/mw_child' do
     request.env['child']
-  end
-
-  get '/Access-Control-Allow-Origin' do
-    response.header['Access-Control-Allow-Origin']
   end
 
 end
@@ -73,7 +73,7 @@ describe Rack::App do
 
     it { expect(get(:url => '/mw_child').body).to eq 'true'.inspect }
 
-    it { expect(get(:url => '/Access-Control-Allow-Origin').body).to eq '*'.inspect }
+    it { expect(get(:url => '/').headers['Access-Control-Allow-Origin']).to eq '*' }
 
     context 'when on_inheritance block defined in parent' do
 

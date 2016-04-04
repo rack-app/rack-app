@@ -10,7 +10,6 @@ class Rack::App::Endpoint
     @app_class = properties[:app_class]
     @error_handler = properties[:error_handler] || Rack::App::ErrorHandler.new
     @serializer = properties[:serializer] || Rack::App::Serializer.new
-    @headers = properties[:default_headers] || {}
 
     @middleware = (properties[:middleware] || Rack::Builder.new).dup
     @middleware.run(lambda { |env| self.execute(env) })
@@ -38,9 +37,9 @@ class Rack::App::Endpoint
   def get_response_body(rack_request, rack_response)
 
     request_handler = @app_class.new
-    set_default_headers(rack_response)
     request_handler.request = rack_request
     request_handler.response = rack_response
+
     rack_request.env[::Rack::App::Constants::PATH_PARAMS_MATCHER]= @path_params_matcher.dup
     return @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
 
@@ -57,12 +56,6 @@ class Rack::App::Endpoint
     return nil unless response.body.is_a?(Array)
 
     response.write(String(@serializer.serialize(result)))
-  end
-
-  def set_default_headers(response)
-    @headers.each do |header, value|
-      response.header[header]=value
-    end
   end
 
   def register_method_to_app_class(proc)

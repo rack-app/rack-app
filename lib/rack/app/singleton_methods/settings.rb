@@ -19,9 +19,11 @@ module Rack::App::SingletonMethods::Settings
   end
 
   def headers(new_headers=nil)
-    @headers ||= {}
-    @headers.merge!(new_headers) if new_headers.is_a?(Hash)
-    @headers
+    middleware do |b|
+      b.use(Rack::App::Middlewares::HeaderSetter,new_headers)
+    end if new_headers.is_a?(Hash)
+
+    new_headers
   end
 
   def error(*exception_classes, &block)

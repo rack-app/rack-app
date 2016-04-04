@@ -30,7 +30,6 @@ module Rack::App::SingletonMethods::RouteHandling
         :request_method => request_method,
         :request_path => request_path,
 
-        :default_headers => headers,
         :error_handler => error,
         :description => @last_description,
         :serializer => serializer,

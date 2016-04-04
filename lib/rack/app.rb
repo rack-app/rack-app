@@ -15,6 +15,7 @@ class Rack::App
   require 'rack/app/endpoint'
   require 'rack/app/extension'
   require 'rack/app/serializer'
+  require 'rack/app/middlewares'
   require 'rack/app/file_server'
   require 'rack/app/error_handler'
   require 'rack/app/endpoint/not_found'

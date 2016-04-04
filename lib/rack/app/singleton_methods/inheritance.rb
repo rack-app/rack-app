@@ -11,7 +11,6 @@ module Rack::App::SingletonMethods::Inheritance
   def inherited(child)
 
     child.serializer(&serializer.logic)
-    child.headers.merge!(headers)
     child.middlewares.push(*middlewares)
 
     on_inheritance.each do |block|
