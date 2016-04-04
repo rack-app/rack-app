@@ -23,8 +23,6 @@ App.cli  do
 
     description "it's a sample test cli command"
 
-    options = {}
-
     option '-c', '--content [STRING]', 'add content to test file the following string' do |string|
       options[:append]= string
     end

@@ -12,10 +12,10 @@ module Rack::App::CLI::DefaultCommands::ListCommands
 
     puts_collection << [list_command_name.to_s.rjust(rjust), 'list all available command'].join('  ')
     known_commands.sort_by { |name, _| name.to_s }.each do |name, command|
-      puts_collection << [name.to_s.rjust(rjust), command.description].join('  ')
+      puts_collection << [name.to_s.rjust(rjust), command.class.description].join('  ')
     end
 
-    puts_collection
+    puts_collection.join("\n")
   end
 
   protected

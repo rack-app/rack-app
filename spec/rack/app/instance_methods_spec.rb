@@ -1,8 +1,14 @@
 require 'spec_helper'
 require 'rack/app/test'
+require 'securerandom'
+require 'tmpdir'
 
-out_file = Rack::App::Utils.pwd('spec', 'fixtures', 'out')
-in_file = Rack::App::Utils.pwd('spec', 'fixtures', 'in')
+out_file = File.join(Dir.tmpdir,SecureRandom.hex)
+in_file = File.join(Dir.tmpdir,SecureRandom.hex)
+
+Kernel.at_exit do
+  [in_file, out_file].each { |fp| File.delete(fp) if File.exist?(fp) }
+end
 
 InstanceMethodsSpec = Class.new
 describe Rack::App::InstanceMethods do

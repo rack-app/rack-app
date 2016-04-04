@@ -42,7 +42,7 @@ class Rack::App::CLI
   def command(name, &block)
     command_prototype = Class.new(Rack::App::CLI::Command)
     command_prototype.class_exec(&block)
-    commands[name.to_s.to_sym]= command_prototype.new(name.to_s.to_sym)
+    commands[name.to_s.to_sym]= command_prototype.new
   end
 
 end

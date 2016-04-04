@@ -42,7 +42,7 @@ describe Rack::App::CLI do
                 "   commands  list all available command",
                 "      hello  hello world cli",
                 "       test  it's a sample test cli command"
-            ]
+            ].join("\n")
         )
 
         subject
