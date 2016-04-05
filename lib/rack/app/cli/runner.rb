@@ -21,26 +21,28 @@ class Rack::App::CLI::Runner
     command_name = argv.shift
     command = command_for(command_name)
     options_parser = configure_command(command,command_name)
-
     $stdout.puts(options_parser.help)
-  rescue CommandNotFound
-    show_commands
   end
 
   def start_command_for(command_name, argv)
     case command_name.to_s
 
       when 'commands'
-        return show_commands
+        show_commands
 
       when 'help'
-        return show_help_message(argv)
+        show_help_message(argv)
+
+      when 'routes'
+        Rack::App::CLI::DefaultCommands::ShowRoutes.new.start(argv)
 
       else
         command = command_for(command_name)
-        return run_command(argv, command, command_name)
+        run_command(argv, command, command_name)
 
     end
+  rescue CommandNotFound
+    show_commands
   end
 
   def run_command(argv, command, command_name)

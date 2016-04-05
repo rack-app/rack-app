@@ -31,6 +31,47 @@ describe Rack::App::CLI do
 
     end
 
+    context 'when command list requested' do
+      before{ argv << 'commands' }
+
+      it 'should return the command list' do
+        expect($stdout).to receive(:puts).with(
+            [
+                "Usage: rspec <command> [options] <args>\n\n",
+                "Some useful rspec commands are:",
+                "   commands  list all available command",
+                "     routes  list all available endpoint",
+                "      hello  hello world cli",
+                "       test  it's a sample test cli command"
+            ].join("\n")
+        )
+
+        subject
+      end
+
+    end
+
+    context 'when invalid command requested' do
+      before{ argv << 'invalid' }
+
+      it 'should return the command list' do
+        expect($stdout).to receive(:puts).with(
+            [
+                "Usage: rspec <command> [options] <args>\n\n",
+                "Some useful rspec commands are:",
+                "   commands  list all available command",
+                "     routes  list all available endpoint",
+                "      hello  hello world cli",
+                "       test  it's a sample test cli command"
+            ].join("\n")
+        )
+
+        subject
+      end
+
+    end
+
+
     context 'when help requested' do
       before { argv << 'help' }
 
@@ -40,6 +81,7 @@ describe Rack::App::CLI do
                 "Usage: rspec <command> [options] <args>\n\n",
                 "Some useful rspec commands are:",
                 "   commands  list all available command",
+                "     routes  list all available endpoint",
                 "      hello  hello world cli",
                 "       test  it's a sample test cli command"
             ].join("\n")

@@ -14,7 +14,13 @@ class MountedApp < Rack::App
 end
 
 class App < Rack::App
+
   mount MountedApp
+
+  get '/' do 
+    'root'
+  end 
+
 end
 
 App.cli  do
