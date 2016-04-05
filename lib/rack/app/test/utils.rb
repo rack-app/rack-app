@@ -16,7 +16,7 @@ module Rack::App::Test::Utils
     app = Rack::App::Utils.deep_dup(app_class)
     constructors.each { |constructor| app.class_eval(&constructor) }
 
-    block.is_a?(Proc) ? app.instance_exec(&block) : app
+    return app
   end
 
   def env_by(properties)
