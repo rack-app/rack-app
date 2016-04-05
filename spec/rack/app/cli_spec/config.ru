@@ -43,4 +43,16 @@ App.cli  do
 
 end
 
+class ExampleMiddleware
+  def initialize(app)
+    @custom = app
+  end
+
+  def call(env)
+    @custom.call(env)
+  end
+end
+
+use ExampleMiddleware
+
 run App

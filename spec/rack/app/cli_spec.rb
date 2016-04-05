@@ -1,8 +1,13 @@
 require 'spec_helper'
 describe Rack::App::CLI do
 
-  let(:gem_file_path) { File.join(File.dirname(__FILE__), 'cli_spec', 'Gemfile') }
-  before { allow(ENV).to receive(:[]).with('BUNDLE_GEMFILE').and_return(gem_file_path) }
+  let(:project_folder) { File.join(File.dirname(__FILE__), 'cli_spec') }
+
+  before do
+    @src_folder = Dir.pwd
+    Dir.chdir(project_folder)
+  end
+
   let(:argv) { [] }
 
   describe '.start' do
@@ -129,6 +134,10 @@ describe Rack::App::CLI do
 
     end
 
+  end
+
+  after do
+    Dir.chdir(@src_folder)
   end
 
 end

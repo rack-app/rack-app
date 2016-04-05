@@ -2,6 +2,7 @@ require 'rack/app'
 require 'optparse'
 class Rack::App::CLI
 
+  require 'rack/app/cli/fetcher'
   require 'rack/app/cli/command'
   require 'rack/app/cli/default_commands'
   require 'rack/app/cli/runner'
@@ -17,13 +18,7 @@ class Rack::App::CLI
     end
 
     def rack_app
-      @rack_app ||= lambda {
-        context = {}
-        Kernel.__send__(:define_method, :run) { |app, *_| context[:app]= app }
-        config_ru_file_path = Rack::App::Utils.pwd('config.ru')
-        load(config_ru_file_path) if File.exist?(config_ru_file_path)
-        context[:app]
-      }.call
+      @rack_app ||= Rack::App::CLI::Fetcher.rack_app
     end
 
   end
