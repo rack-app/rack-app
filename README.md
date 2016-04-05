@@ -115,6 +115,8 @@ require 'rack/app'
 
 class App < Rack::App
 
+  apply_extensions :front_end  
+  
   mount SomeAppClass
 
   headers 'Access-Control-Allow-Origin' => '*',
@@ -144,7 +146,6 @@ class App < Rack::App
   get '/make_error' do
     raise(StandardError,'error block rescued')
   end
-
 
   def say
     "hello #{params['user_id']}!"
