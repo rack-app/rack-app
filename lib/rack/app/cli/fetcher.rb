@@ -1,10 +1,19 @@
 module Rack::App::CLI::Fetcher
 
+  require 'rack/app/cli/fetcher/server'
+
   extend self
+
+  module ExitPrevent
+
+    def abort(*args)
+    end
+
+  end
 
   def rack_app
 
-    server = Rack::Server.new(:config => 'config.ru')
+    server = Rack::App::CLI::Fetcher::Server.new(:config => 'config.ru')
 
     app = server.app
 

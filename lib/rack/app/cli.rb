@@ -18,7 +18,7 @@ class Rack::App::CLI
     end
 
     def rack_app
-      @rack_app ||= Rack::App::CLI::Fetcher.rack_app
+      Rack::App::CLI::Fetcher.rack_app
     end
 
   end
