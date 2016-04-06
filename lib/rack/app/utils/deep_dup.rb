@@ -11,18 +11,18 @@ module Rack::App::Utils::DeepDup
   protected
 
   def registered(object, register)
-    register[object.object_id]
+    register[object.__id__]
   end
 
   def register_duplication(register, object, duplicate)
-    register[object.object_id]= duplicate
+    register[object.__id__]= duplicate
     duplicate
   end
 
   def dup(register, object)
 
-    return object unless registrable?(object)
     return registered(object, register) if registered(object, register)
+    return register_duplication(register, object, object) unless identifiable?(object)
 
     case object
 
@@ -47,9 +47,8 @@ module Rack::App::Utils::DeepDup
     end
   end
 
-  def registrable?(object)
-    object.object_id
-    true
+  def identifiable?(object)
+    object.class && object.respond_to?(:is_a?)
   rescue NoMethodError
     false
   end
@@ -105,7 +104,7 @@ module Rack::App::Utils::DeepDup
   def set_instance_variable(duplicate, instance_variable_name, value_to_set)
     duplicate.instance_variable_set(instance_variable_name, value_to_set)
   rescue NoMethodError
-    duplicate.instance_eval("#{instance_variable_name} = Marshal.load(#{Marshal.dump(value_to_set).inspect})")
+    duplicate.instance_eval("#{instance_variable_name} = Marshal.load(#{Marshal.dump(value_to_set).to_s.inspect})")
   end
 
   def try_dup(object)
@@ -115,7 +114,7 @@ module Rack::App::Utils::DeepDup
   end
 
   def respond_to_instance_variables?(object)
-    object.respond_to?(:instance_variables)
+    object.respond_to?(:instance_variables) && object.instance_variables.is_a?(Array)
   rescue NoMethodError
     false
   end
