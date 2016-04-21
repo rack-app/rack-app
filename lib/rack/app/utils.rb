@@ -99,4 +99,8 @@ module Rack::App::Utils
     hash
   end
 
+  def devnull_path
+    RUBY_PLATFORM =~ /mswin|mingw/ ? 'NUL:' : '/dev/null'
+  end
+
 end

@@ -140,4 +140,41 @@ describe Rack::App::Utils do
     it { is_expected.to eq "/rack-app/front_end/spec/rack/app/front_end_spec/layout" }
   end
 
+  describe '#devnull_path' do
+    subject { instance.devnull_path }
+
+    context 'when platform is windows' do
+
+      context 'as mswin' do
+        before { stub_const("RUBY_PLATFORM", 'mswin') }
+
+        it { is_expected.to eq 'NUL:' }
+      end
+
+      context 'as mswin' do
+        before { stub_const("RUBY_PLATFORM", 'mingw') }
+
+        it { is_expected.to eq 'NUL:' }
+      end
+
+    end
+
+    context 'when other unix based' do
+
+      context 'such as x86_64-linux' do
+        before { stub_const("RUBY_PLATFORM", "x86_64-linux") }
+
+        it { is_expected.to eq '/dev/null' }
+      end
+
+      context 'such as darwin (osx)' do
+        before { stub_const("RUBY_PLATFORM", "x86_64-darwin15.0") }
+
+        it { is_expected.to eq '/dev/null' }
+      end
+
+    end
+
+  end
+
 end
