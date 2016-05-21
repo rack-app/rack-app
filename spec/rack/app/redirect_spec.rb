@@ -11,6 +11,12 @@ describe Rack::App do
       redirect_to '/hello'
     end
 
+    get '/redirect_with_additional_header' do
+      response.headers['X-AUTH']= 'yes please'
+
+      redirect_to '/hello'
+    end
+
   end
 
   describe '#redirect_to' do
@@ -19,6 +25,10 @@ describe Rack::App do
 
     context 'when no query string was given' do
       it{ expect(get(:url => '/redirect').headers).to include({'Location' => '/hello'}) }
+    end
+
+    context 'additional headers setted in the endpoint before redirection' do
+      it{ expect(get(:url => '/redirect_with_additional_header').headers).to include({'Location' => '/hello','X-AUTH' => 'yes please'}) }
     end
 
     context 'when query string was given' do
