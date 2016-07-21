@@ -21,9 +21,11 @@ module Rack::App::SingletonMethods::RouteHandling
     request_path = ::Rack::App::Utils.join(@namespaces, request_path)
 
     builder = Rack::Builder.new
-    middlewares.each do |builder_block|
+    (middlewares + only_next_endpoint_middlewares).each do |builder_block|
       builder_block.call(builder)
     end
+
+    only_next_endpoint_middlewares.clear 
 
     properties = {
         :user_defined_logic => block,

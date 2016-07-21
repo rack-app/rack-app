@@ -43,4 +43,10 @@ module Rack::App::SingletonMethods::Settings
 
   alias middleware middlewares
 
+  def only_next_endpoint_middlewares(&block)
+    @only_next_endpoint_middlewares ||= []
+    @only_next_endpoint_middlewares << block unless block.nil?
+    @only_next_endpoint_middlewares
+  end
+
 end

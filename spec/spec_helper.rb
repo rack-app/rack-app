@@ -165,3 +165,4 @@ end
 
 require 'rack/app/test'
 require 'yaml'
+require 'json'
