@@ -3,6 +3,7 @@ module Rack::App::Utils
   extend self
 
   require 'rack/app/utils/deep_dup'
+  require 'rack/app/utils/parser'
 
   # Normalizes URI path.
   #
