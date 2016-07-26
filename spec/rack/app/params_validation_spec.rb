@@ -13,7 +13,7 @@ describe Rack::App do
       validate_params do
         required 'dogs', :class => Array, :of => String, :desc => 'dog names', :example => ['pug']
         optional 'numbers', :class => Array, :of => Integer, :desc => 'some number'
-        optional 'number', :class => Integer, :desc => 'one number alone'
+        optional :number, :class => Integer, :desc => 'one number alone'
         optional 'numeric', :class => Numeric
       end
       get '/validated' do
@@ -170,7 +170,7 @@ describe Rack::App do
       end
 
       # before do
-      #  puts request.body 
+      #  puts request.body
       # end
 
       it { is_expected.to be_a Hash }
