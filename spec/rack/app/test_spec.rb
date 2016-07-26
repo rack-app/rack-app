@@ -30,7 +30,7 @@ describe Rack::App::Test do
     end
 
     get '/params' do
-      params['dog']
+      params['value']
     end
 
     get '/payload' do
@@ -124,9 +124,16 @@ describe Rack::App::Test do
   end
 
   describe '#params' do
-    subject { get :url => '/params', :params => {'dog' => 'meat'} }
+    subject { get :url => '/params', :params => {'value' => value} }
 
-    it { expect(subject.body).to eq 'meat' }
+    [' ', 'dog', '2016-07-25T20:35:35+02:00'].each do |expected_value|
+      context "when value is #{expected_value}" do
+        let(:value){ expected_value }
+
+        it { expect(subject.body).to eq expected_value }
+      end
+    end
+
   end
 
   describe '#payload' do

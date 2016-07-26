@@ -16,10 +16,9 @@ module Rack::App::Test
 
       properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)
       url = args.select { |e| e.is_a?(String) }.first || properties.delete(:url)
-      request = Rack::MockRequest.new(rack_app)
-      env = Rack::App::Test::Utils.env_by(properties)
-
-      return @last_response = request.__send__(request_method, url, env)
+      mock_request = Rack::MockRequest.new(rack_app)
+      request_env = Rack::App::Test::Utils.env_by(properties)
+      return @last_response = mock_request.request(request_method, url, request_env)
 
     end
   end
@@ -29,7 +28,9 @@ module Rack::App::Test
     @app ||= lambda do
       app_class = defined?(__rack_app_class__) ? __rack_app_class__ : nil
       constructors = []
-      constructors << __rack_app_constructor__ if defined?(__rack_app_constructor__) and __rack_app_constructor__.is_a?(Proc)
+      if defined?(__rack_app_constructor__) and __rack_app_constructor__.is_a?(Proc)
+        constructors << __rack_app_constructor__
+      end
       Rack::App::Test::Utils.rack_app_by(app_class, constructors)
     end.call
 

@@ -67,12 +67,14 @@ module Rack::App::Test::Utils
     end.join('&')
   end
 
-  TBLENCWWWCOMP_ = {} # :nodoc:
+  TBLENCWWWCOMP = {} # :nodoc:
   256.times do |i|
-    TBLENCWWWCOMP_['%%%02X' % i] = i.chr
+    TBLENCWWWCOMP['%%%02X' % i] = i.chr
   end
-  TBLENCWWWCOMP_[' '] = '+'
-  TBLENCWWWCOMP_.freeze
+  TBLENCWWWCOMP[' '] = '%20'
+  TBLENCWWWCOMP['+']= '%2B'
+  TBLENCWWWCOMP.freeze
+
   TBLDECWWWCOMP = {} # :nodoc:
   256.times do |i|
     h, l = i>>4, i&15
@@ -87,7 +89,7 @@ module Rack::App::Test::Utils
 
   def encode_www_form_component(str)
     str = str.to_s.dup
-    TBLENCWWWCOMP_.each do |from, to|
+    TBLENCWWWCOMP.each do |from, to|
       str.gsub!(from, to)
     end
     str
