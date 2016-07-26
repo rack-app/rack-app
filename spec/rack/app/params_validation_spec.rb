@@ -130,7 +130,7 @@ describe Rack::App do
       validate_params do
         required 'a',  :type => Numeric
         required 'b',  :type => DateTime
-        optional 'c',  :type => Array, of: Float
+        optional 'c',  :type => Array, :of => Float
         optional 'd',  :type => :boolean
         optional 'e',  :type => Integer
         optional 'f',  :type => Float

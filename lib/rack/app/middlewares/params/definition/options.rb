@@ -8,8 +8,8 @@ class Rack::App::Middlewares::Params::Definition::Options
 
   def formatted
     {
-      class: parameter_class,
-      of: parameter_class_elements
+      :class => parameter_class,
+      :of => parameter_class_elements
     }
   end
 
