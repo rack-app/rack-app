@@ -30,7 +30,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should response with a ::Rack::File instance' do
-          expect(subject[2]).to be_a ::Rack::File
+          expect(subject[2]).to respond_to :each
         end
 
         it 'should include the file content' do
@@ -71,7 +71,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should response with a ::Rack::File instance' do
-          expect(subject[2]).to be_a ::Rack::File
+          expect(subject[2]).to respond_to :each
         end
 
         it 'should include the file content' do
@@ -112,7 +112,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should response with a ::Rack::File instance' do
-          expect(subject[2]).to be_a ::Rack::File
+          expect(subject[2]).to respond_to :each
         end
 
         it 'should include the file content' do
@@ -148,7 +148,7 @@ describe Rack::App::FileServer do
 
       expect(rack_resp[0]).to eq 200
       expect(rack_resp[1].keys).to match_array(["Last-Modified","Content-Type","Content-Length"])
-      expect(rack_resp[2]).to be_a ::Rack::File
+      expect(rack_resp[2]).to respond_to :each
 
     end
 
