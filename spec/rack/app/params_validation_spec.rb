@@ -169,6 +169,10 @@ describe Rack::App do
         params['f']= 456.789
       end
 
+      # before do
+      #  puts request.body 
+      # end
+
       it { is_expected.to be_a Hash }
       it { expect(subject['a']).to eq 123.45 }
       it { expect(subject['b']).to eq DateTime.parse(params['b']) }

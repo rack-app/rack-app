@@ -27,7 +27,9 @@ class Rack::App::Middlewares::Params::Definition::Options
   end
 
   def parameter_class_iterable?
-    parameter_class.instance_methods.include?(:each)
+    parameter_class.instance_method(:each)
+  rescue NameError
+    false
   end
 
 end

@@ -1,3 +1,4 @@
+require "cgi"
 module Rack::App::Test::Utils
 
   extend self
@@ -27,7 +28,6 @@ module Rack::App::Test::Utils
     env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
     env[::Rack::QUERY_STRING]= encode_www_form(properties[:params].to_a)
     env.merge!(properties[:env] || {})
-
 
     env
   end
@@ -67,32 +67,8 @@ module Rack::App::Test::Utils
     end.join('&')
   end
 
-  TBLENCWWWCOMP = {} # :nodoc:
-  256.times do |i|
-    TBLENCWWWCOMP['%%%02X' % i] = i.chr
-  end
-  TBLENCWWWCOMP[' '] = '%20'
-  TBLENCWWWCOMP['+']= '%2B'
-  TBLENCWWWCOMP.freeze
-
-  TBLDECWWWCOMP = {} # :nodoc:
-  256.times do |i|
-    h, l = i>>4, i&15
-    TBLDECWWWCOMP[i.chr]= '%%%X%X' % [h, l]
-    TBLDECWWWCOMP[i.chr]= '%%%X%X' % [h, l]
-    TBLDECWWWCOMP[i.chr]= '%%%x%X' % [h, l]
-    TBLDECWWWCOMP[i.chr]= '%%%X%x' % [h, l]
-    TBLDECWWWCOMP[i.chr]= '%%%x%x' % [h, l]
-  end
-  TBLDECWWWCOMP['+'] = ' '
-  TBLDECWWWCOMP.freeze
-
   def encode_www_form_component(str)
-    str = str.to_s.dup
-    TBLENCWWWCOMP.each do |from, to|
-      str.gsub!(from, to)
-    end
-    str
+    CGI.escape(str.to_s)
   end
 
 end

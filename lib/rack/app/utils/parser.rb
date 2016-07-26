@@ -14,6 +14,7 @@ module Rack::App::Utils::Parser
   def parse(type, str)
     string = str.to_s
     parser = get_parser(type)
+    # puts "#{type} - #{str.inspect} - #{parser.inspect} - #{parser.validate(string)}"
     return unless parser.validate(string)
     parser.parse(string)
   end

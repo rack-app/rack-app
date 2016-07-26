@@ -61,7 +61,7 @@ describe Rack::App::Utils::Parser do
         context 'and str is a valid time' do
           let(:str){"2016-07-25T00:23:39+02:00"}
 
-          it { is_expected.to eq Time.new(2016,7,25,0,23,39,"+02:00") }
+          it { is_expected.to eq Time.parse("2016-07-25T00:23:39+02:00") }
         end
 
         context 'and str is an invalid time' do
