@@ -6,7 +6,7 @@
 
 ![Rack::App](http://rack-app-website.herokuapp.com/img/msruby_old.png)
 
-Your next favourite rack based micro framework that is totally addition free! 
+Your next favourite rack based micro framework that is totally addition free!
 Have a cup of awesomeness with your performance designed framework!
 
 The idea behind is simple.
@@ -62,17 +62,17 @@ Yes, in fact it's already powering heroku hosted micro-services.
 
 ## Features
 
-* easy to understand syntax 
+* easy to understand syntax
   * module method level endpoint definition inspirited heavily by the Sinatra DSL
   * unified error handling
-  * syntax sugar for default header definitions 
+  * syntax sugar for default header definitions
   * namespaces for endpoint request path declarations so it can be dry and unified
-* no Class method bloat, so you can enjoy pure ruby without any surprises 
+* no Class method bloat, so you can enjoy pure ruby without any surprises
 * App mounting so you can crete separated controllers for different task  
 * Null time look up routing
   * allows as many endpoint registration to you as you want, without impact on route look up speed
 * only basic sets for instance method lvl for the must need tools, such as params, payload
-* simple to use class level response serializer 
+* simple to use class level response serializer
   * so you can choose what type of serialization you want without any enforced convention
 * static file serving so you can mount even filesystem based endpoints too
 * built in testing module so your app can easily written with BDD approach
@@ -81,6 +81,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
 * File Upload and file download in a efficient and elegant way with minimal memory consuming
   * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usualy solution which includes buffering in memory
+* params validation with ease
 
 ## [Contributors](CONTRIBUTORS.md)
 
@@ -90,7 +91,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 
 config.ru
 
-#### basic 
+#### basic
 
 ```ruby
 
@@ -116,7 +117,7 @@ require 'rack/app'
 class App < Rack::App
 
   apply_extensions :front_end  
-  
+
   mount SomeAppClass
 
   headers 'Access-Control-Allow-Origin' => '*',
@@ -127,21 +128,27 @@ class App < Rack::App
   end
 
   desc 'some hello endpoint'
+  validate_params do
+    required 'words', :class => Array, :of => String, :desc => 'some word', :example => ['pug']
+    optional 'word', :class => String, :desc => 'one word', :example => 'pug'
+  end
   get '/hello' do
+    puts(validate_params['words'])
+
     return 'Hello World!'
   end
 
-  namespace '/users' do 
-  
+  namespace '/users' do
+
     desc 'some restful endpoint'
     get '/:user_id' do
       response.status = 201
       params['user_id'] #=> restful parameter :user_id
       say #=> "hello world!"
     end
-    
+
   end
-   
+
   desc 'some endpoint that has error and will be rescued'
   get '/make_error' do
     raise(StandardError,'error block rescued')
@@ -161,12 +168,12 @@ end
 
 ```
 
-you can access Rack::Request with the request method and 
-Rack::Response as response method. 
+you can access Rack::Request with the request method and
+Rack::Response as response method.
 
 By default if you dont write anything to the response 'body' the endpoint block logic return will be used
 
-## Testing 
+## Testing
 
 for testing use rack/test or the bundled testing module for writing unit test for your rack application
 
@@ -214,9 +221,13 @@ end
 
 ## Example Apps To start with
 
+* [Official website How To examples](http://rack-app.com/)
+
+* [Rack::App Team Github repositories](https://github.com/rack-app)
+
 * [Basic](https://github.com/rack-app/rack-app-example-basic)
-  * bare bone simple example app 
-  
+  * bare bone simple example app
+
 * [Escher Authorized Api](https://github.com/rack-app/rack-app-example-escher)
   * complex authorization for corporal level api use
 
@@ -250,7 +261,7 @@ the benchmarking was taken on the following hardware specification:
 
 For more reports check the Benchmark repo out :)
 
-## Roadmap 
+## Roadmap
 
 ### Team [Backlog](https://docs.google.com/spreadsheets/d/19GGX51i6uCQQz8pQ-lvsIxu43huKCX-eC1526-RL3YA/edit?usp=sharing)
 
@@ -267,6 +278,6 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 Bug reports and pull requests are welcome on GitHub at https://github.com/adamluzsi/rack-app.rb This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 ## License and Copyright
-   
+
 Rack::App is free software released under the [Apache License V2](https://opensource.org/licenses/Apache-2.0) License.
 The logo was designed by Zsófia Gebauer. It is Copyright © 2015 Adam Luzsi. All Rights Reserved.
