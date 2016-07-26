@@ -20,13 +20,13 @@ class Rack::App::Router::Base
     @endpoints ||= []
   end
 
-  def register_endpoint!(request_method, request_path, description, endpoint)
+  def register_endpoint!(request_method, request_path, endpoint, properties={})
     endpoints.push(
         {
             :request_method => request_method,
             :request_path => Rack::App::Utils.normalize_path(request_path),
-            :description => description,
-            :endpoint => endpoint
+            :endpoint => endpoint,
+            :properties => properties
         }
     )
 

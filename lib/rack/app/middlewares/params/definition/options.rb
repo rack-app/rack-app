@@ -9,11 +9,21 @@ class Rack::App::Middlewares::Params::Definition::Options
   def formatted
     {
       :class => parameter_class,
-      :of => parameter_class_elements
+      :of => parameter_class_elements,
+      :description => parameter_description,
+      :example => parameter_example
     }
   end
 
   protected
+
+  def parameter_example
+    @descriptor[:example] 
+  end
+
+  def parameter_description
+    @descriptor[:desc] || @descriptor[:description]
+  end
 
   def parameter_class
     @descriptor[:class] || @descriptor[:type]

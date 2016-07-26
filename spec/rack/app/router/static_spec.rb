@@ -18,7 +18,7 @@ describe Rack::App::Router::Static do
   let(:instance) { described_class.new }
 
   describe '#register_endpoint!' do
-    subject { instance.register_endpoint!(request_method, request_path, 'desc', endpoint) }
+    subject { instance.register_endpoint!(request_method, request_path, endpoint, :description => 'desc') }
 
     it { is_expected.to be endpoint }
   end
@@ -29,9 +29,9 @@ describe Rack::App::Router::Static do
     it { is_expected.to eq([]) }
 
     context 'when endpoint is defined' do
-      before { instance.register_endpoint!('GET', '/index.html','desc', endpoint) }
+      before { instance.register_endpoint!('GET', '/index.html', endpoint, :description => 'desc') }
 
-      it { is_expected.to eq([{:request_method => 'GET', :request_path => '/index.html', :description => 'desc', :endpoint => endpoint}]) }
+      it { is_expected.to eq([{:request_method => 'GET', :request_path => '/index.html', :endpoint => endpoint, :properties => {:description => 'desc'}}]) }
     end
   end
 

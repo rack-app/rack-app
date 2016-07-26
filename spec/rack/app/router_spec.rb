@@ -19,7 +19,7 @@ describe Rack::App::Router do
 
   describe '#register_endpoint!' do
 
-    subject { instance.register_endpoint!(request_method, defined_request_path, '', endpoint) }
+    subject { instance.register_endpoint!(request_method, defined_request_path, endpoint, {}) }
 
     it { is_expected.to be endpoint }
 
@@ -72,7 +72,7 @@ describe Rack::App::Router do
     rack_app
 
     context 'when endpoint is defined' do
-      before { instance.register_endpoint!('GET', '/index.html', 'desc', endpoint) }
+      before { instance.register_endpoint!('GET', '/index.html', endpoint, :description => 'desc') }
 
       it { is_expected.to eq ["GET   /index.html   desc"] }
     end

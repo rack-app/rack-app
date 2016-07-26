@@ -7,11 +7,15 @@ module Rack::App::SingletonMethods::RouteHandling
   protected
 
   def root(endpoint_path)
-    alias_endpoint '/', endpoint_path
+    alias_endpoint('/', endpoint_path)
+  end
+
+  def route_registration_properties
+    @route_registration_properties ||= {}
   end
 
   def description(*description_texts)
-    @last_description = description_texts.join("\n")
+    route_registration_properties[:description]= description_texts.join("\n")
   end
 
   alias desc description
@@ -25,7 +29,7 @@ module Rack::App::SingletonMethods::RouteHandling
       builder_block.call(builder)
     end
 
-    only_next_endpoint_middlewares.clear 
+    only_next_endpoint_middlewares.clear
 
     properties = {
         :user_defined_logic => block,
@@ -33,7 +37,6 @@ module Rack::App::SingletonMethods::RouteHandling
         :request_path => request_path,
 
         :error_handler => error,
-        :description => @last_description,
         :serializer => serializer,
         :middleware => builder,
         :app_class => self
@@ -41,8 +44,9 @@ module Rack::App::SingletonMethods::RouteHandling
 
 
     endpoint = Rack::App::Endpoint.new(properties)
-    router.register_endpoint!(request_method, request_path, @last_description, endpoint)
+    router.register_endpoint!(request_method, request_path, endpoint, route_registration_properties)
 
+    @route_registration_properties = nil
     @last_description = nil
     return endpoint
 
