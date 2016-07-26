@@ -15,5 +15,7 @@ module Rack::App::Constants
   PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
   RACK_BASED_APPLICATION = '[Mounted Rack Application]'.freeze
   MOUNTED_DIRECTORY = '[Mounted Directory]'.freeze
-
+  VALIDATED_PARAMS = 'rack-app.validated_params'
+  PARSED_PARAMS = 'rack-app.parsed_params'
+  
 end

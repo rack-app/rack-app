@@ -2,7 +2,11 @@ require 'cgi'
 class Rack::App::Params
 
   def to_hash
-    query_params.merge(request_path_params)
+    if @request_env[::Rack::App::Constants::PARSED_PARAMS]
+      @request_env[::Rack::App::Constants::PARSED_PARAMS]
+    else
+      query_params.merge(request_path_params)
+    end
   end
 
   protected

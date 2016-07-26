@@ -139,10 +139,10 @@ describe Rack::App::Utils::Parser do
           it { is_expected.to eq 10 }
         end
 
-        context 'and str is a valid numeric' do
-          let(:str){"10"}
+        context 'and str is a valid numeric(float)' do
+          let(:str){'123.45'}
 
-          it { is_expected.to eq 10 }
+          it { is_expected.to eq 123.45 }
         end
 
         context 'and str is an invalid numeric' do

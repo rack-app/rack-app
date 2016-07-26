@@ -3,7 +3,11 @@ module Rack::App::InstanceMethods::Core
   attr_writer :request, :response
 
   def params
-    @__params__ ||= Rack::App::Params.new(request.env).to_hash
+    request.env[::Rack::App::Constants::PARSED_PARAMS] ||= Rack::App::Params.new(request.env).to_hash
+  end
+
+  def validated_params
+    request.env[::Rack::App::Constants::VALIDATED_PARAMS]
   end
 
   def request
@@ -15,4 +19,3 @@ module Rack::App::InstanceMethods::Core
   end
 
 end
-
