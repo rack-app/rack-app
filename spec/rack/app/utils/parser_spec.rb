@@ -154,5 +154,31 @@ describe Rack::App::Utils::Parser do
       end
     end
 
+    class RSPECParserCustomParser
+      def parse(string)
+        if string == 'good'
+          'yolo'
+        else
+          raise 'oh my god!'
+        end
+      end
+    end
+
+    context 'when custom parser given as type' do
+      let(:type){ RSPECParserCustomParser.new }
+
+      context 'and the given the string is acceptable for the parser' do
+        let(:str){'good'}
+
+        it { is_expected.to eq 'yolo' }
+      end
+      context 'and the given the string is unacceptable for the parser' do
+        let(:str){'bad'}
+
+        it { is_expected.to be nil }
+      end
+
+    end
+
   end
 end
