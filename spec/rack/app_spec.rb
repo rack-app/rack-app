@@ -1,7 +1,6 @@
 require 'spec_helper'
 describe Rack::App do
 
-  let(:described_class) { Class.new(Rack::App) }
   let(:request_path) { '/some/endpoint/path' }
   let(:block) { Proc.new {} }
 
@@ -13,12 +12,12 @@ describe Rack::App do
 
   require 'rack/app/test'
   include Rack::App::Test
-  rack_app described_class
+  rack_app
 
   [:get, :post, :put, :delete, :patch, :options].each do |http_method|
     describe ".#{http_method}" do
 
-      rack_app described_class do
+      rack_app do
 
         send http_method, "/hello_#{http_method}" do
           String(http_method)
@@ -86,7 +85,7 @@ describe Rack::App do
 
     require 'yaml'
 
-    rack_app described_class do
+    rack_app do
 
       get '/params' do
         YAML.dump(params)
@@ -153,7 +152,7 @@ describe Rack::App do
 
   describe '.call' do
 
-    rack_app described_class do
+    rack_app do
 
       get '/hello' do
         response.status = 201
@@ -187,7 +186,7 @@ describe Rack::App do
 
     context 'when no serializer defined' do
 
-      rack_app described_class do
+      rack_app do
 
         get '/serialized' do
           'to_s'
@@ -201,7 +200,7 @@ describe Rack::App do
 
     context 'when serializer is defined' do
 
-      rack_app described_class do
+      rack_app do
 
         serializer do |o|
           o.inspect.upcase
@@ -222,7 +221,7 @@ describe Rack::App do
 
   describe '.error' do
 
-    rack_app described_class do
+    rack_app do
 
       error ArgumentError, RangeError do |ex|
         ex.message
@@ -267,7 +266,7 @@ describe Rack::App do
 
   describe 'return works in the endpoint block definition' do
 
-    rack_app described_class do
+    rack_app do
 
       get '/return' do
         return 'hello world'
@@ -283,7 +282,7 @@ describe Rack::App do
 
   describe '.namespace' do
 
-    rack_app described_class do
+    rack_app do
 
       namespace '/users' do
 
@@ -329,7 +328,7 @@ describe Rack::App do
 
   describe '.serve_files_from' do
 
-    rack_app described_class do
+    rack_app do
 
       serve_files_from '/spec/fixtures'
 
@@ -341,7 +340,7 @@ describe Rack::App do
 
   describe '.mount_directory' do
 
-    rack_app described_class do
+    rack_app do
 
       mount_directory '/spec/fixtures', :to => '/test'
 
@@ -355,16 +354,14 @@ describe Rack::App do
 
   describe '.middlewares' do
 
-    rack_app described_class do
+    rack_app do
 
       get '/before_middlewares' do
         request.env['custom']
       end
 
       middlewares do |builder|
-
         builder.use(SampleMiddleware, 'custom', 'value')
-
       end
 
       get '/after_middlewares' do

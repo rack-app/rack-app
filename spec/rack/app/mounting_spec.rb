@@ -16,8 +16,6 @@ describe Rack::App do
           'works'
         end
 
-        options.delete(:to)
-
       end
 
       get '/' do
@@ -28,6 +26,7 @@ describe Rack::App do
 
     rack_app do
 
+      desc 'original'
       get '/' do
         'original'
       end
@@ -41,10 +40,6 @@ describe Rack::App do
     it { expect(get(:url => '/mount_point').body).to eq 'hello' }
 
     it { expect(get('/mount_point/hy').body).to eq 'works' }
-
-    it 'should NEVER ALLOW any change in the source App class that being mounte, even if dynamic endpoint deceleration included based on the option' do
-      expect(Rack::MockRequest.new(mounted_class).get('/hy').status).to eq 404
-    end
 
   end
 
@@ -94,8 +89,8 @@ describe Rack::App do
       it { expect(get('/hello').body).to eq 'works!' }
       it { expect(get('/world').body).to eq 'works!' }
       it { expect(get('/mount_point/test').body).to eq 'works!' }
-      it { expect(get('/mount_point/hello').status).to eq 404 }
-      it { expect(get('/mount_point/world').status).to eq 404 }
+      it { expect(get('/mount_point/hello').status).to eq 200 }
+      it { expect(get('/mount_point/world').status).to eq 200 }
 
       it { expect { rack_app.method(:new_method) }.to raise_error(NameError) }
 
@@ -115,7 +110,7 @@ describe Rack::App do
       end
 
       it 'shold never affect one on_mount to an anothere, even by altering the mounting properties' do
-        expect(get('/hello').status).to eq 200
+        expect{ rack_app }.to raise_error /can't modify frozen Hash/
       end
 
     end
