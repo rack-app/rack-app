@@ -6,12 +6,12 @@ describe 'Params Validation additional tests' do
   example_app.class_eval do
     desc 'hello world endpoint'
     validate_params do
-      required 'words', class: Array, of: String,
-                        desc: 'words that will be joined with space',
-                        example: %w(dog cat)
+      required 'words', :class => Array, :of => String,
+                        :desc => 'words that will be joined with space',
+                        :example => %w(dog cat)
 
-      required 'to', class: String,
-                     desc: 'the subject of the conversation'
+      required 'to', :class => String,
+                     :desc => 'the subject of the conversation'
     end
     get '/validated' do
       return "Hello #{validated_params['to']}: #{validated_params['words'].join(' ')}"
@@ -26,7 +26,7 @@ describe 'Params Validation additional tests' do
 
   describe '/validated' do
     let(:params) { {} }
-    let(:request) { get(url: '/validated', params: params) }
+    let(:request) { get(:url => '/validated', :params => params) }
 
     context 'when required params missing given' do
       before { params.delete('words') }
