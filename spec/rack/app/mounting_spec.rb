@@ -5,44 +5,6 @@ describe Rack::App do
   require 'rack/app/test'
   include Rack::App::Test
 
-  describe '.on_mounted' do
-
-    mounted_class = Class.new(Rack::App)
-    mounted_class.class_eval do
-
-      on_mounted do |options|
-
-        get "/#{options[:endpoint]}" do
-          'works'
-        end
-
-      end
-
-      get '/' do
-        'hello'
-      end
-
-    end
-
-    rack_app do
-
-      desc 'original'
-      get '/' do
-        'original'
-      end
-
-      mount mounted_class, :to => '/mount_point', :test => 'hello', :endpoint => 'hy'
-
-    end
-
-    it { expect(get(:url => '/').body).to eq 'original' }
-
-    it { expect(get(:url => '/mount_point').body).to eq 'hello' }
-
-    it { expect(get('/mount_point/hy').body).to eq 'works' }
-
-  end
-
   describe '.mount' do
 
     subject { described_class.mount(to_be_mounted_api_class) }
@@ -76,44 +38,6 @@ describe Rack::App do
 
     end
 
-    context 'when mounting application to multiple mount point with different options, and the application instance handling states' do
-
-      rack_app do
-
-        mount OnMountSelfModifyingApp, :endpoint => 'hello'
-        mount OnMountSelfModifyingApp, :endpoint => 'world'
-        mount OnMountSelfModifyingApp, :endpoint => 'test', :to => '/mount_point'
-
-      end
-
-      it { expect(get('/hello').body).to eq 'works!' }
-      it { expect(get('/world').body).to eq 'works!' }
-      it { expect(get('/mount_point/test').body).to eq 'works!' }
-      it { expect(get('/mount_point/hello').status).to eq 200 }
-      it { expect(get('/mount_point/world').status).to eq 200 }
-
-      it { expect { rack_app.method(:new_method) }.to raise_error(NameError) }
-
-      it { expect(get('/world/singleton').body).to eq 'singleton_method_definition' }
-      it { expect(get('/world/instance').body).to eq 'instance_method_definition' }
-
-    end
-
-    context 'when application on_mounted alters options' do
-
-      rack_app do
-
-        mount OptionsModifier,
-              :delete => :endpoint,
-              :endpoint => 'hello'
-
-      end
-
-      it 'shold never affect one on_mount to an anothere, even by altering the mounting properties' do
-        expect{ rack_app }.to raise_error /can't modify frozen Hash/
-      end
-
-    end
   end
 
   describe '.mount_rack_based_application' do

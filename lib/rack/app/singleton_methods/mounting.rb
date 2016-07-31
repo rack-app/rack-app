@@ -8,10 +8,6 @@ module Rack::App::SingletonMethods::Mounting
       raise(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
     end
 
-    app.on_mounted.each do |on_mount|
-      app.class_exec(options, &on_mount)
-    end
-
     cli.merge!(app.cli)
     merge_prop = {:namespaces => [@namespaces, options[:to]].flatten}
     router.merge_router!(app.router, merge_prop)
