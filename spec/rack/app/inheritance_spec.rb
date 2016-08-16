@@ -5,9 +5,7 @@ class RackAppInheritanceParent < Rack::App
 
   EXCEPTION = Class.new(Exception)
 
-  middleware do |b|
-    b.use SimpleSetterMiddleware, 'parent', 'yes'
-  end
+  use SimpleSetterMiddleware, 'parent', 'yes'
 
   error EXCEPTION do |ex|
     ex.message
