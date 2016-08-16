@@ -10,6 +10,8 @@ module Rack::App::SingletonMethods::Extensions
     Rack::App::Extension.apply_extensions(self,applied_extensions,extension_names)
   end
 
+  alias apply_extension apply_extensions
+
   def extensions(*extensions_names)
     apply_extensions(*extensions_names)
     applied_extensions
