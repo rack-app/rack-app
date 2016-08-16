@@ -13,8 +13,8 @@ class Rack::App::ErrorHandler
     nil
   end
 
-  def execute_with_error_handling_for(instance, endpoint_method_name)
-    instance.__send__(endpoint_method_name)
+  def execute_with_error_handling_for(instance, &block)
+    block.call 
   rescue *[Exception, @handlers.keys].flatten => ex
     instance.instance_exec(ex, &get_handler(ex))
   end

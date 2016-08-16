@@ -21,8 +21,22 @@ describe Rack::App::InstanceMethods do
       serve_file Rack::App::Utils.pwd('spec', 'fixtures', 'raw.txt')
     end
 
+    get '/serve_file_break_execution' do
+      serve_file Rack::App::Utils.pwd('spec', 'fixtures', 'raw.txt')
+      raise 'not raised'
+    end
+
     get '/redirect_to' do
       redirect_to '/hello'
+    end
+
+    get '/redirect_to_with_params' do
+      redirect_to '/hello', :hello => 'world'
+    end
+
+    get '/redirect_to_break_execution' do
+      redirect_to '/hello'
+      raise 'never happen'
     end
 
     get '/payload_to_file' do
@@ -45,6 +59,13 @@ describe Rack::App::InstanceMethods do
 
       expect(new_response.status).to eq 304
 
+    end
+
+    it 'should break the flow of the code processing' do
+      expect{get(:url => '/serve_file_break_execution')}.to_not raise_error
+      response = get(:url => '/serve_file_break_execution')
+      expect(response.status).to eq 200
+      expect(response.body).to eq "hello world!\nhow you doing?"
     end
 
   end
@@ -87,12 +108,24 @@ describe Rack::App::InstanceMethods do
       expect(get(:url => '/redirect_to').status).to eq 301
     end
 
+    it 'should break the control flow of the code block' do
+      expect{ get(:url => '/redirect_to_break_execution') }.to_not raise_error
+    end
+
     it 'should add location header' do
       expect(get(:url => '/redirect_to').headers['Location']).to eq '/hello'
     end
 
     it 'should add params to location url too to proxy the request' do
       expect(get(:url => '/redirect_to', :params => {'hello' => 'world'}).headers['Location']).to eq '/hello?hello=world'
+    end
+
+    it 'should parse the optionally given hash to the repsonse' do
+      expect(get(:url => '/redirect_to_with_params').headers['Location']).to eq '/hello?hello=world'
+    end
+
+    it 'should prefer the passed hash over the origin QUERY_STRING' do
+      expect(get(:url => '/redirect_to_with_params', :params => {'nope' => 'not passed'}).headers['Location']).to eq '/hello?hello=world'
     end
 
   end

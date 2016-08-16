@@ -11,49 +11,53 @@ class Rack::App::Endpoint
     @error_handler = properties[:error_handler] || Rack::App::ErrorHandler.new
     @serializer = properties[:serializer] || Rack::App::Serializer.new
 
-    @middleware = (properties[:middleware] || Rack::Builder.new).dup
-    @middleware.run(lambda { |env| self.execute(env) })
+    middleware = (properties[:middleware] || Rack::Builder.new).dup
+    middleware.run(lambda { |env| self.call_without_middlewares(env) })
     @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
 
-    @app = @middleware.to_app
+    @app = middleware.to_app
   end
 
   def call(env)
     @app.call(env)
   end
 
-  def execute(request_env)
-
-    request = Rack::Request.new(request_env)
+  def call_without_middlewares(env)
+    request = Rack::Request.new(env)
     response = Rack::Response.new
-
-    set_response_body(response, get_response_body(request, response))
-    return response.finish
-
-  end
-
-  def get_response_body(rack_request, rack_response)
-
-    request_handler = @app_class.new
-    request_handler.request = rack_request
-    request_handler.response = rack_response
-
-    return @error_handler.execute_with_error_handling_for(request_handler, @endpoint_method_name)
-
+    return catch(:rack_response){ execute(request, response) }.finish
   end
 
   protected
 
-  def set_response_body(response, result)
-    return nil unless response.body.is_a?(Array)
+  def execute(request,response)
+    request_handler = @app_class.new
+    request_handler.request = request
+    request_handler.response = response
+    set_response_body(response, get_response_body(request_handler))
 
-    response.write(String(@serializer.serialize(result)))
+    return response
+  end
+
+  def get_response_body(request_handler)
+    catch :response_body do
+      evaluated_value = @error_handler.execute_with_error_handling_for(request_handler) do
+        request_handler.__send__(@endpoint_method_name)
+      end
+
+      throw(:rack_response, evaluated_value) if evaluated_value.is_a?(Rack::Response)
+
+      evaluated_value
+    end
+  end
+
+  def set_response_body(response, response_body)
+    response.write(String(@serializer.serialize(response_body)))
   end
 
   def register_method_to_app_class(proc)
-    method_name = ::Rack::App::Utils.uuid
+    method_name = '__' + ::Rack::App::Utils.uuid
     @app_class.__send__(:define_method, method_name, &proc)
     return method_name
   end
-
 end

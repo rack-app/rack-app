@@ -5,8 +5,7 @@ module Rack::App::InstanceMethods::Upload
     response.status = raw_rack_resp[0]
     response.headers.merge!(raw_rack_resp[1])
     response.body = raw_rack_resp[2]
-    return nil
+    throw :rack_response, response
   end
 
 end
-

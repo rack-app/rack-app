@@ -1,4 +1,3 @@
-require "cgi"
 module Rack::App::Test::Utils
 
   extend self
@@ -23,7 +22,7 @@ module Rack::App::Test::Utils
     env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
     payload = properties.delete(:payload)
     env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
-    env[::Rack::QUERY_STRING]= encode_www_form(properties[:params].to_a)
+    env[::Rack::QUERY_STRING]= Rack::App::Utils.encode_www_form(properties[:params].to_a)
     env.merge!(properties[:env] || {})
 
     env
@@ -42,30 +41,6 @@ module Rack::App::Test::Utils
         StringIO.new('')
 
     end
-  end
-
-  def encode_www_form(enum)
-    enum.map do |k, v|
-      if v.nil?
-        encode_www_form_component(k)
-      elsif v.respond_to?(:to_ary)
-        v.to_ary.map do |w|
-          str = encode_www_form_component(k)
-          unless w.nil?
-            str << '='
-            str << encode_www_form_component(w)
-          end
-        end.join('&')
-      else
-        str = encode_www_form_component(k)
-        str << '='
-        str << encode_www_form_component(v)
-      end
-    end.join('&')
-  end
-
-  def encode_www_form_component(str)
-    CGI.escape(str.to_s)
   end
 
 end
