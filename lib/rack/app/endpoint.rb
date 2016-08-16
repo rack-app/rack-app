@@ -35,24 +35,25 @@ class Rack::App::Endpoint
     request_handler.request = request
     request_handler.response = response
     set_response_body(response, get_response_body(request_handler))
-
     return response
   end
 
   def get_response_body(request_handler)
     catch :response_body do
-      evaluated_value = @error_handler.execute_with_error_handling_for(request_handler) do
-        request_handler.__send__(@endpoint_method_name)
-      end
-
-      throw(:rack_response, evaluated_value) if evaluated_value.is_a?(Rack::Response)
-
+      evaluated_value = evaluate_value(request_handler)
+      
       evaluated_value
     end
   end
 
   def set_response_body(response, response_body)
     response.write(String(@serializer.serialize(response_body)))
+  end
+
+  def evaluate_value(request_handler)
+    @error_handler.execute_with_error_handling_for(request_handler) do
+      request_handler.__send__(@endpoint_method_name)
+    end
   end
 
   def register_method_to_app_class(proc)

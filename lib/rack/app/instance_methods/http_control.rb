@@ -11,8 +11,9 @@ module Rack::App::InstanceMethods::HttpControl
 
     response.status = 301
     response.headers.merge!({'Location' => url})
-    throw :rack_response, response
 
+    finish_response
+    
   end
 
 end

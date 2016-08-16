@@ -18,4 +18,8 @@ module Rack::App::InstanceMethods::Core
     @response || raise("response object is not set for #{self.class}")
   end
 
+  def finish_response
+    throw(:rack_response, response)
+  end
+
 end
