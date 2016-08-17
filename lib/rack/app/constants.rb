@@ -3,16 +3,17 @@ module Rack::App::Constants
   module HTTP
 
     module METHOD
-      ANY = 'ANY'.freeze
-      GET= 'GET'.freeze
-      POST = 'POST'.freeze
-      PUT = 'PUT'.freeze
-      DELETE = 'DELETE'.freeze
-      PATCH = 'PATCH'.freeze
-      HEAD = 'HEAD'.freeze
+      ANY     = 'ANY'.freeze
+      GET     = 'GET'.freeze
+      POST    = 'POST'.freeze
+      PUT     = 'PUT'.freeze
+      PATCH   = 'PATCH'.freeze
+      DELETE  = 'DELETE'.freeze
+      HEAD    = 'HEAD'.freeze
       OPTIONS = 'OPTIONS'.freeze
-      LINK = 'LINK'.freeze
-      UNLINK = 'UNLINK'.freeze
+      LINK    = 'LINK'.freeze
+      UNLINK  = 'UNLINK'.freeze
+      TRACE   = 'TRACE'.freeze
     end
 
     METHODS = (METHOD.constants - [:ANY]).map(&:to_s).freeze
