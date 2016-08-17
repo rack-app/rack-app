@@ -57,8 +57,8 @@ module Rack::App::SingletonMethods::RouteHandling
     @namespaces ||= []
     @namespaces.push(request_path_namespace)
     yield
+  ensure
     @namespaces.pop
-    nil
   end
 
 end
