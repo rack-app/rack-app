@@ -24,30 +24,21 @@ module Rack::App::SingletonMethods::RouteHandling
 
     request_path = ::Rack::App::Utils.join(@namespaces, request_path)
 
-    builder = Rack::Builder.new
-    (middlewares + only_next_endpoint_middlewares).each do |builder_block|
-      builder_block.call(builder)
-    end
-
-    only_next_endpoint_middlewares.clear
-
     properties = {
         :user_defined_logic => block,
         :request_method => request_method,
         :request_path => request_path,
-
         :error_handler => error,
         :serializer => serializer,
-        :middleware => builder,
+        :middleware_builders_blocks => only_next_endpoint_middlewares.dup,
         :app_class => self
     }
 
+    only_next_endpoint_middlewares.clear
 
     endpoint = Rack::App::Endpoint.new(properties)
     router.register_endpoint!(request_method, request_path, endpoint, route_registration_properties)
-
     @route_registration_properties = nil
-    @last_description = nil
     return endpoint
 
   end

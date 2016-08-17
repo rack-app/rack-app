@@ -1,7 +1,5 @@
 module Rack::App::SingletonMethods::Middleware
 
-  protected
-  
   def middlewares(&block)
     @middlewares ||= []
     @middlewares << block unless block.nil?
@@ -13,6 +11,8 @@ module Rack::App::SingletonMethods::Middleware
   def use(*args)
     middlewares{ |b| b.use(*args) }
   end
+
+  protected
 
   def only_next_endpoint_middlewares(&block)
     @only_next_endpoint_middlewares ||= []

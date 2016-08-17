@@ -40,7 +40,6 @@ module Rack::App::SingletonMethods::Mounting
     file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
     request_path = Rack::App::Utils.join(@namespaces, options[:to], '**', '*')
     router.register_endpoint!('GET', request_path, file_server, route_registration_properties)
-    @last_description = nil
   end
 
   def mount_rack_based_application(rack_based_app, options={})
@@ -50,8 +49,6 @@ module Rack::App::SingletonMethods::Mounting
       rack_based_app,
       route_registration_properties
     )
-
-    @last_description = nil
   end
 
   alias mount_app mount_rack_based_application

@@ -370,8 +370,7 @@ describe Rack::App do
 
     end
 
-    it { expect(get(:url => '/before_middlewares').body).to eq '' }
-
+    it { expect(get(:url => '/before_middlewares').body).to eq 'value' }
     it { expect(get(:url => '/after_middlewares').body).to eq 'value' }
 
   end

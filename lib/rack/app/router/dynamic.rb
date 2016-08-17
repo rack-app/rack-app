@@ -5,6 +5,13 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   MOUNTED_DIRECTORY = RequestPathPartPlaceholder.new('MOUNTED_DIRECTORY')
   MOUNTED_APPLICATION = RequestPathPartPlaceholder.new('MOUNTED_APPLICATION')
 
+  def compile_registered_endpoints!
+    @http_method_cluster.clear
+    endpoints.each do |endpoint_prop|
+      compile_endpoint(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
+    end
+  end
+
   protected
 
   def initialize
@@ -31,13 +38,6 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
   def path_part_is_a_mounted_rack_based_application?(path_part)
     path_part == Rack::App::Constants::RACK_BASED_APPLICATION
-  end
-
-  def compile_registered_endpoints!
-    @http_method_cluster.clear
-    endpoints.each do |endpoint_prop|
-      compile_endpoint(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
-    end
   end
 
   def compile_endpoint(request_method, request_path, endpoint)
@@ -73,6 +73,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
       end
 
+      current_cluster[:app]= as_app(endpoint)
       current_cluster[:endpoint]= endpoint
       if current_cluster[:endpoint].respond_to?(:register_path_params_matcher)
         current_cluster[:endpoint].register_path_params_matcher(path_params)
@@ -111,7 +112,6 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
     last_mounted_directory = nil
     last_mounted_app = nil
     current_cluster = main_cluster(request_method)
-
     normalized_request_path.split('/').each do |path_part|
 
       last_mounted_directory = current_cluster[MOUNTED_DIRECTORY] || last_mounted_directory
