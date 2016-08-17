@@ -51,6 +51,10 @@ class Rack::App::Router
     nil
   end
 
+  def reset
+    [@static, @dynamic].each(&:reset)
+  end 
+
   protected
 
   def initialize

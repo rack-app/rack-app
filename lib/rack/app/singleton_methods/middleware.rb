@@ -2,7 +2,10 @@ module Rack::App::SingletonMethods::Middleware
 
   def middlewares(&block)
     @middlewares ||= []
-    @middlewares << block unless block.nil?
+    unless block.nil?
+      @middlewares << block
+      router.reset
+    end
     @middlewares
   end
 

@@ -1,13 +1,5 @@
 class Rack::App::Router::Static < Rack::App::Router::Base
 
-  def compile_registered_endpoints!
-    mapped_endpoint_routes.clear
-    endpoints.each do |endpoint|
-      app = as_app(endpoint[:endpoint])
-      mapped_endpoint_routes[[endpoint[:request_method].to_s.upcase, endpoint[:request_path]]]= app
-    end
-  end
-
   protected
 
   def fetch_context(request_method, request_path)
@@ -19,4 +11,11 @@ class Rack::App::Router::Static < Rack::App::Router::Base
     @mapped_endpoint_routes ||= {}
   end
 
+  def compile_registered_endpoints!
+    mapped_endpoint_routes.clear
+    endpoints.each do |endpoint|
+      app = as_app(endpoint[:endpoint])
+      mapped_endpoint_routes[[endpoint[:request_method].to_s.upcase, endpoint[:request_path]]]= app
+    end
+  end
 end

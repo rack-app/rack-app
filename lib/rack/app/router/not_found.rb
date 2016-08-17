@@ -1,9 +1,6 @@
 require "rack/response"
 class Rack::App::Router::NotFound < Rack::App::Router::Base
 
-  def compile_registered_endpoints!
-  end
-
   def fetch_context(request_method, path_info)
     {:app => lambda{|env| not_found_response }}
   end
@@ -20,5 +17,7 @@ class Rack::App::Router::NotFound < Rack::App::Router::Base
     rack_response.write('404 Not Found')
     rack_response.finish
   end
-
+  
+  def compile_registered_endpoints!
+  end
 end

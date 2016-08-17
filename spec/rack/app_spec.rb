@@ -354,24 +354,50 @@ describe Rack::App do
 
   describe '.middlewares' do
 
-    rack_app do
+    context 'when middleware setting is between endpoints' do
 
-      get '/before_middlewares' do
-        request.env['custom']
+      rack_app do
+
+        get '/before_middlewares' do
+          request.env['custom']
+        end
+
+        middlewares do |builder|
+          builder.use(SampleMiddleware, 'custom', 'value')
+        end
+
+        get '/after_middlewares' do
+          request.env['custom']
+        end
+
       end
 
-      middlewares do |builder|
-        builder.use(SampleMiddleware, 'custom', 'value')
-      end
-
-      get '/after_middlewares' do
-        request.env['custom']
-      end
-
+      it { expect(get(:url => '/before_middlewares').body).to eq 'value' }
+      it { expect(get(:url => '/after_middlewares').body).to eq 'value' }
     end
 
-    it { expect(get(:url => '/before_middlewares').body).to eq 'value' }
-    it { expect(get(:url => '/after_middlewares').body).to eq 'value' }
+    context 'when middleware setting is after endpoints' do
+
+      rack_app do
+
+        get '/a' do
+          request.env['custom']
+        end
+
+        get '/b' do
+          request.env['custom']
+        end
+
+        middlewares do |builder|
+          builder.use(SampleMiddleware, 'custom', 'value')
+        end
+
+      end
+
+      it { expect(get(:url => '/a').body).to eq 'value' }
+      it { expect(get(:url => '/b').body).to eq 'value' }
+      
+    end
 
   end
 

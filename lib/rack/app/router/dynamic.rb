@@ -5,13 +5,6 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   MOUNTED_DIRECTORY = RequestPathPartPlaceholder.new('MOUNTED_DIRECTORY')
   MOUNTED_APPLICATION = RequestPathPartPlaceholder.new('MOUNTED_APPLICATION')
 
-  def compile_registered_endpoints!
-    @http_method_cluster.clear
-    endpoints.each do |endpoint_prop|
-      compile_endpoint(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
-    end
-  end
-
   protected
 
   def initialize
@@ -38,6 +31,13 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
   def path_part_is_a_mounted_rack_based_application?(path_part)
     path_part == Rack::App::Constants::RACK_BASED_APPLICATION
+  end
+
+  def compile_registered_endpoints!
+    @http_method_cluster.clear
+    endpoints.each do |endpoint_prop|
+      compile_endpoint(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
+    end
   end
 
   def compile_endpoint(request_method, request_path, endpoint)
