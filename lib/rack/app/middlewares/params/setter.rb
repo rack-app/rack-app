@@ -5,7 +5,7 @@ class Rack::App::Middlewares::Params::Setter
   end
 
   def call(env)
-    env[::Rack::App::Constants::PARSED_PARAMS] ||= params_hash(env)
+    env[::Rack::App::Constants::ENV::PARSED_PARAMS] ||= params_hash(env)
 
     @app.call(env)
   end

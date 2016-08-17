@@ -2,8 +2,8 @@ require 'cgi'
 class Rack::App::Params
 
   def to_hash
-    if @request_env[::Rack::App::Constants::PARSED_PARAMS]
-      @request_env[::Rack::App::Constants::PARSED_PARAMS]
+    if @request_env[::Rack::App::Constants::ENV::PARSED_PARAMS]
+      @request_env[::Rack::App::Constants::ENV::PARSED_PARAMS]
     else
       query_params.merge(request_path_params)
     end
@@ -58,7 +58,7 @@ class Rack::App::Params
   end
 
   def path_params_matcher
-    @request_env[::Rack::App::Constants::PATH_PARAMS_MATCHER] || {}
+    @request_env[::Rack::App::Constants::ENV::PATH_PARAMS_MATCHER] || {}
   end
 
 end

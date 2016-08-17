@@ -3,31 +3,31 @@ module Rack::App::SingletonMethods::HttpMethods
   protected
 
   def get(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::GET, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::GET, path, &block)
   end
 
   def post(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::POST, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::POST, path, &block)
   end
 
   def put(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::PUT, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::PUT, path, &block)
   end
 
   def delete(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::DELETE, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::DELETE, path, &block)
   end
 
   def head(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::HEAD, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::HEAD, path, &block)
   end
 
   def options(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::OPTIONS, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::OPTIONS, path, &block)
   end
 
   def patch(path = '/', &block)
-    add_route(::Rack::App::Constants::HTTP::PATCH, path, &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::PATCH, path, &block)
   end
 
   def alias_endpoint(new_request_path, original_request_path)

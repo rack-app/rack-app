@@ -91,7 +91,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def clusters_for(request_method)
-    if ::Rack::App::Constants::HTTP::ANY == request_method
+    if ::Rack::App::Constants::HTTP::METHOD::ANY == request_method
       supported_http_protocols.each do |cluster_type|
         yield(main_cluster(cluster_type))
       end
@@ -101,7 +101,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def supported_http_protocols
-    (::Rack::App::Constants::HTTP.constants - [:ANY]).map(&:to_s)
+    ::Rack::App::Constants::HTTP::METHODS
   end
 
 
@@ -145,7 +145,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
   def format_env(context, env)
     mount_path = context[:options][:mount_path] rescue ''
-    env[::Rack::App::Constants::PATH_PARAMS_MATCHER]= context[:options][:path_params].dup
+    env[::Rack::App::Constants::ENV::PATH_PARAMS_MATCHER]= context[:options][:path_params].dup
     env[::Rack::PATH_INFO].sub!(mount_path, '')
   end
 

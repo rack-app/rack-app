@@ -45,7 +45,7 @@ module Rack::App::SingletonMethods::Mounting
 
   def mount_rack_based_application(rack_based_app, options={})
     router.register_endpoint!(
-      ::Rack::App::Constants::HTTP::ANY,
+      ::Rack::App::Constants::HTTP::METHOD::ANY,
       Rack::App::Utils.join(@namespaces, options[:to], ::Rack::App::Constants::RACK_BASED_APPLICATION),
       rack_based_app,
       route_registration_properties
