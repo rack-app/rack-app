@@ -13,7 +13,7 @@ describe '#Performance Benchmark' do
 
   let(:maximum_accepted_seconds) do
     if RUBY_VERSION >= '1.9'
-      5
+      6
     else
       13
     end

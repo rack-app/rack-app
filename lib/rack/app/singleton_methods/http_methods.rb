@@ -30,6 +30,18 @@ module Rack::App::SingletonMethods::HttpMethods
     add_route(::Rack::App::Constants::HTTP::METHOD::PATCH, path, &block)
   end
 
+  def link(path = '/', &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::LINK, path, &block)
+  end
+  
+  def unlink(path = '/', &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::UNLINK, path, &block)
+  end
+
+  def trace(path = '/', &block)
+    add_route(::Rack::App::Constants::HTTP::METHOD::TRACE, path, &block)
+  end
+
   def alias_endpoint(new_request_path, original_request_path)
     new_request_path = Rack::App::Utils.normalize_path(new_request_path)
     original_request_path = Rack::App::Utils.normalize_path(original_request_path)
