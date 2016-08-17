@@ -19,7 +19,6 @@ class Rack::App
   require 'rack/app/file_server'
   require 'rack/app/error_handler'
   require 'rack/app/bundled_extensions'
-  require 'rack/app/endpoint/not_found'
   require 'rack/app/request_configurator'
 
   require 'rack/app/singleton_methods'
