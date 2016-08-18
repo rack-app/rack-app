@@ -1,6 +1,6 @@
 class Rack::App::Endpoint::Properties
 
-  def to_hash 
+  def to_hash
     @raw
   end
 
@@ -20,10 +20,24 @@ class Rack::App::Endpoint::Properties
     @raw[:middleware_builders_blocks] ||= []
   end
 
+  def endpoint_method_name
+    @raw[:method_name] ||= register_method_to_app_class
+  end
+
   protected
 
   def initialize(raw)
     @raw = raw
+  end
+
+  def register_method_to_app_class
+    method_name = '__' + ::Rack::App::Utils.uuid
+    app_class.__send__(:define_method, method_name, &logic_block)
+    return method_name
+  end
+
+  def logic_block
+    @raw[:user_defined_logic]
   end
 
 end

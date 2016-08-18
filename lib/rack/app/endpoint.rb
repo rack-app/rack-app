@@ -1,34 +1,44 @@
 require "rack/builder"
 class Rack::App::Endpoint
   require "rack/app/endpoint/properties"
+  require "rack/app/endpoint/executor"
 
   def properties
     @properties.to_hash
   end
 
-  LAST_MODIFIED_HEADER = "Last-Modified".freeze
-
   def initialize(properties)
     @properties = Rack::App::Endpoint::Properties.new(properties)
-    @endpoint_method_name = register_method_to_app_class(properties[:user_defined_logic])
   end
 
   def call(env)
     to_app.call(env)
-  end 
+  end
 
   def to_app
     builder = Rack::Builder.new
     apply_middleware_build_blocks(builder)
-    builder.run(lambda { |env| self.call_without_middlewares(env) })
+    @properties.endpoint_method_name
+    builder.run(Rack::App::Endpoint::Executor.new(@properties))
     builder.to_app
   end
 
   protected
 
   def apply_middleware_build_blocks(builder)
+    builder.use(Rack::App::Middlewares::Configuration, @properties.app_class)
+    apply_hook_middlewares(builder)
     builder_blocks.each do |builder_block|
       builder_block.call(builder)
+    end
+  end
+
+  def apply_hook_middlewares(builder)
+    @properties.app_class.before.each do |before_block|
+      builder.use(Rack::App::Middlewares::Hooks::Before, before_block)
+    end
+    @properties.app_class.after.each do |after_block|
+      builder.use(Rack::App::Middlewares::Hooks::After, after_block)
     end
   end
 
@@ -36,41 +46,4 @@ class Rack::App::Endpoint
     @properties.app_class.middlewares + @properties.middleware_builders_blocks
   end
 
-  def call_without_middlewares(env)
-    request = Rack::Request.new(env)
-    response = Rack::Response.new
-    return catch(:rack_response){ execute(request, response) }.finish
-  end
-
-  def execute(request,response)
-    request_handler = @properties.app_class.new
-    request_handler.request = request
-    request_handler.response = response
-    set_response_body(response, get_response_body(request_handler))
-    return response
-  end
-
-  def get_response_body(request_handler)
-    catch :response_body do
-      evaluated_value = evaluate_value(request_handler)
-
-      evaluated_value
-    end
-  end
-
-  def set_response_body(response, response_body)
-    response.write(String(@properties.serializer.serialize(response_body)))
-  end
-
-  def evaluate_value(request_handler)
-    @properties.error_handler.execute_with_error_handling_for(request_handler) do
-      request_handler.__send__(@endpoint_method_name)
-    end
-  end
-
-  def register_method_to_app_class(proc)
-    method_name = '__' + ::Rack::App::Utils.uuid
-    @properties.app_class.__send__(:define_method, method_name, &proc)
-    return method_name
-  end
 end

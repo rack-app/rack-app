@@ -21,6 +21,7 @@ module Rack::App::Constants
   end
 
   module ENV
+    REQUEST_HANDLER = 'rack-app.handler'
     PARSED_PARAMS = 'rack-app.parsed_params'
     VALIDATED_PARAMS = 'rack-app.validated_params'
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze

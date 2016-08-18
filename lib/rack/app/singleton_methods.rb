@@ -9,6 +9,7 @@ module Rack::App::SingletonMethods
   require 'rack/app/singleton_methods/route_handling'
   require 'rack/app/singleton_methods/settings'
   require 'rack/app/singleton_methods/extensions'
+  require 'rack/app/singleton_methods/hooks'
 
   include Rack::App::SingletonMethods::HttpMethods
   include Rack::App::SingletonMethods::Inheritance
@@ -19,5 +20,6 @@ module Rack::App::SingletonMethods
   include Rack::App::SingletonMethods::RouteHandling
   include Rack::App::SingletonMethods::Settings
   include Rack::App::SingletonMethods::Extensions
+  include Rack::App::SingletonMethods::Hooks
 
 end
