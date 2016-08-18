@@ -26,11 +26,11 @@ class Rack::App::Endpoint
   protected
 
   def apply_middleware_build_blocks(builder)
-    builder.use(Rack::App::Middlewares::Configuration, @properties.app_class)
-    apply_hook_middlewares(builder)
     builder_blocks.each do |builder_block|
       builder_block.call(builder)
     end
+    builder.use(Rack::App::Middlewares::Configuration, @properties.app_class)
+    apply_hook_middlewares(builder)
   end
 
   def apply_hook_middlewares(builder)
