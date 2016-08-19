@@ -13,6 +13,7 @@ class Rack::App
   require 'rack/app/params'
   require 'rack/app/router'
   require 'rack/app/endpoint'
+  require 'rack/app/streamer'
   require 'rack/app/extension'
   require 'rack/app/serializer'
   require 'rack/app/middlewares'
