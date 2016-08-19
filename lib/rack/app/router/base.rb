@@ -30,22 +30,27 @@ class Rack::App::Router::Base
         }
     )
 
-    compile_registered_endpoints!
+    reset
     return endpoint
   end
 
   def reset
+    clean_routes!
     compile_registered_endpoints!
   end
 
   protected
 
+  def clean_routes!
+    raise(NotImplementedError)
+  end
+
   def compile_registered_endpoints!
-    raise('IMPLEMENTATION MISSING ERROR')
+    raise(NotImplementedError)
   end
 
   def fetch_context(request_method, request_path)
-    raise('IMPLEMENTATION MISSING ERROR')
+    raise(NotImplementedError)
   end
 
   def as_app(endpoint_or_app)

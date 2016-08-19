@@ -33,8 +33,11 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
     path_part == Rack::App::Constants::RACK_BASED_APPLICATION
   end
 
-  def compile_registered_endpoints!
+  def clean_routes!
     @http_method_cluster.clear
+  end
+
+  def compile_registered_endpoints!
     endpoints.each do |endpoint_prop|
       compile_endpoint(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
     end
