@@ -25,7 +25,7 @@ module Rack::App::Test
 
   def rack_app(&block)
 
-    @app ||= lambda do
+    @rack_app ||= lambda do
       app_class = defined?(__rack_app_class__) ? __rack_app_class__ : nil
       constructors = []
       if defined?(__rack_app_constructor__) and __rack_app_constructor__.is_a?(Proc)
@@ -34,7 +34,7 @@ module Rack::App::Test
       Rack::App::Test::Utils.rack_app_by(app_class, constructors)
     end.call
 
-    block.is_a?(Proc) ? @app.instance_exec(&block) : @app
+    block.is_a?(Proc) ? @rack_app.instance_exec(&block) : @rack_app
 
   end
 
