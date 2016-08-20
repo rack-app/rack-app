@@ -6,6 +6,9 @@ describe Rack::App::CLI do
 
   let(:argv) { [] }
 
+  before{ Rack::App::CLI::Fetcher.instance_variable_set(:@server_based_lookup, nil) }
+  after{ Rack::App::CLI::Fetcher.instance_variable_set(:@server_based_lookup, nil) }
+
   describe '.start' do
     subject { described_class.start(argv) }
 
