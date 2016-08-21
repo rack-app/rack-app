@@ -10,7 +10,7 @@ module Rack::App::InstanceMethods::Streaming
   # after the block has been executed. This is only relevant for evented
   # servers like Thin or Rainbows.
   def stream(keep_open = false)
-    scheduler = request.env['async.callback'] ? ::EventMachine : Rack::App::Streamer
+    scheduler = Rack::App::Streamer::Scheduler.by_env(request.env)
     response.body = Rack::App::Streamer.new(scheduler, keep_open) { |out| yield(out) }
     finish_response
   end

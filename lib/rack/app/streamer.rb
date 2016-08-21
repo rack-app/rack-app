@@ -10,10 +10,9 @@
 #
 # Scheduler has to respond to defer and schedule.
 class Rack::App::Streamer
-  def self.schedule(*) yield end
-  def self.defer(*)    yield end
+  require "rack/app/streamer/scheduler"
 
-  def initialize(scheduler = self.class, keep_open = false, &back)
+  def initialize(scheduler = self.class::Scheduler::Null, keep_open = false, &back)
     @back, @scheduler, @keep_open = back.to_proc, scheduler, keep_open
     @callbacks, @closed = [], false
   end
@@ -29,8 +28,8 @@ class Rack::App::Streamer
     @scheduler.defer do
       begin
         @back.call(self)
-      rescue Exception => e
-        @scheduler.schedule { raise e }
+      rescue Exception => ex
+        @scheduler.schedule { raise(ex) }
       end
       close unless @keep_open
     end

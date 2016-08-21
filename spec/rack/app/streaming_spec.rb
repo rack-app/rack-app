@@ -60,7 +60,7 @@ describe Rack::App do
   it 'does not trigger the callback if close is set to :keep_open' do
     step   = 0
     final  = 0
-    stream = Stream.new(Stream, :keep_open) { |_| 10.times { step += 1 } }
+    stream = Stream.new(Stream::Scheduler::Null, :keep_open) { |_| 10.times { step += 1 } }
     stream.callback { final = step }
     stream.each {|_|}
     assert_equal 0, final
@@ -136,22 +136,24 @@ describe Rack::App do
   it 'sets up async.close if available' do
     ran = false
     rack_app do
-      get('/') do
+      get('/async_close') do
         close = Object.new
         def close.callback; yield end
         def close.errback; end
         request.env['async.close'] = close
+
         stream(:keep_open) do |out|
           out.callback { ran = true }
         end
       end
     end
-    get '/'
+    get '/async_close'
+
     assert ran
   end
 
   it 'has a public interface to inspect its open/closed state' do
-    stream = Stream.new(Stream) { |out| out << :foo }
+    stream = Stream.new { |out| out << :foo }
     assert !stream.closed?
     stream.close
     assert stream.closed?

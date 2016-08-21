@@ -1,5 +1,6 @@
-require 'uri'
-require 'rack/app'
+require "uri"
+require "rack/app"
+require "rack/mock"
 module Rack::App::Test
 
   require 'rack/app/test/utils'
@@ -11,7 +12,8 @@ module Rack::App::Test
 
   attr_reader :last_response
 
-  [:get, :post, :put, :delete, :options, :patch, :head].each do |request_method|
+  Rack::App::Constants::HTTP::METHODS.each do |request_method_type|
+    request_method = request_method_type.to_s.downcase
     define_method(request_method) do |*args|
 
       properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)

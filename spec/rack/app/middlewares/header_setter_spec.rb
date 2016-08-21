@@ -5,7 +5,7 @@ describe Rack::App do
 
   describe '.headers' do
 
-    rack_app described_class do
+    rack_app do
 
       headers 'Access-Control-Allow-Origin' => '*',
               'Access-Control-Expose-Headers' => 'X-My-Custom-Header, X-Another-Custom-Header',
