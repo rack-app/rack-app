@@ -1,7 +1,15 @@
 require "spec_helper"
 describe Rack::App do
   include Rack::App::Test
-  Stream = Rack::App::Streamer
+
+  let(:env) do
+    {Rack::App::Constants::ENV::SERIALIZER => Rack::App::Serializer.new}
+  end
+
+  def stream(options={},&back)
+    Rack::App::Streamer.new(env, options, &back)
+  end
+
 
   def assert(something, *_)
     expect(something).to be true
@@ -28,14 +36,21 @@ describe Rack::App do
   end
 
   it 'always yields strings' do
-    stream = Stream.new { |out| out << :foo }
-    stream.each { |str| assert_equal 'foo', str }
+    rack_app do
+      get '/' do
+        stream do |out|
+          out << :foo
+        end
+      end
+    end
+
+    expect(get('/').body).to eq 'foo'
   end
 
   it 'postpones body generation' do
     step = 0
 
-    stream = Stream.new do |out|
+    stream = stream do |out|
       10.times do
         out << step
         step += 1
@@ -51,7 +66,7 @@ describe Rack::App do
   it 'calls the callback after it is done' do
     step   = 0
     final  = 0
-    stream = Stream.new { |_| 10.times { step += 1 }}
+    stream = stream { |_| 10.times { step += 1 }}
     stream.callback { final = step }
     stream.each {|_|}
     assert_equal 10, final
@@ -60,7 +75,7 @@ describe Rack::App do
   it 'does not trigger the callback if close is set to :keep_open' do
     step   = 0
     final  = 0
-    stream = Stream.new(Stream::Scheduler::Null, :keep_open) { |_| 10.times { step += 1 } }
+    stream = stream(:keep_open => true) { |_| 10.times { step += 1 } }
     stream.callback { final = step }
     stream.each {|_|}
     assert_equal 0, final
@@ -68,7 +83,7 @@ describe Rack::App do
 
   it 'allows adding more than one callback' do
     a = b = false
-    stream = Stream.new { }
+    stream = stream { }
     stream.callback { a = true }
     stream.callback { b = true }
     stream.each {|_| }
@@ -88,7 +103,7 @@ describe Rack::App do
     scheduler  = MockScheduler.new
     processing = sending = done = false
 
-    stream = Stream.new(scheduler) do |out|
+    stream = stream(:scheduler => scheduler) do |out|
       processing = true
       out << :foo
     end
@@ -113,13 +128,13 @@ describe Rack::App do
 
   it 'schedules exceptions to be raised on the main thread/event loop/...' do
     scheduler = MockScheduler.new
-    Stream.new(scheduler) { fail 'should be caught' }.each { }
+    stream(:scheduler => scheduler) { fail 'should be caught' }.each { }
     scheduler.defer!
     assert_raises(RuntimeError) { scheduler.schedule! }
   end
 
   it 'does not trigger an infinite loop if you call close in a callback' do
-    stream = Stream.new { |out| out.callback { out.close }}
+    stream = stream { |out| out.callback { out.close }}
     stream.each { |_| }
   end
 
@@ -131,6 +146,21 @@ describe Rack::App do
     end
     get '/foo'
     expect(last_response.body).to eq 'foo'
+  end
+
+  it 'use the class defined serializer' do
+    rack_app do
+      require 'yaml'
+      serializer{ |obj| YAML.dump(obj) }
+      get('/:name') do
+        stream do |o|
+          obj = {:dog => 'bark'}
+          o << obj
+        end
+      end
+    end
+    get '/foo'
+    expect(YAML.load(last_response.body)).to eq :dog => 'bark'
   end
 
   it 'sets up async.close if available' do
@@ -177,7 +207,7 @@ describe Rack::App do
   end
 
   it 'has a public interface to inspect its open/closed state' do
-    stream = Stream.new { |out| out << :foo }
+    stream = stream { |out| out << :foo }
     assert !stream.closed?
     stream.close
     assert stream.closed?

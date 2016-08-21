@@ -11,7 +11,7 @@ class Rack::App::Serializer
   end
 
   def serialize(object)
-    @logic.call(object)
+    String(@logic.call(object))
   end
 
 end

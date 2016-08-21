@@ -2,12 +2,14 @@ require "rack/request"
 require "rack/response"
 class Rack::App::Middlewares::Configuration
 
-  def initialize(app, handler_class)
-    @handler_class = handler_class
+  def initialize(app, options={})
+    @handler_class = options[:app_class] || raise
+    @serializer = options[:serializer] || raise
     @app = app
   end
 
   def call(env)
+    env[Rack::App::Constants::ENV::SERIALIZER]= @serializer
     env[Rack::App::Constants::ENV::REQUEST_HANDLER]= handler(env)
     @app.call(env)
   end

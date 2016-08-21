@@ -1,7 +1,12 @@
 class Rack::App::Endpoint::Properties
 
   def to_hash
-    @raw
+    app_class
+    serializer
+    error_handler
+    middleware_builders_blocks
+    endpoint_method_name
+    return @raw
   end
 
   def app_class

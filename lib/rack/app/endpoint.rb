@@ -29,7 +29,7 @@ class Rack::App::Endpoint
     builder_blocks.each do |builder_block|
       builder_block.call(builder)
     end
-    builder.use(Rack::App::Middlewares::Configuration, @properties.app_class)
+    builder.use(Rack::App::Middlewares::Configuration, @properties.to_hash)
     apply_hook_middlewares(builder)
   end
 

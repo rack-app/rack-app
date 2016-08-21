@@ -9,9 +9,8 @@ module Rack::App::InstanceMethods::Streaming
   # The close parameter specifies whether Stream#close should be called
   # after the block has been executed. This is only relevant for evented
   # servers like Thin or Rainbows.
-  def stream(keep_open = false)
-    scheduler = Rack::App::Streamer::Scheduler.by_env(request.env)
-    response.body = Rack::App::Streamer.new(scheduler, keep_open) { |out| yield(out) }
+  def stream(keep_open = false, &back)
+    response.body = Rack::App::Streamer.new(request.env, :keep_open => keep_open, &back)
     finish_response
   end
 end

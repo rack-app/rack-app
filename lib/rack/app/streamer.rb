@@ -12,8 +12,11 @@
 class Rack::App::Streamer
   require "rack/app/streamer/scheduler"
 
-  def initialize(scheduler = self.class::Scheduler::Null, keep_open = false, &back)
-    @back, @scheduler, @keep_open = back.to_proc, scheduler, keep_open
+  def initialize(env, options={}, &back)
+    @serializer = env[Rack::App::Constants::ENV::SERIALIZER]
+    @scheduler = options[:scheduler] || Rack::App::Streamer::Scheduler.by_env(env)
+    @keep_open = options[:keep_open] || false
+    @back = back.to_proc
     @callbacks, @closed = [], false
   end
 
@@ -36,7 +39,7 @@ class Rack::App::Streamer
   end
 
   def <<(data)
-    @scheduler.schedule { @front.call(data.to_s) }
+    @scheduler.schedule { @front.call(@serializer.serialize(data)) }
     self
   end
 

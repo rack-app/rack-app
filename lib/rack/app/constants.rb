@@ -22,6 +22,7 @@ module Rack::App::Constants
 
   module ENV
     REQUEST_HANDLER = 'rack-app.handler'
+    SERIALIZER = 'rack-app.serializer'
     PARSED_PARAMS = 'rack-app.parsed_params'
     VALIDATED_PARAMS = 'rack-app.validated_params'
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
