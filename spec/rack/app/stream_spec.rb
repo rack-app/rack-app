@@ -152,6 +152,30 @@ describe Rack::App do
     assert ran
   end
 
+  it 'sets up async.close if available even when middlewares included' do
+    ran = false
+    rack_app do
+
+      headers 'Access-Control-Allow-Origin' => '*',
+              'Access-Control-Expose-Headers' => 'X-My-Custom-Header, X-Another-Custom-Header',
+              ::Rack::CONTENT_TYPE => 'application/json'
+
+      get('/async_close') do
+        close = Object.new
+        def close.callback; yield end
+        def close.errback; end
+        request.env['async.close'] = close
+
+        stream(:keep_open) do |out|
+          out.callback { ran = true }
+        end
+      end
+    end
+    get '/async_close'
+
+    assert ran
+  end
+
   it 'has a public interface to inspect its open/closed state' do
     stream = Stream.new { |out| out << :foo }
     assert !stream.closed?

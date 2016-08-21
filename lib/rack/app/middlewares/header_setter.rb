@@ -6,19 +6,13 @@ class Rack::App::Middlewares::HeaderSetter
   end
 
   def call(env)
-    response = rack_response(@app.call(env))
+     status, headers, body = @app.call(env)
 
     @headers.each do |header, value|
-      response.headers[header] ||= value
+      headers[header] ||= value
     end
 
-    response.finish
-  end
-
-  protected
-
-  def rack_response(raw_response)
-    Rack::Response.new(raw_response[2], raw_response[0], raw_response[1])
+    [status, headers, body]
   end
 
 end
