@@ -32,7 +32,7 @@ env:
     - VERBOSE=true
     - TIMEOUT=1
     - BENCHMARK_QUANTITY=100000
-    - STREAM_FILE_SIZE=1024
+    - STREAM_FILE_SIZE=68 
 
 branches:
   only:
