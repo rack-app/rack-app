@@ -26,18 +26,16 @@ module Rack::App::Test
   end
 
   def rack_app(&block)
-
     @rack_app ||= lambda do
-      app_class = defined?(__rack_app_class__) ? __rack_app_class__ : nil
-      constructors = []
-      if defined?(__rack_app_constructor__) and __rack_app_constructor__.is_a?(Proc)
-        constructors << __rack_app_constructor__
+      if defined?(__rack_app_class__)
+        __rack_app_class__
+      elsif defined?(described_class) && described_class.respond_to?(:call)
+        described_class
+      else
+        raise('missing class definition')
       end
-      Rack::App::Test::Utils.rack_app_by(app_class, constructors)
-    end.call
-
+    end.call 
     block.is_a?(Proc) ? @rack_app.instance_exec(&block) : @rack_app
-
   end
 
 end
