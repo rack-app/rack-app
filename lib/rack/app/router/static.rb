@@ -15,10 +15,13 @@ class Rack::App::Router::Static < Rack::App::Router::Base
     mapped_endpoint_routes.clear
   end
 
+  def compile_endpoint!(request_method, request_path, endpoint)
+    mapped_endpoint_routes[[request_method.to_s.upcase, request_path]]= as_app(endpoint)
+  end
+
   def compile_registered_endpoints!
     endpoints.each do |endpoint|
-      app = as_app(endpoint[:endpoint])
-      mapped_endpoint_routes[[endpoint[:request_method].to_s.upcase, endpoint[:request_path]]]= app
+      compile_endpoint!(endpoint[:request_method],endpoint[:request_path], endpoint[:endpoint])
     end
   end
 

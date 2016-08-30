@@ -17,16 +17,17 @@ class Rack::App::Router::Base
   end
 
   def register_endpoint!(request_method, request_path, endpoint, properties={})
+    normalized_request_path = Rack::App::Utils.normalize_path(request_path)
     endpoints.push(
         {
             :request_method => request_method,
-            :request_path => Rack::App::Utils.normalize_path(request_path),
+            :request_path => normalized_request_path,
             :endpoint => endpoint,
             :properties => properties
         }
     )
 
-    reset
+    compile_endpoint!(request_method, normalized_request_path, endpoint)
     return endpoint
   end
 
@@ -36,6 +37,10 @@ class Rack::App::Router::Base
   end
 
   protected
+
+  def compile_endpoint!(request_method, request_path, endpoint)
+    raise(NotImplementedError)
+  end
 
   def clean_routes!
     raise(NotImplementedError)
