@@ -48,8 +48,10 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
       break_build = false
       path_params = {}
-      mount_path = ''
       options = {}
+
+      builder = Rack::Builder.new
+      builder.use(Rack::App::Middlewares::Configuration::PathParamsMatcher, path_params)
 
       request_path_parts = request_path.split('/')
       request_path_parts.each.with_index do |path_part, index|
@@ -64,7 +66,10 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
                            elsif path_part_is_a_mounted_rack_based_application?(path_part)
                              break_build = true
-                             mount_path = calculate_mount_path(request_path_parts)
+                             builder.use(
+                              Rack::App::Middlewares::Configuration::PathInfoFormatter,
+                              calculate_mount_path(request_path_parts)
+                             )
                              MOUNTED_APPLICATION
 
                            else
@@ -76,16 +81,16 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
       end
 
-      current_cluster[:app]= as_app(endpoint)
+
+      builder.run(as_app(endpoint))
+      current_cluster[:app]= builder.to_app
+
       current_cluster[:endpoint]= endpoint
       if current_cluster[:endpoint].respond_to?(:register_path_params_matcher)
         current_cluster[:endpoint].register_path_params_matcher(path_params)
       end
 
-      options[:mount_path]= mount_path
-      options[:path_params]= path_params
       current_cluster[:options]= options
-
     end
   end
 
@@ -144,12 +149,6 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
     return current_cluster
 
-  end
-
-  def format_env(context, env)
-    mount_path = context[:options][:mount_path] rescue ''
-    env[::Rack::App::Constants::ENV::PATH_PARAMS_MATCHER]= context[:options][:path_params].dup
-    env[::Rack::PATH_INFO].sub!(mount_path, '')
   end
 
 end

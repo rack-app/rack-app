@@ -8,13 +8,9 @@ class Rack::App::Router::Base
     context = fetch_context(request_method, path_info)
     return unless context.is_a?(Hash) and not context[:app].nil?
 
-    format_env(context, env)
     context[:app].call(env)
-
   end
 
-  def format_env(context, env)
-  end
 
   def endpoints
     @endpoints ||= []

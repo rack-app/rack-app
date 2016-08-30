@@ -2,6 +2,9 @@ require "rack/request"
 require "rack/response"
 class Rack::App::Middlewares::Configuration
 
+  require "rack/app/middlewares/configuration/path_info_formatter"
+  require "rack/app/middlewares/configuration/path_params_matcher"
+
   def initialize(app, options={})
     @handler_class = options[:app_class] || raise
     @serializer = options[:serializer] || raise
