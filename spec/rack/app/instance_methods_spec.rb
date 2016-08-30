@@ -72,7 +72,7 @@ describe Rack::App::InstanceMethods do
 
   describe '#stream_payload_to' do
 
-    file_size_in_mb = (ENV['STREAM_FILE_SIZE'] || 128).to_i
+    file_size_in_mb = (ENV['STREAM_FILE_SIZE'] || 64).to_i
 
     before do
       [in_file, out_file].each { |fp| File.delete(fp) if File.exist?(fp) }
