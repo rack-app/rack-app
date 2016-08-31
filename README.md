@@ -238,10 +238,16 @@ end
 
 ## [Benchmarking](https://github.com/rack-app/rack-app-benchmark)
 
+This is a repo that used for measure Rack::App project speed in order keep an eye on the performance in every release.
+
 the benchmarking was taken on the following hardware specification:
 * Processor: 2,7 GHz Intel Core i5
 * Memory: 16 GB 1867 MHz DDR3
-* Ruby: ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin15.0]
+* Ruby: ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15]
+
+
+### Endpoint to be call type: static
+
 
 #### number of declared endpoints: 100
 
@@ -254,6 +260,7 @@ the benchmarking was taken on the following hardware specification:
 | hobbit                 | 0.6.1                  | 2.996                  | 6.607205038890137e-05  |
 | brooklyn               | 0.0.1                  | 5.243                  | 0.00011562206838279088 |
 | nyny                   | 3.4.3                  | 5.272                  | 0.00011626420279498706 |
+| plezi                  | 0.14.1                 | 5.334                  | 0.00011763589749898317 |
 | nancy                  | 0.3.0                  | 5.649                  | 0.00012458588462322884 |
 | roda                   | 2.17.0                 | 10.646                 | 0.00023477471132838754 |
 | scorched               | 0.25                   | 12.728                 | 0.0002807019599946191  |
@@ -263,6 +270,7 @@ the benchmarking was taken on the following hardware specification:
 | camping                | 2.1.532                | 39.699                 | 0.0008754866444039887  |
 | cuba                   | 3.8.0                  | 54.196                 | 0.001195195165998367   |
 | almost-sinatra         | unknown                | 58.613                 | 0.0012926107780076503  |
+
 
 For more reports check the Benchmark repo out :)
 
