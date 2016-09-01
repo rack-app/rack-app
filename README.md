@@ -1,7 +1,7 @@
-# [Rack::App](http://rack-app.com/) [![Build Status][travis-image]][travis-link]
+# [Rack::App](http://www.rack-app.com/) [![Build Status][travis-image]][travis-link]
 
 [travis-image]: https://travis-ci.org/rack-app/rack-app.svg?branch=master
-[travis-link]: http://travis-ci.org/rack-app/rack-app
+[travis-link]: https://travis-ci.org/rack-app/rack-app
 [travis-home]: http://travis-ci.org/
 
 Your next favourite rack based micro framework that is totally addition free!
@@ -288,7 +288,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/adamluzsi/rack-app.rb This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/rack-app/rack-app This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
 
 ## License and Copyright
 
