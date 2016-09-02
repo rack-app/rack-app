@@ -8,3 +8,7 @@ Contributors
 * **[Daniel Szpisjak](https://github.com/felin-arch)**
 
   * Pimp up the website descriptions
+
+* **[Jeremy Evans](https://github.com/jeremyevans)**
+
+  * suggestion for application stand up speed optimization
