@@ -13,7 +13,7 @@ while able to write pure rack apps,
 that will do nothing more than what you defined.
 
 If you want see fancy magic, you are in a bad place buddy!
-This includes that it do not have such core extensions like activesupport that monkey patch the whole world.
+This also implies that the framework does not include extensions like ActiveSupport that monkey patch the whole world.
 
 Routing can handle any amount of endpoints that can fit in the memory,
 so if you that crazy to use more than 10k endpoint,
