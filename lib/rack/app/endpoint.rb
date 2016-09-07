@@ -1,14 +1,16 @@
 require "rack/builder"
 class Rack::App::Endpoint
-  require "rack/app/endpoint/properties"
+
+  require "rack/app/endpoint/config"
+  require "rack/app/endpoint/builder"
   require "rack/app/endpoint/executor"
 
-  def properties
-    @properties.to_hash
+  def initialize(properties)
+    @config = Rack::App::Endpoint::Config.new(properties)
   end
 
-  def initialize(properties)
-    @properties = Rack::App::Endpoint::Properties.new(properties)
+  def properties
+    @config.to_hash
   end
 
   def call(env)
@@ -16,34 +18,7 @@ class Rack::App::Endpoint
   end
 
   def to_app
-    builder = Rack::Builder.new
-    apply_middleware_build_blocks(builder)
-    @properties.endpoint_method_name
-    builder.run(Rack::App::Endpoint::Executor.new(@properties))
-    builder.to_app
-  end
-
-  protected
-
-  def apply_middleware_build_blocks(builder)
-    builder_blocks.each do |builder_block|
-      builder_block.call(builder)
-    end
-    builder.use(Rack::App::Middlewares::Configuration, @properties.to_hash)
-    apply_hook_middlewares(builder)
-  end
-
-  def apply_hook_middlewares(builder)
-    @properties.app_class.before.each do |before_block|
-      builder.use(Rack::App::Middlewares::Hooks::Before, before_block)
-    end
-    @properties.app_class.after.each do |after_block|
-      builder.use(Rack::App::Middlewares::Hooks::After, after_block)
-    end
-  end
-
-  def builder_blocks
-    @properties.app_class.middlewares + @properties.middleware_builders_blocks
+    self.class::Builder.new(@config).build
   end
 
 end

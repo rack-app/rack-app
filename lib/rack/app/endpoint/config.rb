@@ -1,4 +1,4 @@
-class Rack::App::Endpoint::Properties
+class Rack::App::Endpoint::Config
 
   def to_hash
     app_class
