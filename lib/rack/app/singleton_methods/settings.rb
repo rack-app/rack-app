@@ -10,11 +10,7 @@ module Rack::App::SingletonMethods::Settings
 
   def serializer(&definition_how_to_serialize)
     @serializer ||= Rack::App::Serializer.new
-
-    unless definition_how_to_serialize.nil?
-      @serializer.set_serialization_logic(definition_how_to_serialize)
-    end
-
+    @serializer = Rack::App::Serializer.new(&definition_how_to_serialize) unless definition_how_to_serialize.nil?
     return @serializer
   end
 

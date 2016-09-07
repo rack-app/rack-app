@@ -2,12 +2,8 @@ class Rack::App::Serializer
 
   attr_reader :logic
 
-  def initialize
-    @logic = lambda { |o| o.to_s }
-  end
-
-  def set_serialization_logic(proc)
-    @logic = proc
+  def initialize(&block)
+    @logic = block || lambda { |o| o.to_s }
   end
 
   def serialize(object)
