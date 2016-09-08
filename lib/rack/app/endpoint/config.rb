@@ -6,6 +6,8 @@ class Rack::App::Endpoint::Config
     error_handler
     middleware_builders_blocks
     endpoint_method_name
+    request_path
+    request_method
     return @raw
   end
 
@@ -27,6 +29,18 @@ class Rack::App::Endpoint::Config
 
   def endpoint_method_name
     @raw[:method_name] ||= register_method_to_app_class
+  end
+
+  def request_method
+    (@raw[:request_method] || raise('missing request_method!')).to_s.upcase
+  end
+
+  def request_path
+    Rack::App::Utils.normalize_path(@raw[:request_path] || raise('missing request_path!'))
+  end
+
+  def description
+    @raw[:route][:description] || @raw[:route][:desc] rescue nil 
   end
 
   protected

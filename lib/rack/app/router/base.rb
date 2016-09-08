@@ -16,18 +16,9 @@ class Rack::App::Router::Base
     @endpoints ||= []
   end
 
-  def register_endpoint!(request_method, request_path, endpoint, properties={})
-    normalized_request_path = Rack::App::Utils.normalize_path(request_path)
-    endpoints.push(
-        {
-            :request_method => request_method,
-            :request_path => normalized_request_path,
-            :endpoint => endpoint,
-            :properties => properties
-        }
-    )
-
-    compile_endpoint!(request_method, normalized_request_path, endpoint)
+  def register_endpoint!(endpoint)
+    endpoints.push(endpoint)
+    compile_endpoint!(endpoint)
     return endpoint
   end
 
@@ -38,7 +29,7 @@ class Rack::App::Router::Base
 
   protected
 
-  def compile_endpoint!(request_method, request_path, endpoint)
+  def compile_endpoint!(endpoint)
     raise(NotImplementedError)
   end
 

@@ -184,7 +184,7 @@ describe Rack::App do
     end
 
     it 'router endpoint paths should have information about validated_params' do
-      endpoint_descriptor = rack_app.router.endpoints.first
+      endpoint = rack_app.router.endpoints.first
 
       expected_description = {
         :required => {
@@ -209,7 +209,7 @@ describe Rack::App do
         }
       }
 
-      expect(endpoint_descriptor[:properties][:params]).to eq expected_description
+      expect(endpoint.properties[:route][:params]).to eq expected_description
     end
   end
 end

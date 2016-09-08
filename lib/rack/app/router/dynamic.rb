@@ -38,12 +38,15 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def compile_registered_endpoints!
-    endpoints.each do |endpoint_prop|
-      compile_endpoint!(endpoint_prop[:request_method], endpoint_prop[:request_path], endpoint_prop[:endpoint])
+    endpoints.each do |endpoint|
+      compile_endpoint!(endpoint)
     end
   end
 
-  def compile_endpoint!(request_method, request_path, endpoint)
+  def compile_endpoint!(endpoint)
+    request_method = endpoint.request_method
+    request_path = endpoint.request_path
+
     clusters_for(request_method) do |current_cluster|
 
       break_build = false

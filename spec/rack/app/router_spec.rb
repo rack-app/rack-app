@@ -11,15 +11,18 @@ describe Rack::App::Router do
     settings = {
         :app_class => Class.new(Rack::App),
         :user_defined_logic => lambda { 'hello world!' },
-        :request_method => 'GET',
-        :request_path => '\404'
+        :request_method => request_method,
+        :request_path => defined_request_path,
+        :route => {
+           :description => 'desc'
+        }
     }
     Rack::App::Endpoint.new(settings)
   end
 
   describe '#register_endpoint!' do
 
-    subject { instance.register_endpoint!(request_method, defined_request_path, endpoint, {}) }
+    subject { instance.register_endpoint!(endpoint) }
 
     it { is_expected.to be endpoint }
 
@@ -29,9 +32,9 @@ describe Rack::App::Router do
       it 'should use dynamic router for register the new endpoint' do
         dynamic_router = Rack::App::Router::Dynamic.new
         expect(Rack::App::Router::Dynamic).to receive(:new).and_return(dynamic_router)
-        expect(dynamic_router).to receive(:register_endpoint!).and_return(endpoint)
+        expect(dynamic_router).to receive(:register_endpoint!)
 
-        is_expected.to be endpoint
+        is_expected.to be nil
       end
 
     end
@@ -42,9 +45,9 @@ describe Rack::App::Router do
       it 'should use dynamic router for register the new endpoint' do
         static_router = Rack::App::Router::Static.new
         expect(Rack::App::Router::Static).to receive(:new).and_return(static_router)
-        expect(static_router).to receive(:register_endpoint!).and_return(endpoint)
+        expect(static_router).to receive(:register_endpoint!)
 
-        is_expected.to be endpoint
+        is_expected.to be nil
       end
 
     end
@@ -72,9 +75,9 @@ describe Rack::App::Router do
     rack_app
 
     context 'when endpoint is defined' do
-      before { instance.register_endpoint!('GET', '/index.html', endpoint, :description => 'desc') }
+      before { instance.register_endpoint!(endpoint) }
 
-      it { is_expected.to eq ["GET   /index.html   desc"] }
+      it { is_expected.to eq ["GET   /users/:user_id   desc"] }
     end
 
   end

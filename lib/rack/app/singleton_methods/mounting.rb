@@ -39,15 +39,33 @@ module Rack::App::SingletonMethods::Mounting
   def serve_files_from(file_path, options={})
     file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
     request_path = Rack::App::Utils.join(@namespaces, options[:to], '**', '*')
-    router.register_endpoint!('GET', request_path, file_server, route_registration_properties)
+
+    endpoint = Rack::App::Endpoint.new(
+      route_registration_properties.merge(
+        :request_method => 'GET',
+        :request_path => request_path,
+        :application => file_server
+      )
+    )
+
+    router.register_endpoint!(endpoint)
+    route_registration_properties.clear
+    nil
   end
 
   def mount_rack_based_application(rack_based_app, options={})
     router.register_endpoint!(
-      ::Rack::App::Constants::HTTP::METHOD::ANY,
-      Rack::App::Utils.join(@namespaces, options[:to], ::Rack::App::Constants::RACK_BASED_APPLICATION),
-      rack_based_app,
-      route_registration_properties
+      Rack::App::Endpoint.new(
+        route_registration_properties.merge(
+          :request_method => ::Rack::App::Constants::HTTP::METHOD::ANY,
+          :request_path => Rack::App::Utils.join(
+            @namespaces,
+            options[:to],
+            ::Rack::App::Constants::RACK_BASED_APPLICATION
+          ),
+          :application => rack_based_app
+        )
+      )
     )
   end
 

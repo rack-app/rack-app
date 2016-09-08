@@ -1,11 +1,17 @@
-require "rack/builder"
 class Rack::App::Endpoint
+
+  require "forwardable"
+  extend Forwardable
+  def_delegators :@config, :request_method, :request_path, :description
 
   require "rack/app/endpoint/config"
   require "rack/app/endpoint/builder"
   require "rack/app/endpoint/executor"
 
+  attr_reader :config
+
   def initialize(properties)
+    @application = properties.delete(:application)
     @config = Rack::App::Endpoint::Config.new(properties)
   end
 
@@ -18,7 +24,7 @@ class Rack::App::Endpoint
   end
 
   def to_app
-    self.class::Builder.new(@config).build
+    @application || self.class::Builder.new(@config).build
   end
 
 end

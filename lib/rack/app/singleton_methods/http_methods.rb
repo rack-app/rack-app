@@ -33,7 +33,7 @@ module Rack::App::SingletonMethods::HttpMethods
   def link(path = '/', &block)
     add_route(::Rack::App::Constants::HTTP::METHOD::LINK, path, &block)
   end
-  
+
   def unlink(path = '/', &block)
     add_route(::Rack::App::Constants::HTTP::METHOD::UNLINK, path, &block)
   end
@@ -46,11 +46,9 @@ module Rack::App::SingletonMethods::HttpMethods
     new_request_path = Rack::App::Utils.normalize_path(new_request_path)
     original_request_path = Rack::App::Utils.normalize_path(original_request_path)
 
-    router.endpoints.select { |ep| ep[:request_path] == original_request_path }.each do |endpoint|
-      router.register_endpoint!(
-        endpoint[:request_method], new_request_path,
-        endpoint[:endpoint], endpoint[:properties]
-      )
+    router.endpoints.select { |ep| ep.request_path == original_request_path }.each do |endpoint|
+      new_endpoint = Rack::App::Endpoint.new(endpoint.properties.merge(:request_path => new_request_path))
+      router.register_endpoint!(new_endpoint)
     end
   end
 

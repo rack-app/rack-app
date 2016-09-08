@@ -17,43 +17,38 @@ class Rack::App::Router
 
     endpoints = self.endpoints
 
-    wd0 = endpoints.map { |endpoint| endpoint[:request_method].to_s.length }.max
-    wd1 = endpoints.map { |endpoint| endpoint[:request_path].to_s.length }.max
-    wd2 = endpoints.map { |endpoint| extract_description(endpoint).to_s.length }.max
+    wd0 = endpoints.map { |endpoint| endpoint.request_method.to_s.length }.max
+    wd1 = endpoints.map { |endpoint| endpoint.request_path.to_s.length }.max
+    wd2 = endpoints.map { |endpoint| endpoint.description.to_s.length }.max
 
-    return endpoints.sort_by { |endpoint| [endpoint[:request_method], endpoint[:request_path]] }.map do |endpoint|
+    return endpoints.sort_by { |endpoint| [endpoint.request_method, endpoint.request_path] }.map do |endpoint|
       [
-          endpoint[:request_method].to_s.ljust(wd0),
-          endpoint[:request_path].to_s.ljust(wd1),
-          extract_description(endpoint).to_s.ljust(wd2)
+          endpoint.request_method.to_s.ljust(wd0),
+          endpoint.request_path.to_s.ljust(wd1),
+          endpoint.description.to_s.ljust(wd2)
       ].join('   ')
     end
 
   end
 
-  def register_endpoint!(request_method, request_path, endpoint, properties)
-    router = router_for(request_path)
-    router.register_endpoint!(request_method, request_path, endpoint, properties)
+  def register_endpoint!(endpoint)
+    router = router_for(endpoint.request_path)
+    router.register_endpoint!(endpoint)
   end
 
   def merge_router!(router, prop={})
     raise(ArgumentError, 'invalid router object, must implement :endpoints interface') unless router.respond_to?(:endpoints)
     router.endpoints.each do |endpoint|
-      request_path = ::Rack::App::Utils.join(prop[:namespaces], endpoint[:request_path])
-
-      register_endpoint!(
-          endpoint[:request_method],
-          request_path,
-          endpoint[:endpoint],
-          endpoint[:properties]
-      )
+      new_request_path = ::Rack::App::Utils.join(prop[:namespaces], endpoint.request_path)
+      new_endpoint = Rack::App::Endpoint.new(endpoint.properties.merge(:request_path => new_request_path))
+      register_endpoint!(new_endpoint)
     end
     nil
   end
 
   def reset
     [@static, @dynamic].each(&:reset)
-  end 
+  end
 
   protected
 
@@ -74,9 +69,4 @@ class Rack::App::Router
         path_str.include?(Rack::App::Constants::RACK_BASED_APPLICATION)
   end
 
-  def extract_description(endpoint_struct)
-    if endpoint_struct[:properties]
-      endpoint_struct[:properties][:description]
-    end
-  end
 end
