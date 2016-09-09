@@ -5,18 +5,11 @@ describe 'rack-app inheritance for mounted rack interface compatible application
 
   rack_app do
 
-    rack_based_application = Class.new(Rack::App)
-    rack_based_application.class_eval do
-
-      get '/hello/world' do
-        "Hello, World!"
-      end
-
-    end
+    rack_based_application = lambda { |env| [200, {"Content-Type" => "text/html"}, ["Hello, World!"]] }
 
     klass = Class.new(Rack::App)
     klass.class_eval do
-      mount_rack_based_application rack_based_application
+      mount_rack_interface_compatible_application rack_based_application
     end
 
     mount klass, :to => '/mount/point'

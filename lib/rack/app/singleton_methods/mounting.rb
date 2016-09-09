@@ -2,6 +2,17 @@ module Rack::App::SingletonMethods::Mounting
   MOUNT = Rack::App::SingletonMethods::Mounting
 
   def mount(app, options={})
+    case
+    when app.is_a?(Class) && app < ::Rack::App
+      mount_rack_app(app, options)
+    when app.respond_to?(:call)
+      mount_rack_interface_compatible_application(app, options)
+    else
+      raise(NotImplementedError)
+    end
+  end
+
+  def mount_rack_app(app, options={})
     options.freeze
 
     unless app.is_a?(Class) and app <= Rack::App
@@ -35,6 +46,7 @@ module Rack::App::SingletonMethods::Mounting
   end
 
   alias create_endpoints_for_files_in mount_directory
+  Rack::App::Utils.deprecate(self,:create_endpoints_for_files_in, :mount_directory, 2016,9)
 
   def serve_files_from(file_path, options={})
     file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
@@ -53,7 +65,7 @@ module Rack::App::SingletonMethods::Mounting
     nil
   end
 
-  def mount_rack_based_application(rack_based_app, options={})
+  def mount_rack_interface_compatible_application(rack_based_app, options={})
     router.register_endpoint!(
       Rack::App::Endpoint.new(
         route_registration_properties.merge(
@@ -69,7 +81,10 @@ module Rack::App::SingletonMethods::Mounting
     )
   end
 
-  alias mount_app mount_rack_based_application
+  alias mount_rack_based_application mount_rack_interface_compatible_application
+  Rack::App::Utils.deprecate(self,:mount_rack_based_application, "mount or mount_rack_interface_compatible_application", 2016,9)
+  alias mount_app mount_rack_interface_compatible_application
+  Rack::App::Utils.deprecate(self,:mount_app, "mount or mount_rack_interface_compatible_application", 2016,9)
 
   protected
 

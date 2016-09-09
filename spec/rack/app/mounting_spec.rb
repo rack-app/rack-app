@@ -5,9 +5,9 @@ describe Rack::App do
   require 'rack/app/test'
   include Rack::App::Test
 
-  describe '.mount' do
+  describe '.mount_rack_app' do
 
-    subject { described_class.mount(to_be_mounted_api_class) }
+    subject { described_class.mount_rack_app(to_be_mounted_api_class) }
 
     context 'when valid api class given' do
 
@@ -20,7 +20,7 @@ describe Rack::App do
           end
         end
 
-        mount klass
+        mount_rack_app klass
 
       end
 
@@ -33,22 +33,22 @@ describe Rack::App do
     context 'when invalid class given' do
 
       it 'should raise argument error' do
-        expect { rack_app { mount('nope this is a string') } }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
+        expect { rack_app { mount_rack_app('nope this is a string') } }.to raise_error(ArgumentError, 'Invalid class given for mount, must be a Rack::App')
       end
 
     end
 
   end
 
-  describe '.mount_rack_based_application' do
+  describe '.mount_rack_interface_compatible_application' do
 
     rack_app do
 
-      mount_rack_based_application RackBasedApplication
+      mount_rack_interface_compatible_application RackBasedApplication
 
       namespace :mount do
 
-        mount_rack_based_application RackBasedApplication, :to => '/point'
+        mount_rack_interface_compatible_application RackBasedApplication, :to => '/point'
 
       end
 

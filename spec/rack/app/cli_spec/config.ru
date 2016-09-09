@@ -1,3 +1,8 @@
+# rack_api_lib_folder = File.absolute_path(File.join(File.dirname(__FILE__),'..','..','..','..','lib'))
+# $LOAD_PATH.unshift(rack_api_lib_folder)
+# require 'rack/app'
+
+
 class MountedApp < Rack::App
   cli do
 
@@ -17,9 +22,9 @@ class App < Rack::App
 
   mount MountedApp
 
-  get '/' do 
+  get '/' do
     'root'
-  end 
+  end
 
 end
 
