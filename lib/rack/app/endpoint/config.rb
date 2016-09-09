@@ -1,14 +1,16 @@
 class Rack::App::Endpoint::Config
 
   def to_hash
-    app_class
     serializer
     error_handler
     middleware_builders_blocks
-    endpoint_method_name
     request_path
     request_method
     return @raw
+  end
+
+  def application
+    @raw[:application]
   end
 
   def app_class
@@ -40,7 +42,7 @@ class Rack::App::Endpoint::Config
   end
 
   def description
-    @raw[:route][:description] || @raw[:route][:desc] rescue nil 
+    @raw[:route][:description] || @raw[:route][:desc] rescue nil
   end
 
   protected

@@ -47,7 +47,7 @@ module Rack::App::SingletonMethods::HttpMethods
     original_request_path = Rack::App::Utils.normalize_path(original_request_path)
 
     router.endpoints.select { |ep| ep.request_path == original_request_path }.each do |endpoint|
-      new_endpoint = Rack::App::Endpoint.new(endpoint.properties.merge(:request_path => new_request_path))
+      new_endpoint = endpoint.fork(:request_path => new_request_path)
       router.register_endpoint!(new_endpoint)
     end
   end

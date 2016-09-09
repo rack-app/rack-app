@@ -11,8 +11,11 @@ class Rack::App::Endpoint
   attr_reader :config
 
   def initialize(properties)
-    @application = properties.delete(:application)
     @config = Rack::App::Endpoint::Config.new(properties)
+  end
+
+  def fork(differences_in_properties)
+    self.class.new(self.properties.merge(differences_in_properties))
   end
 
   def properties
@@ -24,7 +27,7 @@ class Rack::App::Endpoint
   end
 
   def to_app
-    @application || self.class::Builder.new(@config).build
+    @config.application || self.class::Builder.new(@config).build
   end
 
 end
