@@ -23,7 +23,7 @@ class Rack::App::FileServer
   def self.serve_file(env, file_path)
     file_server = self.new(File.dirname(file_path))
     env = env.dup
-    env[::Rack::REQUEST_METHOD]= 'GET'
+    env[::Rack::App::Constants::ENV::REQUEST_METHOD]= 'GET'
     env[::Rack::App::Constants::ENV::PATH_INFO]= file_path
     file_server.call(env)
   end

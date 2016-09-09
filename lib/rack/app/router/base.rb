@@ -2,7 +2,7 @@ class Rack::App::Router::Base
 
   def call(env)
 
-    request_method= env[Rack::REQUEST_METHOD]
+    request_method= env[::Rack::App::Constants::ENV::REQUEST_METHOD]
     path_info= env[Rack::App::Constants::ENV::PATH_INFO]
 
     context = fetch_context(request_method, path_info)

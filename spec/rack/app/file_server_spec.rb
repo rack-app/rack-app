@@ -8,7 +8,7 @@ describe Rack::App::FileServer do
   let(:env) do
     {
         ::Rack::App::Constants::ENV::PATH_INFO => path_info,
-        ::Rack::REQUEST_METHOD => request_method
+        ::Rack::App::Constants::ENV::REQUEST_METHOD => request_method
     }
   end
 
