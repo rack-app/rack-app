@@ -17,10 +17,18 @@ module Rack::App::SingletonMethods::Middleware
 
   protected
 
-  def only_next_endpoint_middlewares(&block)
-    @only_next_endpoint_middlewares ||= []
-    @only_next_endpoint_middlewares << block unless block.nil?
-    @only_next_endpoint_middlewares
+  def next_endpoint_middlewares(&block)
+    @next_endpoint_middlewares ||= []
+    @next_endpoint_middlewares << block unless block.nil?
+    @next_endpoint_middlewares
   end
+
+  alias only_next_endpoint_middlewares next_endpoint_middlewares
+
+  Rack::App::Utils.deprecate(self,
+    :only_next_endpoint_middlewares,
+    :next_endpoint_middlewares,
+    2016,9
+  )
 
 end

@@ -30,12 +30,12 @@ module Rack::App::SingletonMethods::RouteHandling
         :user_defined_logic => block,
         :request_method => request_method,
         :route => route_registration_properties.dup,
-        :middleware_builders_blocks => only_next_endpoint_middlewares.dup,
+        :middleware_builders_blocks => next_endpoint_middlewares.dup,
         :request_path => ::Rack::App::Utils.join(@namespaces, request_path)
       })
     )
 
-    only_next_endpoint_middlewares.clear
+    next_endpoint_middlewares.clear
     route_registration_properties.clear
     return nil
 

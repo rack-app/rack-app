@@ -4,11 +4,11 @@ describe Rack::App do
   require 'rack/app/test'
   include Rack::App::Test
 
-  describe '.only_next_endpoint_middlewares' do
+  describe '.next_endpoint_middlewares' do
 
     rack_app do
 
-      only_next_endpoint_middlewares do |builder|
+      next_endpoint_middlewares do |builder|
         builder.use SampleMiddleware, 'key', 'OK'
       end
 
