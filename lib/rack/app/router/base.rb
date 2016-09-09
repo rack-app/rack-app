@@ -3,7 +3,7 @@ class Rack::App::Router::Base
   def call(env)
 
     request_method= env[Rack::REQUEST_METHOD]
-    path_info= env[Rack::PATH_INFO]
+    path_info= env[Rack::App::Constants::ENV::PATH_INFO]
 
     context = fetch_context(request_method, path_info)
     return unless context.is_a?(Hash) and not context[:app].nil?

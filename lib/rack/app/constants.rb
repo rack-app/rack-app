@@ -21,6 +21,7 @@ module Rack::App::Constants
   end
 
   module ENV
+    PATH_INFO = (defined?(::Rack::PATH_INFO) ? ::Rack::PATH_INFO : "PATH_INFO".freeze)
     REQUEST_HANDLER = 'rack-app.handler'
     SERIALIZER = 'rack-app.serializer'
     PARSED_PARAMS = 'rack-app.parsed_params'

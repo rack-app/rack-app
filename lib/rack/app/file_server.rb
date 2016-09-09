@@ -12,7 +12,7 @@ class Rack::App::FileServer
 
     @relative_file_paths.each do |relative_file_path|
       if path_info =~ /#{Regexp.escape(relative_file_path)}$/
-        env[::Rack::PATH_INFO]= relative_file_path
+        env[::Rack::App::Constants::ENV::PATH_INFO]= relative_file_path
         break
       end
     end
@@ -24,14 +24,14 @@ class Rack::App::FileServer
     file_server = self.new(File.dirname(file_path))
     env = env.dup
     env[::Rack::REQUEST_METHOD]= 'GET'
-    env[::Rack::PATH_INFO]= file_path
+    env[::Rack::App::Constants::ENV::PATH_INFO]= file_path
     file_server.call(env)
   end
 
   protected
 
   def clean_path_info(env)
-    path_info = ::Rack::Utils.unescape(env[::Rack::PATH_INFO])
+    path_info = ::Rack::Utils.unescape(env[::Rack::App::Constants::ENV::PATH_INFO])
     ::Rack::Utils.clean_path_info(path_info)
   end
 

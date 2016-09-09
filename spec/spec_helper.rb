@@ -143,7 +143,7 @@ class RackBasedApplication
 
   def call(env)
 
-    request_path = env[::Rack::PATH_INFO]
+    request_path = env[::Rack::App::Constants::ENV::PATH_INFO]
 
     if request_path == '/'
       ['200', {'Content-Type' => 'text/html'}, ['static endpoint']]
