@@ -11,7 +11,9 @@ module Rack::App::SingletonMethods::Inheritance
   def inherited(child)
 
     child.serializer(&serializer.logic)
-    child.middlewares.push(*middlewares)
+    [:middlewares, :before, :after].each do |type|
+      child.__send__(type).push(*__send__(type))
+    end
 
     on_inheritance.each do |block|
       block.call(self, child)
