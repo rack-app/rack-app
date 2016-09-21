@@ -53,6 +53,13 @@ describe Rack::App do
         end
       end
 
+      context 'and a get parameter is an array with brackets notation and contains one value' do
+        let(:request) { get(:url => '/validated', :params => {'dogs[]' => ['Molly']}) }
+
+        it { expect(request.status).to eq 200 }
+        it { expect(request.body).to eq 'OK' }
+      end
+
       context 'and required param is in the right format' do
         before { params['dogs'] = ['Lobelia'] }
         it { expect(request.status).to eq 200 }
