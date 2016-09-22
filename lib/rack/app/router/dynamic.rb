@@ -117,15 +117,18 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def get_app(env)
-    c = fetch_by_env(env)
-    return unless c.is_a?(Hash)
-    c[:app]
+    find_by_path_infos(env) do |path_info|
+      c = fetch_context(get_request_method(env), path_info)
+
+      if c.is_a?(Hash)
+        c[:app]
+      else
+        nil
+      end
+    end
   end
 
-  def fetch_by_env(env)
-
-    request_method= env[::Rack::App::Constants::ENV::REQUEST_METHOD]
-    path_info= formatted_path_info(env)
+  def fetch_context(request_method, path_info)
 
     last_mounted_directory = nil
     last_mounted_app = nil
@@ -159,16 +162,6 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
     return current_cluster
 
-  end
-
-  def formatted_path_info(env)
-    path_info = env[::Rack::App::Constants::ENV::PATH_INFO].dup
-    path_info.slice!(/#{Regexp.escape(extname(env))}$/)
-    path_info
-  end
-
-  def extname(env)
-    env[::Rack::App::Constants::ENV::EXTNAME]
   end
 
 end

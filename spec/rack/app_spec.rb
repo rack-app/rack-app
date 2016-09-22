@@ -342,13 +342,18 @@ describe Rack::App do
 
     rack_app do
 
-      mount_directory '/spec/fixtures', :to => '/test'
+      mount_directory '/spec/fixtures', :to => '/static'
+      mount_directory '/spec/fixtures', :to => '/dynamic/:id'
 
     end
 
-    it { expect(get(:url => '/test/raw.txt').status).to eq 200 }
+    it { expect(get(:url => '/static/raw.txt').status).to eq 200 }
 
-    it { expect(get(:url => '/test/raw.txt').body).to eq "hello world!\nhow you doing?" }
+    it { expect(get(:url => '/static/raw.txt').body).to eq "hello world!\nhow you doing?" }
+
+    it { expect(get(:url => '/dynamic/123/raw.txt').status).to eq 200 }
+
+    it { expect(get(:url => '/dynamic/123/raw.txt').body).to eq "hello world!\nhow you doing?" }
 
   end
 
@@ -396,7 +401,7 @@ describe Rack::App do
 
       it { expect(get(:url => '/a').body).to eq 'value' }
       it { expect(get(:url => '/b').body).to eq 'value' }
-      
+
     end
 
   end

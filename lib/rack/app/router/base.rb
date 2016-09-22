@@ -50,4 +50,26 @@ class Rack::App::Router::Base
     end
   end
 
+  def find_by_path_infos(env, &block)
+    block.call(raw_path_info(env)) || block.call(formatted_path_info(env))
+  end
+
+  def get_request_method(env)
+    env[::Rack::App::Constants::ENV::REQUEST_METHOD]
+  end
+
+  def raw_path_info(env)
+    env[::Rack::App::Constants::ENV::PATH_INFO]
+  end
+
+  def formatted_path_info(env)
+    path_info = raw_path_info(env).dup
+    path_info.slice!(/#{Regexp.escape(extname(env))}$/)
+    path_info
+  end
+
+  def extname(env)
+    env[::Rack::App::Constants::ENV::EXTNAME]
+  end
+
 end
