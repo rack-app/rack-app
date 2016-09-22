@@ -32,17 +32,27 @@ describe Rack::App do
   describe 'should serve request for the requested format format' do
 
     it 'should work with static endpoints' do
-      expect(get("/test.yaml").body).to eq YAML.dump({"type" => "static"})
+      get("/test.yaml")
+
+      expect(last_response.body).to eq YAML.dump({"type" => "static"})
+      expect(last_response.headers).to include 'Content-Type' => 'application/x-yaml'
     end
 
     context 'should work with static endpoints' do
 
       it 'should end with a normal url part' do
-        expect(get("/test/123/ep.yaml").body).to eq YAML.dump({"type" => "dynamic with static last url part", "id" => "123"})
+        get("/test/123/ep.yaml")
+
+        expect(last_response.body).to eq YAML.dump({"type" => "dynamic with static last url part", "id" => "123"})
+
+        expect(last_response.headers).to include 'Content-Type' => 'application/x-yaml'
       end
 
       it 'should end with a dynamic url part' do
-        expect(get("/test/123.yaml").body).to eq YAML.dump({"type" => "dynamic endpoint endpoint", "id" => "123"})
+        get("/test/123.yaml")
+
+        expect(last_response.body).to eq YAML.dump({"type" => "dynamic endpoint endpoint", "id" => "123"})
+        expect(last_response.headers).to include 'Content-Type' => 'application/x-yaml'
       end
 
     end
