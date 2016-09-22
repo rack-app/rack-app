@@ -109,6 +109,12 @@ describe Rack::App do
         it { is_expected.to eq({"a" => "2"}) }
       end
 
+      context 'with single value and brackets notation' do
+        before { request[:params]= {'a[]' => 2} }
+
+        it { is_expected.to eq({"a" => ["2"]}) }
+      end
+
       context 'with array value' do
         before { request[:env][::Rack::QUERY_STRING]= 'a[]=2&a[]=3' }
 

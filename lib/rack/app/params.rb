@@ -17,12 +17,12 @@ class Rack::App::Params
 
   def query_params
     raw_cgi_params.reduce({}) do |params_collection, (k, v)|
-      k = k.sub(/\[\]$/, '')
+      stripped_key = k.sub(/\[\]$/, '')
 
-      if single_paramter_value?(v)
-        params_collection[k]= v[0]
+      if single_paramter_value?(v) && !k.end_with?("[]")
+        params_collection[stripped_key]= v[0]
       else
-        params_collection[k]= v
+        params_collection[stripped_key]= v
       end
 
       params_collection
