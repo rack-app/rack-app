@@ -2,9 +2,10 @@ class Rack::App::Router::Static < Rack::App::Router::Base
 
   protected
 
-  def fetch_context(request_method, request_path)
-    app = mapped_endpoint_routes[[request_method, request_path]]
-    app && {:app => app}
+  def get_app(env)
+    request_method= env[::Rack::App::Constants::ENV::REQUEST_METHOD]
+    path_info= env[Rack::App::Constants::ENV::PATH_INFO]
+    mapped_endpoint_routes[[request_method, path_info]]
   end
 
   def mapped_endpoint_routes
@@ -18,7 +19,7 @@ class Rack::App::Router::Static < Rack::App::Router::Base
   def compile_endpoint!(endpoint)
     endpoint.supported_extnames.map do |extname|
       endpoint.request_path + extname
-      
+
     end.push(endpoint.request_path).each do |request_path|
       routing_key = [endpoint.request_method, request_path]
 

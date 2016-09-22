@@ -10,7 +10,7 @@ describe Rack::App::RequestConfigurator do
     }
   end
   describe '#configure' do
-    subject { instance.configure(request_env) }
+    subject { instance.configure(request_env);request_env }
 
     it { is_expected.to include({Rack::App::Constants::ENV::ORIGINAL_PATH_INFO => '/hello/world/'}) }
 

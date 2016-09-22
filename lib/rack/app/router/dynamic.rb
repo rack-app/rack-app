@@ -44,13 +44,8 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def compile_endpoint!(endpoint)
-    endpoint.request_paths.each do |request_path|
-      compile_request_path!(request_path, endpoint)
-    end
-  end
-
-  def compile_request_path!(request_path, endpoint)
     request_method = endpoint.request_method
+    request_path = endpoint.request_path
 
     clusters_for(request_method) do |current_cluster|
 
@@ -121,14 +116,21 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
     ::Rack::App::Constants::HTTP::METHODS
   end
 
+  def get_app(env)
+    c = fetch_by_env(env)
+    return unless c.is_a?(Hash)
+    c[:app]
+  end
 
-  def fetch_context(request_method, path_info)
-    normalized_request_path = Rack::App::Utils.normalize_path(path_info)
+  def fetch_by_env(env)
+
+    request_method= env[::Rack::App::Constants::ENV::REQUEST_METHOD]
+    path_info= formatted_path_info(env)
 
     last_mounted_directory = nil
     last_mounted_app = nil
     current_cluster = main_cluster(request_method)
-    normalized_request_path.split('/').each do |path_part|
+    path_info.split('/').each do |path_part|
 
       last_mounted_directory = current_cluster[MOUNTED_DIRECTORY] || last_mounted_directory
       last_mounted_app = current_cluster[MOUNTED_APPLICATION] || last_mounted_app
@@ -157,6 +159,16 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
     return current_cluster
 
+  end
+
+  def formatted_path_info(env)
+    path_info = env[::Rack::App::Constants::ENV::PATH_INFO].dup
+    path_info.slice!(/#{Regexp.escape(extname(env))}$/)
+    path_info
+  end
+
+  def extname(env)
+    env[::Rack::App::Constants::ENV::EXTNAME]
   end
 
 end

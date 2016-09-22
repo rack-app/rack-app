@@ -1,16 +1,9 @@
 class Rack::App::Router::Base
 
   def call(env)
-
-    request_method= env[::Rack::App::Constants::ENV::REQUEST_METHOD]
-    path_info= env[Rack::App::Constants::ENV::PATH_INFO]
-
-    context = fetch_context(request_method, path_info)
-    return unless context.is_a?(Hash) and not context[:app].nil?
-
-    context[:app].call(env)
+    app = get_app(env)
+    app && app.call(env)
   end
-
 
   def endpoints
     @endpoints ||= []
@@ -28,6 +21,10 @@ class Rack::App::Router::Base
   end
 
   protected
+
+  def get_app(env)
+    raise(NotImplementedError)
+  end
 
   def compile_endpoint!(endpoint)
     raise(NotImplementedError)

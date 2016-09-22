@@ -6,7 +6,7 @@ class Rack::App::Middlewares::Configuration::SerializerSetter
   end
 
   def call(env)
-    env[::Rack::App::Constants::ENV::EXTNAME] ||= extname(env)
+    # env[::Rack::App::Constants::ENV::EXTNAME] ||= extname(env)
     env[::Rack::App::Constants::ENV::SERIALIZER]= @serializer
     @app.call(env)
   end
