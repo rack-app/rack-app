@@ -44,8 +44,13 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
   end
 
   def compile_endpoint!(endpoint)
+    endpoint.request_paths.each do |request_path|
+      compile_request_path!(request_path, endpoint)
+    end
+  end
+
+  def compile_request_path!(request_path, endpoint)
     request_method = endpoint.request_method
-    request_path = endpoint.request_path
 
     clusters_for(request_method) do |current_cluster|
 
@@ -70,7 +75,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
                            elsif path_part_is_a_mounted_rack_based_application?(path_part)
                              break_build = true
                              builder.use(
-                              Rack::App::Middlewares::Configuration::PathInfoFormatter,
+                              Rack::App::Middlewares::PathInfoCutter,
                               calculate_mount_path(request_path_parts)
                              )
                              MOUNTED_APPLICATION

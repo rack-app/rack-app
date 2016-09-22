@@ -1,29 +1,35 @@
+require "rack/builder"
 require "rack/request"
 require "rack/response"
 class Rack::App::Middlewares::Configuration
+
+  require "rack/app/middlewares/configuration/handler_setter"
+  require "rack/app/middlewares/configuration/serializer_setter"
 
   require "rack/app/middlewares/configuration/path_info_formatter"
   require "rack/app/middlewares/configuration/path_params_matcher"
 
   def initialize(app, options={})
-    @handler_class = options[:app_class] || raise
-    @serializer = options[:serializer] || raise
-    @app = app
+    @stack = build_stack(app) do |builder|
+      builder.use Rack::App::Middlewares::Configuration::SerializerSetter,
+                  options[:serializer]
+
+      builder.use Rack::App::Middlewares::Configuration::HandlerSetter,
+                  options[:app_class] || options[:handler_class]
+
+    end
   end
 
   def call(env)
-    env[Rack::App::Constants::ENV::SERIALIZER]= @serializer
-    env[Rack::App::Constants::ENV::REQUEST_HANDLER]= handler(env)
-    @app.call(env)
+    @stack.call(env)
   end
 
   protected
 
-  def handler(env)
-    new_handler = @handler_class.new
-    new_handler.request = ::Rack::Request.new(env)
-    new_handler.response = ::Rack::Response.new
-    new_handler
+  def build_stack(app)
+    builder = Rack::Builder.new
+    yield(builder)
+    builder.run(app)
+    return builder.to_app
   end
-
 end

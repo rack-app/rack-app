@@ -8,12 +8,6 @@ module Rack::App::SingletonMethods::Settings
 
   protected
 
-  def serializer(&definition_how_to_serialize)
-    @serializer ||= Rack::App::Serializer.new
-    @serializer = Rack::App::Serializer.new(&definition_how_to_serialize) unless definition_how_to_serialize.nil?
-    return @serializer
-  end
-
   def headers(new_headers=nil)
     middleware do |b|
       b.use(Rack::App::Middlewares::HeaderSetter,new_headers)

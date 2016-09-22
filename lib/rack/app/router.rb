@@ -6,6 +6,7 @@ class Rack::App::Router
   require 'rack/app/router/not_found'
 
   def call(env)
+    Rack::App::RequestConfigurator.configure(env)
     @static.call(env) or @dynamic.call(env) or @not_found.call(env)
   end
 

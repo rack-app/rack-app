@@ -2,8 +2,8 @@ require 'cgi'
 class Rack::App::Params
 
   def to_hash
-    if @request_env[::Rack::App::Constants::ENV::PARSED_PARAMS]
-      @request_env[::Rack::App::Constants::ENV::PARSED_PARAMS]
+    if @env[::Rack::App::Constants::ENV::PARSED_PARAMS]
+      @env[::Rack::App::Constants::ENV::PARSED_PARAMS]
     else
       query_params.merge(request_path_params)
     end
@@ -11,8 +11,8 @@ class Rack::App::Params
 
   protected
 
-  def initialize(request_env)
-    @request_env = request_env
+  def initialize(env)
+    @env = env
   end
 
   def query_params
@@ -34,7 +34,7 @@ class Rack::App::Params
   end
 
   def raw_cgi_params
-    CGI.parse(@request_env[::Rack::QUERY_STRING].to_s)
+    CGI.parse(@env[::Rack::QUERY_STRING].to_s)
   end
 
   def request_path_params
@@ -44,18 +44,26 @@ class Rack::App::Params
   end
 
   def extract_path_params
+    last_index = request_path_parts.length - 1
     request_path_parts.each.with_index.reduce({}) do |params_col, (path_part, index)|
-      params_col[path_params_matcher[index]]= path_part if path_params_matcher[index]
+      if path_params_matcher[index]
+        if index == last_index && @env[::Rack::App::Constants::ENV::EXTNAME]
+          matcher = Regexp.escape(@env[::Rack::App::Constants::ENV::EXTNAME])
+          path_part = path_part.sub(/#{matcher}$/,'')
+        end
+        params_col[path_params_matcher[index]]= path_part
+      end
+
       params_col
     end
   end
 
   def request_path_parts
-    @request_env[::Rack::App::Constants::ENV::PATH_INFO].split('/')
+    @env[::Rack::App::Constants::ENV::PATH_INFO].split('/')
   end
 
   def path_params_matcher
-    @request_env[::Rack::App::Constants::ENV::PATH_PARAMS_MATCHER] || {}
+    @env[::Rack::App::Constants::ENV::PATH_PARAMS_MATCHER] || {}
   end
 
 end

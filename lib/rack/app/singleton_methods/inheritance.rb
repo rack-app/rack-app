@@ -10,7 +10,8 @@ module Rack::App::SingletonMethods::Inheritance
 
   def inherited(child)
 
-    child.serializer(&serializer.logic)
+    child.formats.merge!(formats)
+
     [:middlewares, :before, :after].each do |type|
       child.__send__(type).push(*__send__(type))
     end

@@ -12,7 +12,7 @@ class Rack::App::Endpoint::Executor
 
   def execute(env)
     request_handler = env[Rack::App::Constants::ENV::REQUEST_HANDLER]
-    set_response_body(request_handler.response, get_response_body(request_handler))
+    set_response_body(request_handler, get_response_body(request_handler))
     return request_handler.response
   end
 
@@ -24,8 +24,13 @@ class Rack::App::Endpoint::Executor
     end
   end
 
-  def set_response_body(response, response_body)
-    response.write(String(@endpoint_properties.serializer.serialize(response_body)))
+  EXTNAME = ::Rack::App::Constants::ENV::EXTNAME
+  CONTENT_TYPE = ::Rack::App::Constants::HTTP::Headers::CONTENT_TYPE
+
+  def set_response_body(handler, response_body)
+    extname = handler.request.env[EXTNAME]
+    handler.response.headers.merge!(@endpoint_properties.serializer.response_headers_for(extname))
+    handler.response.write(@endpoint_properties.serializer.serialize(extname, response_body))
   end
 
   def evaluate_value(request_handler)
@@ -33,6 +38,5 @@ class Rack::App::Endpoint::Executor
       request_handler.__send__(@endpoint_properties.endpoint_method_name)
     end
   end
-
 
 end

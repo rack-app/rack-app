@@ -3,7 +3,10 @@ describe Rack::App do
   include Rack::App::Test
 
   let(:env) do
-    {Rack::App::Constants::ENV::SERIALIZER => Rack::App::Serializer.new}
+    {
+      Rack::App::Constants::ENV::EXTNAME => "",
+      Rack::App::Constants::ENV::SERIALIZER => Rack::App::Serializer.new
+    }
   end
 
   def stream(options={},&back)
