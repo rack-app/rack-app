@@ -133,6 +133,7 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
     last_mounted_directory = nil
     last_mounted_app = nil
     current_cluster = main_cluster(request_method)
+    
     path_info.split('/').each do |path_part|
 
       last_mounted_directory = current_cluster[MOUNTED_DIRECTORY] || last_mounted_directory
