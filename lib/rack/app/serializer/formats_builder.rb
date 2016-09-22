@@ -9,7 +9,7 @@ class Rack::App::Serializer::FormatsBuilder
 
   def on(extname, response_content_type, &formatter)
     format = String(extname).downcase
-    extension = (format[0] == '.' ? format : ".#{format}")
+    extension = (format[0,1] == '.' ? format : ".#{format}")
     @formatters[extension]= formatter
     @content_types[extension]= response_content_type
     self
