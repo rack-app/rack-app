@@ -30,12 +30,6 @@ class Rack::App::Endpoint
     @config.serializer.extnames
   end
 
-  def request_paths
-    @config.serializer.extnames.map do |extname|
-      @config.request_path + extname
-    end.push(@config.request_path)
-  end
-
   def to_app
     @config.application || self.class::Builder.new(@config).build
   end
