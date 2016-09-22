@@ -26,7 +26,6 @@ module Rack::App::SingletonMethods::RouteHandling
       Rack::App::Endpoint.new({
         :app_class => self,
         :error_handler => error,
-        :serializer => formats.to_serializer,
         :user_defined_logic => block,
         :request_method => request_method,
         :route => route_registration_properties.dup,

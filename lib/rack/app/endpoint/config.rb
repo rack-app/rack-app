@@ -1,7 +1,6 @@
 class Rack::App::Endpoint::Config
 
   def to_hash
-    serializer
     error_handler
     middleware_builders_blocks
     request_path
@@ -18,7 +17,11 @@ class Rack::App::Endpoint::Config
   end
 
   def serializer
-    @raw[:serializer] ||= Rack::App::Serializer.new
+    serializer_builder.to_serializer
+  end
+
+  def serializer_builder
+    @raw[:serializer_builder] ||= app_class.__send__(:formats)
   end
 
   def error_handler

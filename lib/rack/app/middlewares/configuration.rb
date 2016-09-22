@@ -8,13 +8,13 @@ class Rack::App::Middlewares::Configuration
 
   require "rack/app/middlewares/configuration/path_params_matcher"
 
-  def initialize(app, options={})
+  def initialize(app, config)
     @stack = build_stack(app) do |builder|
       builder.use Rack::App::Middlewares::Configuration::SerializerSetter,
-                  options[:serializer]
+                  config.serializer
 
       builder.use Rack::App::Middlewares::Configuration::HandlerSetter,
-                  options[:app_class] || options[:handler_class]
+                  config.app_class
 
     end
   end

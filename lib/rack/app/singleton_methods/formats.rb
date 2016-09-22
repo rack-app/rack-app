@@ -2,7 +2,10 @@ module Rack::App::SingletonMethods::Formats
 
   def formats(&descriptor)
     @formats_builder ||= Rack::App::Serializer::FormatsBuilder.new
-    @formats_builder.instance_exec(&descriptor) unless descriptor.nil?
+    unless descriptor.nil?
+      @formats_builder.instance_exec(&descriptor)
+      router.reset 
+    end
     @formats_builder
   end
 
