@@ -39,12 +39,13 @@ describe '#Performance Benchmark' do
   end
 
   describe 'route tree generation time' do
+    let(:maximum_allowed_time){ 15 }
     include Rack::App::Test
     context 'when only static endpoints given' do
       rack_app Class.new(Rack::App)
 
       it 'should initialize the application in a meaningful time' do
-        Timeout.timeout(10) do
+        Timeout.timeout(maximum_allowed_time) do
           time_now = Time.now
           rack_app do
             10_000.times do |i|
@@ -62,7 +63,7 @@ describe '#Performance Benchmark' do
       rack_app Class.new(Rack::App)
 
       it 'should initialize the application in a meaningful time' do
-        Timeout.timeout(10) do
+        Timeout.timeout(maximum_allowed_time) do
           time_now = Time.now
           rack_app do
             10_000.times do |i|
