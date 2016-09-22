@@ -6,7 +6,6 @@ class Rack::App::Middlewares::Configuration
   require "rack/app/middlewares/configuration/handler_setter"
   require "rack/app/middlewares/configuration/serializer_setter"
 
-  require "rack/app/middlewares/configuration/path_info_formatter"
   require "rack/app/middlewares/configuration/path_params_matcher"
 
   def initialize(app, options={})
