@@ -5,7 +5,7 @@ module Rack::App::InstanceMethods::ServeFile
     response.status = raw_rack_resp[0]
     response.headers.merge!(raw_rack_resp[1])
     response.body = raw_rack_resp[2]
-    finish_response
+    finish!
   end
 
 end

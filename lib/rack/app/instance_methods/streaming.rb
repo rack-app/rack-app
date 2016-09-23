@@ -11,6 +11,6 @@ module Rack::App::InstanceMethods::Streaming
   # servers like Thin or Rainbows.
   def stream(keep_open = false, &back)
     response.body = Rack::App::Streamer.new(request.env, :keep_open => keep_open, &back)
-    finish_response
+    finish!
   end
 end

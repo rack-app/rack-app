@@ -18,8 +18,11 @@ module Rack::App::InstanceMethods::Core
     @response || raise("response object is not set for #{self.class}")
   end
 
-  def finish_response
-    throw(:rack_response, response)
+  def finish!(rack_response=response)
+    throw(:rack_response, rack_response)
   end
+
+  alias finish_response finish!
+  Rack::App::Utils.deprecate(self, :finish_response, :finish!, 2016,9)
 
 end

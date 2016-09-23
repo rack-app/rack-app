@@ -1,4 +1,4 @@
-module Rack::App::InstanceMethods::HttpControl
+module Rack::App::InstanceMethods::RedirectTo 
 
   def redirect_to(url, params={})
 
@@ -12,8 +12,8 @@ module Rack::App::InstanceMethods::HttpControl
     response.status = 301
     response.headers.merge!({'Location' => url})
 
-    finish_response
-    
+    finish!
+
   end
 
 end

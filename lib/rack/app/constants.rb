@@ -1,5 +1,7 @@
 module Rack::App::Constants
 
+  require "rack/app/constants/http_status_codes"
+  
   def self.rack_constant(constant_name, fallback_value)
     ::Rack.const_get(constant_name)
   rescue NameError
