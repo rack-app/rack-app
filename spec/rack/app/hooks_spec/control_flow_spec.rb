@@ -2,6 +2,23 @@ require "spec_helper"
 describe Rack::App do
   include Rack::App::Test
 
+  describe 'hook with http_status! method control flow break' do
+
+    rack_app do
+      before do
+        http_status!(418)
+      end
+
+      get '/' do
+        "sorry I'm a teapot, can't serve this"
+      end
+    end
+
+    it { expect(get('/').status).to eq 418 }
+    it { expect(get('/').body).to eq "I'm a teapot (RFC 2324)" }
+
+  end
+
   describe '.before' do
     rack_app do
 
