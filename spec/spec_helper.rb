@@ -165,3 +165,5 @@ end
 
 require 'rack/app/test'
 require 'yaml'
+
+IS_OLD_RUBY = !(RUBY_VERSION[0..2] > '1.8')

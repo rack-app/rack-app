@@ -21,8 +21,8 @@ class Rack::App::Payload::Parser
     parse_io(request.content_type, request.body)
   end
 
-  def parse_string(content_type, chunk)
-    parse_io(content_type, StringIO.new(chunk))
+  def parse_string(content_type, str)
+    parse_io(content_type, StringIO.new(str))
   end
 
 end

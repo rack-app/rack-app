@@ -1,6 +1,6 @@
 require "csv"
 require "spec_helper"
-describe "Rack::App#payload" do
+describe "Rack::App#payload_stream" do
   include Rack::App::Test
 
   let(:payload_struct) { [{"Foo" => "bar"}] }
@@ -8,7 +8,9 @@ describe "Rack::App#payload" do
   rack_app do
 
     get "/" do
-      Marshal.dump(payload) #> [{"Foo" => "bar"}]
+      o = []
+      payload_stream{|chunk| o << chunk }
+      Marshal.dump(o)
     end
 
   end
@@ -27,7 +29,9 @@ describe "Rack::App#payload" do
       end
 
       get "/" do
-        Marshal.dump(payload) #> [{"Foo" => "bar"}]
+        o = []
+        payload_stream{ |chunk| o << chunk }
+        Marshal.dump(o)
       end
 
     end
@@ -35,7 +39,7 @@ describe "Rack::App#payload" do
     let(:request_options) do
       {
         :env => { Rack::App::Constants::ENV::CONTENT_TYPE => 'custom/x-yaml' },
-        :payload => YAML.dump(payload_struct)
+        :payload => 'Foo: bar'
       }
     end
 
@@ -54,7 +58,7 @@ describe "Rack::App#payload" do
         let(:request_options) do
           {
             :env => { Rack::App::Constants::ENV::CONTENT_TYPE => yaml_content_type },
-            :payload => YAML.dump(payload_struct)
+            :payload => 'Foo: bar'
           }
         end
 
@@ -72,7 +76,9 @@ describe "Rack::App#payload" do
       rack_app do
 
         get "/" do
-          Marshal.dump(payload)
+          o = []
+          payload_stream{ |chunk| o << chunk }
+          Marshal.dump(o)
         end
 
       end
@@ -91,7 +97,7 @@ describe "Rack::App#payload" do
             }
           end
 
-          it { expect(Marshal.load(get('/', request_options).body)).to eq [['1', '2', '3']] }
+          it { expect(Marshal.load(get('/', request_options).body)).to eq [[['1', '2', '3']]] }
 
         end
       end
@@ -117,7 +123,7 @@ describe "Rack::App#payload" do
             }
           end
 
-          it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
+          it { expect(Marshal.load(get('/', request_options).body)).to eq [payload_struct] }
 
         end
       end
@@ -132,8 +138,9 @@ describe "Rack::App#payload" do
       }
     end
 
-    it { expect(Marshal.load(get('/', request_options).body)).to eq 'Hello, World!' }
+    it { expect(Marshal.load(get('/', request_options).body)).to eq ['Hello, World!'] }
   end
+
   context 'when unknown content type given' do
     let(:request_options) do
       {
@@ -142,7 +149,7 @@ describe "Rack::App#payload" do
       }
     end
 
-    it { expect(Marshal.load(get('/', request_options).body)).to eq 'Hello, World!' }
+    it { expect(Marshal.load(get('/', request_options).body)).to eq ['Hello, World!'] }
   end
 
   context 'when content type is form-urlencoded' do
@@ -160,7 +167,7 @@ describe "Rack::App#payload" do
           }
         end
 
-        it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
+        it { expect(Marshal.load(get('/', request_options).body)).to eq [payload_struct] }
 
       end
 
@@ -173,7 +180,7 @@ describe "Rack::App#payload" do
           }
         end
 
-        it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
+        it { expect(Marshal.load(get('/', request_options).body)).to eq [payload_struct] }
 
       end
     end

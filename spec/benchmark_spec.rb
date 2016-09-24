@@ -39,7 +39,8 @@ describe '#Performance Benchmark' do
   end
 
   describe 'route tree generation time' do
-    let(:maximum_allowed_time){ 15 }
+    let(:maximum_allowed_time){ RUBY_VERSION > '1.8' ? 15 : 30 }
+
     include Rack::App::Test
     context 'when only static endpoints given' do
       rack_app Class.new(Rack::App)
