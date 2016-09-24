@@ -20,6 +20,14 @@ class Rack::App::Endpoint::Config
     serializer_builder.to_serializer
   end
 
+  def payload
+    app_class.__send__(:payload)
+  end
+
+  def payload_parser
+    payload.parser.to_parser
+  end
+
   def serializer_builder
     @raw[:serializer_builder] ||= app_class.__send__(:formats)
   end

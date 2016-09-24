@@ -10,13 +10,9 @@ module Rack::App::InstanceMethods::Payload
   end
 
   def payload
-    @__payload__ ||= lambda {
-
-      payload = ''
-      payload_stream { |chunk| payload << chunk }
-      return payload
-
-    }.call
+    request.env[Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= lambda do
+      request.env[Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(request.env)
+    end.call
   end
 
   def payload_to_file(file_path, file_mod='w')
@@ -26,4 +22,3 @@ module Rack::App::InstanceMethods::Payload
   end
 
 end
-

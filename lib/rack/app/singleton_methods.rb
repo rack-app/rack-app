@@ -5,6 +5,7 @@ module Rack::App::SingletonMethods
   require 'rack/app/singleton_methods/middleware'
   require 'rack/app/singleton_methods/mounting'
   require 'rack/app/singleton_methods/params_validator'
+  require 'rack/app/singleton_methods/payload'
   require 'rack/app/singleton_methods/rack_interface'
   require 'rack/app/singleton_methods/route_handling'
   require 'rack/app/singleton_methods/settings'
@@ -17,6 +18,7 @@ module Rack::App::SingletonMethods
   include Rack::App::SingletonMethods::Middleware
   include Rack::App::SingletonMethods::Mounting
   include Rack::App::SingletonMethods::ParamsValidator
+  include Rack::App::SingletonMethods::Payload
   include Rack::App::SingletonMethods::RackInterface
   include Rack::App::SingletonMethods::RouteHandling
   include Rack::App::SingletonMethods::Settings

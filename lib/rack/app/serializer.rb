@@ -22,8 +22,6 @@ class Rack::App::Serializer
     String(@formatters[extname].call(object))
   end
 
-  CONTENT_TYPE = ::Rack::App::Constants::HTTP::Headers::CONTENT_TYPE
-
   def response_headers_for(extname)
     headers = {}
     add_content_type_for(headers, extname)
@@ -44,6 +42,8 @@ class Rack::App::Serializer
   end
 
   protected
+
+  CONTENT_TYPE = ::Rack::App::Constants::HTTP::Headers::CONTENT_TYPE
 
   def add_content_type_for(headers, extname)
     content_type = @content_types[extname]

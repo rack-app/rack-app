@@ -7,6 +7,7 @@ class Rack::App::Endpoint::Builder
 
   def build
     builder = Rack::Builder.new
+    apply_core_middlewares(builder)
     apply_middleware_build_blocks(builder)
     @config.endpoint_method_name
     builder.run(Rack::App::Endpoint::Executor.new(@config))
@@ -14,6 +15,10 @@ class Rack::App::Endpoint::Builder
   end
 
   protected
+
+  def apply_core_middlewares(builder)
+    builder.use(Rack::App::Middlewares::PayloadParserSetter, @config.payload_parser)
+  end
 
   def apply_middleware_build_blocks(builder)
     builder_blocks.each do |builder_block|

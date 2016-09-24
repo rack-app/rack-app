@@ -11,6 +11,7 @@ class Rack::App
   require 'rack/app/test'
   require 'rack/app/utils'
   require 'rack/app/params'
+  require 'rack/app/payload'
   require 'rack/app/router'
   require 'rack/app/endpoint'
   require 'rack/app/streamer'

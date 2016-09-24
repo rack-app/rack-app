@@ -81,14 +81,15 @@ describe Rack::App do
   end
 
   describe '#payload' do
-    subject { new_subject.payload }
+    include Rack::App::Test
 
-    context 'when payload is present in the request env' do
-      before { request_env['rack.input']= ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld")) }
-
-      it { is_expected.to eq "hello\nworld" }
+    rack_app do
+      get '/' do
+        payload
+      end
     end
 
+    it { expect(get('/', :payload => "hello\nworld").body).to eq "hello\nworld" }
   end
 
   describe '.call' do

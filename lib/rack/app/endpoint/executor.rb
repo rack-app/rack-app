@@ -25,7 +25,6 @@ class Rack::App::Endpoint::Executor
   end
 
   EXTNAME = ::Rack::App::Constants::ENV::EXTNAME
-  CONTENT_TYPE = ::Rack::App::Constants::HTTP::Headers::CONTENT_TYPE
 
   def set_response_body(handler, response_body)
     extname = handler.request.env[EXTNAME]

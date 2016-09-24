@@ -1,7 +1,7 @@
 module Rack::App::Constants
 
   require "rack/app/constants/http_status_codes"
-  
+
   def self.rack_constant(constant_name, fallback_value)
     ::Rack.const_get(constant_name)
   rescue NameError
@@ -27,7 +27,7 @@ module Rack::App::Constants
     METHODS = (METHOD.constants - [:ANY]).map(&:to_s).freeze
 
     module Headers
-      CONTENT_TYPE = Rack::App::Constants.rack_constant(:CONTENT_TYPE, "Content-Type")
+      CONTENT_TYPE = "Content-Type".freeze
     end
 
   end
@@ -39,13 +39,18 @@ module Rack::App::Constants
     REQUEST_METHOD = Rack::App::Constants.rack_constant(:REQUEST_METHOD, "REQUEST_METHOD")
 
     EXTNAME = 'rack-app.extname'.freeze
-    REQUEST_HANDLER = 'rack-app.handler'
-    SERIALIZER = 'rack-app.serializer'
-    PARSED_PARAMS = 'rack-app.parsed_params'
-    VALIDATED_PARAMS = 'rack-app.validated_params'
+    CONTENT_TYPE = 'CONTENT_TYPE'.freeze
+    REQUEST_HANDLER = 'rack-app.handler'.freeze
+    SERIALIZER = 'rack-app.serializer'.freeze
+    PAYLOAD_PARSER = 'rack-app.payload_parser'.freeze
+    PARSED_PAYLOAD = 'rack-app.parsed_payload'.freeze
+    PARSED_PARAMS = 'rack-app.parsed_params'.freeze
+    VALIDATED_PARAMS = 'rack-app.validated_params'.freeze
+    VALIDATED_PAYLOAD = 'rack-app.validated_payload'.freeze
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
     METHODOVERRIDE_ORIGINAL_METHOD = 'rack-app.methodoverride.original_method'.freeze
+
   end
 
   MOUNTED_DIRECTORY = '[Mounted Directory]'.freeze
