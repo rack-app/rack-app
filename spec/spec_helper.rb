@@ -122,6 +122,18 @@ module SampleMethods
 
 end
 
+class SimpleExecMiddleware
+  def initialize(app, callable)
+    @app = app
+    @callable = callable
+  end
+
+  def call(env)
+    @callable.call(env)
+    @app.call(env)
+  end
+end
+
 class SimpleSetterMiddleware
 
   def initialize(app, k, v)
