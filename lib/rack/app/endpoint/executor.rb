@@ -2,6 +2,7 @@ class Rack::App::Endpoint::Executor
 
   def initialize(endpoint_properties)
     @endpoint_properties = endpoint_properties
+    @endpoint_properties.endpoint_method_name
   end
 
   def call(env)

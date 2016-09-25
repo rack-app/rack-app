@@ -9,7 +9,6 @@ class Rack::App::Endpoint::Builder
     builder = Rack::Builder.new
     apply_core_middlewares(builder)
     apply_middleware_build_blocks(builder)
-    @config.endpoint_method_name
     builder.run(Rack::App::Endpoint::Executor.new(@config))
     builder.to_app
   end
