@@ -12,9 +12,7 @@ module Rack::App::InstanceMethods::Payload
   end
 
   def payload
-    request.env[Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= lambda do
-      request.env[Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(request.env)
-    end.call
+    request.env[Rack::App::Constants::ENV::PAYLOAD_GETTER].call
   end
 
   def payload_to_file(file_path, file_mod='w')
