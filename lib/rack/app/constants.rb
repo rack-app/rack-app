@@ -43,14 +43,15 @@ module Rack::App::Constants
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze
     REQUEST_HANDLER = 'rack-app.handler'.freeze
 
-    PARSED_PARAMS = 'rack-app.parsed_params'.freeze
-    VALIDATED_PARAMS = 'rack-app.validated_params'.freeze
+    PARAMS_GETTER = 'rack-app.params.getter'
+    PARSED_PARAMS = 'rack-app.params.parsed'.freeze
+    VALIDATED_PARAMS = 'rack-app.params.validated'.freeze
 
     PAYLOAD = 'rack-app.payload'.freeze
-    PAYLOAD_PARSER = 'rack-app.payload_parser'.freeze
-    PAYLOAD_GETTER = 'rack-app.payload_getter'.freeze
-    PARSED_PAYLOAD = 'rack-app.parsed_payload'.freeze
-    VALIDATED_PAYLOAD = 'rack-app.validated_payload'.freeze
+    PAYLOAD_PARSER = 'rack-app.payload.parser'.freeze
+    PAYLOAD_GETTER = 'rack-app.payload.getter'.freeze
+    PARSED_PAYLOAD = 'rack-app.payload.parsed'.freeze
+    VALIDATED_PAYLOAD = 'rack-app.payload.validated'.freeze
 
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
