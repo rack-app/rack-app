@@ -9,7 +9,7 @@ describe Rack::App do
       context "when #{log_level} log level used" do
         rack_app do
 
-          apply_extension :logger
+          apply_extensions :logger
 
           get do
             logger.__send__(log_level, 'hello')
@@ -33,7 +33,7 @@ describe Rack::App do
     context "when :unknown log level used" do
       rack_app do
 
-        apply_extension :logger
+        apply_extensions :logger
 
         get do
           logger.unknown 'hello'
@@ -56,7 +56,7 @@ describe Rack::App do
 
       rack_app do
 
-        apply_extension :logger
+        apply_extensions :logger
 
         get do
           logger.info 'some msg'
@@ -78,7 +78,7 @@ describe Rack::App do
 
       rack_app do
 
-        apply_extension :logger
+        apply_extensions :logger
 
         get do
           logger.info :hello => 'world'
