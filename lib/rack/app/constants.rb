@@ -47,11 +47,9 @@ module Rack::App::Constants
     PARSED_PARAMS = 'rack-app.params.parsed'.freeze
     VALIDATED_PARAMS = 'rack-app.params.validated'.freeze
 
-    PAYLOAD = 'rack-app.payload'.freeze
     PAYLOAD_PARSER = 'rack-app.payload.parser'.freeze
     PAYLOAD_GETTER = 'rack-app.payload.getter'.freeze
     PARSED_PAYLOAD = 'rack-app.payload.parsed'.freeze
-    VALIDATED_PAYLOAD = 'rack-app.payload.validated'.freeze
 
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
