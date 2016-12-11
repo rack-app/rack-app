@@ -1,4 +1,4 @@
-module Rack::App::Payload::Parser::Builder::Defaults
+module Rack::App::Payload::Parser::Builder::Formats
   extend(self)
 
   JSON_CONTENT_TYPE = [
@@ -71,10 +71,23 @@ module Rack::App::Payload::Parser::Builder::Defaults
     RACK_QUERY_PARSER.call(form_vars)
   end
 
-  def form(builder)
+  def www_form_urlencoded(builder)
     FORM_CONTENT_TYPES.each do |content_type|
       builder.on(content_type, &FORM_PARSER)
     end
+  end
+
+  alias form www_form_urlencoded
+  alias urlencoded www_form_urlencoded
+
+  def accept(builder, *form_names)
+    last_name = nil
+    form_names.map(&:to_sym).each do |form_name|
+      last_name = form_name
+      __send__ form_name, builder
+    end
+  rescue NoMethodError
+    raise(NotImplementedError, "unknown formatter: #{last_name}")
   end
 
 end

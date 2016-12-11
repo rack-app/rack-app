@@ -1,6 +1,6 @@
 class Rack::App::Payload::Parser::Builder
 
-  require "rack/app/payload/parser/builder/defaults"
+  require "rack/app/payload/parser/builder/formats"
 
   def initialize
     @parsers = {}
@@ -15,17 +15,8 @@ class Rack::App::Payload::Parser::Builder
     self
   end
 
-  FORMS = {
-    :json => Rack::App::Payload::Parser::Builder::Defaults.method(:json),
-    :form => Rack::App::Payload::Parser::Builder::Defaults.method(:form),
-    :urlencoded => Rack::App::Payload::Parser::Builder::Defaults.method(:form),
-    :www_form_urlencoded => Rack::App::Payload::Parser::Builder::Defaults.method(:form)
-  }
-
-  def accept(*form_names)
-    form_names.map(&:to_sym).each do |form_name|
-      (FORMS[form_name] || raise(NotImplementedError)).call(self)
-    end
+  def accept(*formats)
+    Rack::App::Payload::Parser::Builder::Formats.accept(self, *formats)
   end
 
   def merge!(parser_builder)
