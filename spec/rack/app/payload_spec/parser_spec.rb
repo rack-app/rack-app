@@ -9,7 +9,7 @@ describe "Rack::App#payload" do
 
     payload do
       parser do
-        accept :json, :www_form_urlencoded
+        accept :www_form_urlencoded
 
         on "custom/x-yaml" do |io|
           YAML.load(io.read)
@@ -37,6 +37,24 @@ describe "Rack::App#payload" do
 
   unless IS_OLD_RUBY
     context 'when payload is a json' do
+
+      rack_app do
+
+        payload do
+          parser do
+            accept :json, :www_form_urlencoded
+
+            on "custom/x-yaml" do |io|
+              YAML.load(io.read)
+            end
+          end
+        end
+
+        get "/" do
+          Marshal.dump(payload) #> [{"Foo" => "bar"}]
+        end
+
+      end
 
       [
         "application/json",
@@ -70,6 +88,7 @@ describe "Rack::App#payload" do
   end
 
   context 'when no content type given' do
+
     let(:request_options) do
       {
         :payload => 'Hello, World!'
@@ -78,28 +97,29 @@ describe "Rack::App#payload" do
 
     it { expect(Marshal.load(get('/', request_options).body)).to eq 'Hello, World!' }
 
-  #   context "and the :reject_unsupported_media_types flag is set" do
-  #     rack_app do
-  #       payload do
-  #         parser do
-  #           accept :json, :www_form_urlencoded
-  #
-  #           reject_unsupported_media_types
-  #         end
-  #       end
-  #
-  #       get "/" do
-  #         "happen"
-  #
-  #         payload
-  #
-  #         'Never reached...'
-  #       end
-  #     end
-  #
-  #     it { expect(get('/', request_options).status).to eq 415 }
-  #     it { expect(get('/', request_options).body).to eq "Unsupported Media Type" }
-  #   end
+    # context "and the :reject_unsupported_media_types flag is set" do
+    #   rack_app do
+    #     payload do
+    #       parser do
+    #         accept :json, :www_form_urlencoded
+    #
+    #         reject_unsupported_media_types
+    #       end
+    #     end
+    #
+    #     get "/" do
+    #       "happen"
+    #
+    #       payload
+    #
+    #       'Never reached...'
+    #     end
+    #   end
+    #
+    #   it { expect(get('/', request_options).status).to eq 415 }
+    #   it { expect(get('/', request_options).body).to eq "Unsupported Media Type" }
+    # end
+
   end
 
   context 'when unknown content type given' do
