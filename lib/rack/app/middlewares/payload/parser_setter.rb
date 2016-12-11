@@ -4,8 +4,8 @@ class Rack::App::Middlewares::Payload::ParserSetter
   PARSED = ::Rack::App::Constants::ENV::PARSED_PAYLOAD
   GETTER = ::Rack::App::Constants::ENV::PAYLOAD_GETTER
 
-  def initialize(app, payload_parser)
-    @payload_parser = payload_parser
+  def initialize(app, payload_builder)
+    @payload_parser = payload_builder.parser.to_parser
     @app = app
   end
 
