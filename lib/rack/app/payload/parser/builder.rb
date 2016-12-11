@@ -19,6 +19,17 @@ class Rack::App::Payload::Parser::Builder
     Rack::App::Payload::Parser::Builder::Formats.accept(self, *formats)
   end
 
+  # def reject_unsupported_media_types
+  #   reject = proc do
+  #     rr = Rack::Response.new
+  #     rr.status = 415
+  #     rr.write("Unsupported Media Type")
+  #     throw(:rack_response, rr)
+  #   end
+  #   @parsers = Hash.new(reject).merge(@parsers)
+  #   nil
+  # end
+
   def merge!(parser_builder)
     raise unless parser_builder.is_a?(self.class)
     @parsers.merge!(parser_builder.instance_variable_get(:@parsers))
