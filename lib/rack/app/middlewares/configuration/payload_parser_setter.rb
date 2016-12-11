@@ -6,27 +6,11 @@ class Rack::App::Middlewares::Configuration::PayloadParserSetter
 
   def initialize(app)
     @app = app
-  end
-
-  module DefaultParser
-    extend(self)
-
-    def parse_io(io)
-      io.read
-    end
-
-    def parse_string(str)
-      str
-    end
-
-    def parse_env(env)
-      Rack::Request.new(env).body.read
-    end
-
+    @parser = Rack::App::Payload::Parser.new 
   end
 
   def call(env)
-    env[PARSER]= DefaultParser
+    env[PARSER]= @parser
     env[GETTER]= lambda { env[PARSED] ||= env[PARSER].parse_env(env) }
     @app.call(env)
   end
