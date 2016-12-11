@@ -11,6 +11,7 @@ module Rack::App::SingletonMethods::Extensions
   end
 
   alias apply_extension apply_extensions
+  Rack::App::Utils.deprecate(self, :apply_extension, :apply_extensions, 2017, 01)
 
   def extensions(*extensions_names)
     apply_extensions(*extensions_names)

@@ -16,7 +16,7 @@ class Rack::App::Endpoint::Builder
   protected
 
   def apply_core_middlewares(builder)
-    builder.use(Rack::App::Middlewares::PayloadParserSetter, @config.payload_parser)
+    builder.use(Rack::App::Middlewares::Configuration::PayloadParserSetter)
   end
 
   def apply_middleware_build_blocks(builder)

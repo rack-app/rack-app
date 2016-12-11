@@ -5,6 +5,7 @@ class Rack::App::Middlewares::Configuration
 
   require "rack/app/middlewares/configuration/handler_setter"
   require "rack/app/middlewares/configuration/serializer_setter"
+  require "rack/app/middlewares/configuration/payload_parser_setter"
 
   require "rack/app/middlewares/configuration/path_params_matcher"
 

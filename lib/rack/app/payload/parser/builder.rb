@@ -4,7 +4,6 @@ class Rack::App::Payload::Parser::Builder
 
   def initialize
     @parsers = {}
-    Rack::App::Payload::Parser::Builder::Defaults.apply(self)
   end
 
   def to_parser
@@ -14,6 +13,14 @@ class Rack::App::Payload::Parser::Builder
   def on(content_type, &parser)
     @parsers[content_type]= parser
     self
+  end
+
+  def accept_json
+    Rack::App::Payload::Parser::Builder::Defaults.json(self)
+  end
+
+  def accept_www_form_urlencoded
+    Rack::App::Payload::Parser::Builder::Defaults.form(self)
   end
 
   def merge!(parser_builder)

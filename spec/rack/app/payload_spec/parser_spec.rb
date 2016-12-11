@@ -42,65 +42,24 @@ describe "Rack::App#payload" do
     it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
   end
 
-  context 'when payload is a yaml' do
-    [
-      "text/yaml",
-      "text/x-yaml",
-      "application/yaml",
-      "application/x-yaml",
-    ].each do |yaml_content_type|
-      context "when yaml content_type given with: #{yaml_content_type}" do
-
-        let(:request_options) do
-          {
-            :env => { Rack::App::Constants::ENV::CONTENT_TYPE => yaml_content_type },
-            :payload => YAML.dump(payload_struct)
-          }
-        end
-
-        it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
-
-      end
-    end
-  end
-
   unless IS_OLD_RUBY
-    context 'when payload is a csv' do
-
-      let(:payload_struct){ [1,2,3] }
+    context 'when payload is a json' do
 
       rack_app do
 
-        get "/" do
-          Marshal.dump(payload)
-        end
-
-      end
-
-      [
-        "text/comma-separated-values",
-        "application/csv",
-        "text/csv",
-      ].each do |content_type|
-        context "when yaml content_type given with: #{content_type}" do
-
-          let(:request_options) do
-            {
-              :env => { Rack::App::Constants::ENV::CONTENT_TYPE => content_type },
-              :payload => CSV.generate{|csv| csv << payload_struct }
-            }
+        payload do
+          parser do
+            accept_json
           end
-
-          it { expect(Marshal.load(get('/', request_options).body)).to eq [['1', '2', '3']] }
-
         end
+
+        get "/" do
+          Marshal.dump(payload) #> [{"Foo" => "bar"}]
+        end
+
       end
 
-    end
-  end
 
-  unless IS_OLD_RUBY
-    context 'when payload is a json' do
       [
         "application/json",
         "application/x-javascript",
@@ -109,15 +68,22 @@ describe "Rack::App#payload" do
         "text/x-json",
       ].each do |json_content_type|
         context "when json content_type given with: #{json_content_type}" do
+          let(:payload){JSON.dump(payload_struct)}
 
           let(:request_options) do
             {
               :env => { Rack::App::Constants::ENV::CONTENT_TYPE => json_content_type },
-              :payload => JSON.dump(payload_struct)
+              :payload => payload
             }
           end
 
           it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
+
+          context 'and the payload is not valid' do
+            let(:payload){'{"hello":"world"'}
+
+            it{ expect(get('/', request_options).status).to eq 400 }
+          end
 
         end
       end
@@ -134,6 +100,7 @@ describe "Rack::App#payload" do
 
     it { expect(Marshal.load(get('/', request_options).body)).to eq 'Hello, World!' }
   end
+
   context 'when unknown content type given' do
     let(:request_options) do
       {
@@ -146,6 +113,17 @@ describe "Rack::App#payload" do
   end
 
   context 'when content type is form-urlencoded' do
+    rack_app do
+      payload do
+        parser do
+          accept_www_form_urlencoded
+        end
+      end
+
+      get "/" do
+        Marshal.dump(payload) #> [{"Foo" => "bar"}]
+      end
+    end
     let(:payload_struct){{'hello' => 'world'}}
 
     [
@@ -180,3 +158,5 @@ describe "Rack::App#payload" do
 
   end
 end
+
+# 415 Unsupported Media Type

@@ -46,28 +46,6 @@ describe "Rack::App#payload_stream" do
     it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
   end
 
-  context 'when payload is a yaml' do
-    [
-      "text/yaml",
-      "text/x-yaml",
-      "application/yaml",
-      "application/x-yaml",
-    ].each do |yaml_content_type|
-      context "when yaml content_type given with: #{yaml_content_type}" do
-
-        let(:request_options) do
-          {
-            :env => { Rack::App::Constants::ENV::CONTENT_TYPE => yaml_content_type },
-            :payload => 'Foo: bar'
-          }
-        end
-
-        it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
-
-      end
-    end
-  end
-
   unless IS_OLD_RUBY
     context 'when payload is a csv' do
 
