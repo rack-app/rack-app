@@ -1,5 +1,9 @@
 module Rack::App::InstanceMethods::Payload
 
+  def payload
+    request.env[Rack::App::Constants::ENV::PAYLOAD_GETTER].call
+  end
+
   def payload_stream(&block)
     return nil unless @request.body.respond_to?(:gets)
     while chunk = @request.body.gets
@@ -7,10 +11,6 @@ module Rack::App::InstanceMethods::Payload
     end
     @request.body.rewind
     nil
-  end
-
-  def payload
-    request.env[Rack::App::Constants::ENV::PAYLOAD_GETTER].call
   end
 
   def payload_to_file(file_path, file_mod='w')
