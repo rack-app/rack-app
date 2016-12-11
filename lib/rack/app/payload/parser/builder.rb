@@ -15,12 +15,17 @@ class Rack::App::Payload::Parser::Builder
     self
   end
 
-  def accept_json
-    Rack::App::Payload::Parser::Builder::Defaults.json(self)
-  end
+  FORMS = {
+    :json => Rack::App::Payload::Parser::Builder::Defaults.method(:json),
+    :form => Rack::App::Payload::Parser::Builder::Defaults.method(:form),
+    :urlencoded => Rack::App::Payload::Parser::Builder::Defaults.method(:form),
+    :www_form_urlencoded => Rack::App::Payload::Parser::Builder::Defaults.method(:form)
+  }
 
-  def accept_www_form_urlencoded
-    Rack::App::Payload::Parser::Builder::Defaults.form(self)
+  def accept(*form_names)
+    form_names.map(&:to_sym).each do |form_name|
+      (FORMS[form_name] || raise(NotImplementedError)).call(self)
+    end
   end
 
   def merge!(parser_builder)

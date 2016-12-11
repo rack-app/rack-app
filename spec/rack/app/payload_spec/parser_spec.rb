@@ -7,6 +7,16 @@ describe "Rack::App#payload" do
 
   rack_app do
 
+    payload do
+      parser do
+        accept :json, :www_form_urlencoded
+
+        on "custom/x-yaml" do |io|
+          YAML.load(io.read)
+        end
+      end
+    end
+
     get "/" do
       Marshal.dump(payload) #> [{"Foo" => "bar"}]
     end
@@ -14,23 +24,6 @@ describe "Rack::App#payload" do
   end
 
   context 'when custom parser defined' do
-    rack_app do
-
-      payload do
-
-        parser do
-          on "custom/x-yaml" do |io|
-            YAML.load(io.read)
-          end
-        end
-
-      end
-
-      get "/" do
-        Marshal.dump(payload) #> [{"Foo" => "bar"}]
-      end
-
-    end
 
     let(:request_options) do
       {
@@ -44,21 +37,6 @@ describe "Rack::App#payload" do
 
   unless IS_OLD_RUBY
     context 'when payload is a json' do
-
-      rack_app do
-
-        payload do
-          parser do
-            accept_json
-          end
-        end
-
-        get "/" do
-          Marshal.dump(payload) #> [{"Foo" => "bar"}]
-        end
-
-      end
-
 
       [
         "application/json",
@@ -113,17 +91,6 @@ describe "Rack::App#payload" do
   end
 
   context 'when content type is form-urlencoded' do
-    rack_app do
-      payload do
-        parser do
-          accept_www_form_urlencoded
-        end
-      end
-
-      get "/" do
-        Marshal.dump(payload) #> [{"Foo" => "bar"}]
-      end
-    end
     let(:payload_struct){{'hello' => 'world'}}
 
     [
