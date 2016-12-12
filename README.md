@@ -199,14 +199,14 @@ describe App do
 
     it { expect(subject.status).to eq 200 }
 
-    it { expect(subject.body.join).to eq "Hello World!" }
+    it { expect(subject.body).to eq "Hello World!" }
   end
 
   describe '/users/:user_id' do
     # restful endpoint example
     subject{ get(url: '/users/1234') }
 
-    it { expect(subject.body.join).to eq 'hello 1234!'}
+    it { expect(subject.body).to eq 'hello 1234!'}
 
     it { expect(subject.status).to eq 201 }
 
@@ -216,7 +216,7 @@ describe App do
     # error handled example
     subject{ get(url: '/make_error') }
 
-    it { expect(subject.body.join).to eq '{:error=>"error block rescued"}' }
+    it { expect(subject.body).to eq '{:error=>"error block rescued"}' }
   end
 
 end
