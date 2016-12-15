@@ -2,16 +2,18 @@ class Rack::App::Payload::Parser::Builder
 
   require "rack/app/payload/parser/builder/formats"
 
+  DEFAULT_PARSER = proc { |io| io.read }
+
   def initialize
-    @parsers = {}
+    @content_type__parsers = Hash.new(DEFAULT_PARSER)
   end
 
   def to_parser
-    Rack::App::Payload::Parser.new(@parsers)
+    Rack::App::Payload::Parser.new(@content_type__parsers)
   end
 
   def on(content_type, &parser)
-    @parsers[content_type]= parser
+    @content_type__parsers[content_type]= parser
     self
   end
 
@@ -26,13 +28,13 @@ class Rack::App::Payload::Parser::Builder
   #     rr.write("Unsupported Media Type")
   #     throw(:rack_response, rr)
   #   end
-  #   @parsers = Hash.new(reject).merge(@parsers)
+  #   @content_type__parsers = Hash.new(reject).merge(@content_type__parsers)
   #   nil
   # end
 
   def merge!(parser_builder)
     raise unless parser_builder.is_a?(self.class)
-    @parsers.merge!(parser_builder.instance_variable_get(:@parsers))
+    @content_type__parsers.merge!(parser_builder.instance_variable_get(:@content_type__parsers))
     self
   end
 
