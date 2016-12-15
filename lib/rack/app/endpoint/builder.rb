@@ -7,17 +7,12 @@ class Rack::App::Endpoint::Builder
 
   def build
     builder = Rack::Builder.new
-    apply_core_middlewares(builder)
     apply_middleware_build_blocks(builder)
     builder.run(Rack::App::Endpoint::Executor.new(@config))
     builder.to_app
   end
 
   protected
-
-  def apply_core_middlewares(builder)
-    builder.use(Rack::App::Middlewares::Configuration::PayloadParserSetter)
-  end
 
   def apply_middleware_build_blocks(builder)
     builder_blocks.each do |builder_block|
@@ -37,7 +32,7 @@ class Rack::App::Endpoint::Builder
   end
 
   def builder_blocks
-    @config.app_class.middlewares + @config.middleware_builders_blocks
+    [@config.app_class.middlewares, @config.middleware_builders_blocks].flatten
   end
 
 end

@@ -25,6 +25,7 @@ module Rack::App::SingletonMethods::RouteHandling
     router.register_endpoint!(
       Rack::App::Endpoint.new({
         :app_class => self,
+        :payload => payload,
         :error_handler => error,
         :user_defined_logic => block,
         :request_method => request_method,

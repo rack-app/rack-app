@@ -8,6 +8,10 @@ class Rack::App::Endpoint::Config
     return @raw
   end
 
+  def payload_builder
+    @raw[:payload].parser_builder
+  end
+
   def application
     @raw[:application]
   end

@@ -1,62 +1,15 @@
 require 'spec_helper'
 
 describe Rack::App::Router do
-  let(:instance) { described_class.new }
+  include Rack::App::Test
 
-  let(:defined_request_path) { '/users/:user_id' }
-  let(:received_request_path) { '/users/123' }
-  let(:request_method) { 'GET' }
-
-  let(:endpoint) do
-    settings = {
-        :app_class => Class.new(Rack::App),
-        :user_defined_logic => lambda { 'hello world!' },
-        :request_method => request_method,
-        :request_path => defined_request_path,
-        :route => {
-           :description => 'desc'
-        }
-    }
-    Rack::App::Endpoint.new(settings)
-  end
-
-  describe '#register_endpoint!' do
-
-    subject { instance.register_endpoint!(endpoint) }
-
-    it { is_expected.to be endpoint }
-
-    context 'when dynamic path given' do
-      let(:defined_request_path) { '/users/:user_id' }
-
-      it 'should use dynamic router for register the new endpoint' do
-        dynamic_router = Rack::App::Router::Dynamic.new
-        expect(Rack::App::Router::Dynamic).to receive(:new).and_return(dynamic_router)
-        expect(dynamic_router).to receive(:register_endpoint!)
-
-        is_expected.to be nil
-      end
-
-    end
-
-    context 'when static path given' do
-      let(:defined_request_path) { '/users/user_id' }
-
-      it 'should use dynamic router for register the new endpoint' do
-        static_router = Rack::App::Router::Static.new
-        expect(Rack::App::Router::Static).to receive(:new).and_return(static_router)
-        expect(static_router).to receive(:register_endpoint!)
-
-        is_expected.to be nil
-      end
-
-    end
-
+  let(:router) { rack_app.router }
+  rack_app Rack::App do
   end
 
   describe 'merge_router!' do
 
-    let(:router) { described_class.new }
+
     subject { router.merge_router!(other_router) }
 
     context 'when not static router given' do
@@ -68,14 +21,14 @@ describe Rack::App::Router do
   end
 
   describe '#show_endpoints' do
-    subject { instance.show_endpoints }
-
-    require 'rack/app/test'
-    include Rack::App::Test
-    rack_app
+    subject { router.show_endpoints }
 
     context 'when endpoint is defined' do
-      before { instance.register_endpoint!(endpoint) }
+      rack_app do
+        desc 'desc'
+        get '/users/:user_id' do
+        end
+      end
 
       it { is_expected.to eq ["GET   /users/:user_id   desc"] }
     end

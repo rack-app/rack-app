@@ -3,33 +3,37 @@ require "rack/request"
 require "rack/response"
 class Rack::App::Middlewares::Configuration
 
-  require "rack/app/middlewares/configuration/handler_setter"
-  require "rack/app/middlewares/configuration/serializer_setter"
-  require "rack/app/middlewares/configuration/payload_parser_setter"
-
   require "rack/app/middlewares/configuration/path_params_matcher"
 
   def initialize(app, config)
-    @stack = build_stack(app) do |builder|
-      builder.use Rack::App::Middlewares::Configuration::SerializerSetter,
-                  config.serializer
-
-      builder.use Rack::App::Middlewares::Configuration::HandlerSetter,
-                  config.app_class
-
-    end
+    @app = app || raise 
+    @serializer = config.serializer || raise
+    @handler_class = config.app_class || raise
+    @payload_parser = config.payload_builder.to_parser || raise
   end
 
   def call(env)
-    @stack.call(env)
+    env[Rack::App::Constants::ENV::REQUEST_HANDLER]= handler(env)
+    env[::Rack::App::Constants::ENV::SERIALIZER]= @serializer
+    env[::Rack::App::Constants::ENV::PAYLOAD_PARSER]= @payload_parser
+    env[::Rack::App::Constants::ENV::PAYLOAD_GETTER]= lambda do
+       env[::Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= env[::Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(env)
+     end
+    @app.call(env)
   end
 
   protected
 
-  def build_stack(app)
-    builder = Rack::Builder.new
-    yield(builder)
-    builder.run(app)
-    return builder.to_app
+  def handler(env)
+    new_handler = @handler_class.new
+    new_handler.request = ::Rack::Request.new(env)
+    new_handler.response = ::Rack::Response.new
+    new_handler
   end
+
+  def extname(env)
+    path_info = env[::Rack::App::Constants::ENV::PATH_INFO]
+    File.extname(path_info.split("/").last.to_s)
+  end
+
 end
