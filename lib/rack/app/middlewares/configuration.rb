@@ -6,7 +6,7 @@ class Rack::App::Middlewares::Configuration
   require "rack/app/middlewares/configuration/path_params_matcher"
 
   def initialize(app, config)
-    @app = app || raise 
+    @app = app || raise
     @serializer = config.serializer || raise
     @handler_class = config.app_class || raise
     @payload_parser = config.payload_builder.to_parser || raise

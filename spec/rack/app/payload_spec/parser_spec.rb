@@ -8,7 +8,7 @@ describe "Rack::App#payload" do
   rack_app do
 
     payload do
-      parser do
+      configure_parser do
         accept :www_form_urlencoded
 
         on "custom/x-yaml" do |io|
@@ -33,6 +33,37 @@ describe "Rack::App#payload" do
     end
 
     it { expect(Marshal.load(get('/', request_options).body)).to eq payload_struct }
+  end
+
+  context 'when unknown content types are rejected with reject_unsupported_media_types flag' do
+    rack_app do
+
+      payload do
+        parser_builder do
+          accept :www_form_urlencoded
+          reject_unsupported_media_types
+
+          on "custom/x-yaml" do |io|
+            YAML.load(io.read)
+          end
+        end
+      end
+
+      get "/" do
+        payload #> this will cause to reject the request while being parsed
+      end
+
+    end
+
+    it 'should reject the request and reply the accepted formats' do
+       response = get('/', {:env => {Rack::App::Constants::HTTP::Headers::CONTENT_TYPE => 'unknown'}})
+
+       expect(response.status).to eq 415
+       expect(response.body).to include "Unsupported Media Type"
+       expect(response.body).to include "Accepted content-types:"
+       expect(response.body).to include "application/x-www-form-urlencoded"
+       expect(response.body).to include "custom/x-yaml"
+    end
   end
 
   unless IS_OLD_RUBY

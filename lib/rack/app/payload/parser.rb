@@ -3,6 +3,8 @@ require 'rack/request'
 class Rack::App::Payload::Parser
   require 'rack/app/payload/parser/builder'
 
+  DEFAULT_PARSER = proc { |io| io.read }
+
   def initialize(content_type__parsers = {})
     raise unless content_type__parsers.is_a?(Hash)
     @content_type__parsers = content_type__parsers
@@ -24,7 +26,7 @@ class Rack::App::Payload::Parser
   protected
 
   def parser_for(content_type)
-    @content_type__parsers[content_type] || Rack::App::Payload::Parser::Builder::DEFAULT_PARSER
+    @content_type__parsers[content_type] || DEFAULT_PARSER
   end
 
 end

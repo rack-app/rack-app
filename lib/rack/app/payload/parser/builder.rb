@@ -2,14 +2,12 @@ class Rack::App::Payload::Parser::Builder
 
   require "rack/app/payload/parser/builder/formats"
 
-  DEFAULT_PARSER = proc { |io| io.read }
-
   def initialize
-    @content_type__parsers = Hash.new(DEFAULT_PARSER)
+    @content_type__parsers = Hash.new(Rack::App::Payload::Parser::DEFAULT_PARSER)
   end
 
   def to_parser
-    Rack::App::Payload::Parser.new(@content_type__parsers)
+    Rack::App::Payload::Parser.new(@content_type__parsers.dup)
   end
 
   def on(content_type, &parser)
@@ -21,16 +19,20 @@ class Rack::App::Payload::Parser::Builder
     Rack::App::Payload::Parser::Builder::Formats.accept(self, *formats)
   end
 
-  # def reject_unsupported_media_types
-  #   reject = proc do
-  #     rr = Rack::Response.new
-  #     rr.status = 415
-  #     rr.write("Unsupported Media Type")
-  #     throw(:rack_response, rr)
-  #   end
-  #   @content_type__parsers = Hash.new(reject).merge(@content_type__parsers)
-  #   nil
-  # end
+  def reject_unsupported_media_types
+    reject = proc do |io|
+      rr = Rack::Response.new
+      rr.status = 415
+      rr.write("Unsupported Media Type")
+      rr.write("Accepted content-types:")
+      @content_type__parsers.each do |content_type, _|
+        rr.write(content_type.to_s)
+      end
+      throw(:rack_response, rr)
+    end
+    @content_type__parsers = Hash.new(reject).merge(@content_type__parsers)
+    nil
+  end
 
   def merge!(parser_builder)
     raise unless parser_builder.is_a?(self.class)
