@@ -66,6 +66,39 @@ describe "Rack::App#payload" do
     end
   end
 
+  context 'when unknown content type received and parser defined to handle this case' do
+    rack_app do
+
+      payload do
+        parser do
+          accept :www_form_urlencoded
+
+          on_unsupported_media_types do |io|
+            io.gets.chomp
+          end
+        end
+      end
+
+      get "/" do
+        payload #> this will cause to reject the request while being parsed
+      end
+
+    end
+
+    it 'should use the custom parser that is defined with :on_unsupported_media_types' do
+      response = get(
+        '/',
+        {
+          :env => {Rack::App::Constants::HTTP::Headers::CONTENT_TYPE => 'unknown'},
+          :payload => "hello\nworld!"
+        }
+      )
+
+       expect(response.status).to eq 200
+       expect(response.body).to eq 'hello'
+    end
+  end
+
   unless IS_OLD_RUBY
     context 'when payload is a json' do
 
