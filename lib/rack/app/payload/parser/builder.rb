@@ -19,7 +19,7 @@ class Rack::App::Payload::Parser::Builder
     Rack::App::Payload::Parser::Builder::Formats.accept(self, *formats)
   end
 
-  def on_unsupported_media_types(&parser)
+  def on_unknown_media_types(&parser)
     @content_type__parsers = Hash.new(parser).merge(@content_type__parsers)
   end
 

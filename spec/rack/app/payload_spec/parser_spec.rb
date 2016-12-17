@@ -73,7 +73,7 @@ describe "Rack::App#payload" do
         parser do
           accept :www_form_urlencoded
 
-          on_unsupported_media_types do |io|
+          on_unknown_media_types do |io|
             io.gets.chomp
           end
         end
@@ -85,7 +85,7 @@ describe "Rack::App#payload" do
 
     end
 
-    it 'should use the custom parser that is defined with :on_unsupported_media_types' do
+    it 'should use the custom parser that is defined with :on_unknown_media_types' do
       response = get(
         '/',
         {
