@@ -12,3 +12,7 @@ Contributors
 * **[Jeremy Evans](https://github.com/jeremyevans)**
 
   * suggestion for application stand up speed optimization
+
+* **[David Bush](https://github.com/disavowd)**
+
+  * [write an article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
