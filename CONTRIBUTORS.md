@@ -15,4 +15,4 @@ Contributors
 
 * **[David Bush](https://github.com/disavowd)**
 
-  * [write an article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
+  * [wrote an article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
