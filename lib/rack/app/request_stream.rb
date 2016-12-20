@@ -1,4 +1,3 @@
-require "fiber"
 require "enumerator"
 class Rack::App::RequestStream
   include Enumerable
