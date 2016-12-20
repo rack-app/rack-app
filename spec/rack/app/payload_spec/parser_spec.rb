@@ -1,4 +1,3 @@
-require "csv"
 require "spec_helper"
 describe "Rack::App#payload" do
   include Rack::App::Test

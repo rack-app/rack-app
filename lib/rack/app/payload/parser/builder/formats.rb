@@ -1,13 +1,13 @@
 module Rack::App::Payload::Parser::Builder::Formats
   extend(self)
 
-  JSON_CONTENT_TYPE = [
-    "application/json",
-    "application/x-javascript",
-    "text/javascript",
-    "text/x-javascript",
-    "text/x-json",
-  ]
+  JSON_CONTENT_TYPES = [
+    'application/json',
+    'application/x-javascript',
+    'text/javascript',
+    'text/x-javascript',
+    'text/x-json'
+  ].freeze
 
   JSON_PARSER = proc do |io|
     begin
@@ -21,9 +21,25 @@ module Rack::App::Payload::Parser::Builder::Formats
   end
 
   def json(builder)
-    require "json"
-    JSON_CONTENT_TYPE.each do |content_type|
+    require 'json'
+    JSON_CONTENT_TYPES.each do |content_type|
       builder.on(content_type, &JSON_PARSER)
+    end
+  end
+
+  JSON_STREAM_CONTENT_TYPES = [
+    'application/jsonstream',
+    'application/stream+json',
+    'application/x-json-stream'
+  ].freeze
+
+  JSON_STREAM_PARSER = proc do |io|
+    Rack::App::RequestStream.new(io, JSON_PARSER)
+  end
+
+  def json_stream(builder)
+    JSON_STREAM_CONTENT_TYPES.each do |content_type|
+      builder.on(content_type, &JSON_STREAM_PARSER)
     end
   end
 
@@ -53,13 +69,13 @@ module Rack::App::Payload::Parser::Builder::Formats
   FORM_SEP_CHAR = '&'.freeze
 
   RACK_QUERY_PARSER = if Rack::Utils.respond_to?(:default_query_parser)
-    lambda do |form|
-      ::Rack::Utils.default_query_parser.parse_nested_query(form, FORM_SEP_CHAR)
-    end
-  else
-    lambda do |form|
-      ::Rack::Utils.parse_nested_query(form, FORM_SEP_CHAR)
-    end
+                        lambda do |form|
+                          ::Rack::Utils.default_query_parser.parse_nested_query(form, FORM_SEP_CHAR)
+                        end
+                      else
+                        lambda do |form|
+                          ::Rack::Utils.parse_nested_query(form, FORM_SEP_CHAR)
+                        end
   end
 
   NULL_END_CHAR = /#{"\u0000"}$/
@@ -89,5 +105,4 @@ module Rack::App::Payload::Parser::Builder::Formats
   rescue NoMethodError
     raise(NotImplementedError, "unknown formatter: #{last_name}")
   end
-
 end
