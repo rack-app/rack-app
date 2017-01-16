@@ -118,23 +118,19 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
   def get_app(env)
     find_by_path_infos(env) do |path_info|
-      c = fetch_context(get_request_method(env), path_info)
-
-      if c.is_a?(Hash)
-        c[:app]
-      else
-        nil
-      end
+      fetch_context(get_request_method(env), path_info)
     end
   end
 
   def fetch_context(request_method, path_info)
-
-    last_mounted_directory = nil
-    last_mounted_app = nil
     current_cluster = main_cluster(request_method)
-    
-    path_info.split('/').each do |path_part|
+
+    last_mounted_app = nil
+    last_mounted_directory = nil
+
+    path_parts = path_info.split('/')
+    path_parts << '' if path_parts.empty?
+    path_parts.each do |path_part|
 
       last_mounted_directory = current_cluster[MOUNTED_DIRECTORY] || last_mounted_directory
       last_mounted_app = current_cluster[MOUNTED_APPLICATION] || last_mounted_app
@@ -145,6 +141,8 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
       last_mounted_app = (current_cluster || {})[MOUNTED_APPLICATION] || last_mounted_app
 
       if current_cluster.nil?
+
+
         if last_mounted_directory
           current_cluster = last_mounted_directory
           break
@@ -161,8 +159,12 @@ class Rack::App::Router::Dynamic < Rack::App::Router::Base
 
     end
 
-    return current_cluster
+    return extract_app(current_cluster) || extract_app(last_mounted_app) || extract_app(last_mounted_directory)
 
+  end
+
+  def extract_app(hash)
+    hash.is_a?(Hash) ? hash[:app] : nil
   end
 
 end

@@ -12,16 +12,17 @@ module Rack::App::Test
 
   attr_reader :last_response
 
+  def __send_rack_app_request__(request_method, *args)
+    properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)
+    url = args.select { |e| e.is_a?(String) }.first || properties.delete(:url)
+    mock_request = Rack::MockRequest.new(rack_app)
+    request_env = Rack::App::Test::Utils.env_by(properties)
+    return @last_response = mock_request.request(request_method.to_s.upcase, url, request_env)
+  end
+
   Rack::App::Constants::HTTP::METHODS.each do |request_method_type|
-    request_method = request_method_type.to_s.downcase
-    define_method(request_method) do |*args|
-
-      properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)
-      url = args.select { |e| e.is_a?(String) }.first || properties.delete(:url)
-      mock_request = Rack::MockRequest.new(rack_app)
-      request_env = Rack::App::Test::Utils.env_by(properties)
-      return @last_response = mock_request.request(request_method, url, request_env)
-
+    define_method(request_method_type.to_s.downcase) do |*args|
+      self.__send_rack_app_request__(request_method_type, *args)
     end
   end
 
@@ -34,7 +35,7 @@ module Rack::App::Test
       else
         raise('missing class definition')
       end
-    end.call 
+    end.call
     block.is_a?(Proc) ? @rack_app.instance_exec(&block) : @rack_app
   end
 

@@ -148,6 +148,15 @@ class SimpleSetterMiddleware
 
 end
 
+module RackMountTestApp
+  extend(self)
+  def call(env)
+    path_info = env[::Rack::App::Constants::ENV::PATH_INFO]
+    method_type = env['REQUEST_METHOD']
+    Rack::Response.new(method_type + ':' + path_info).finish
+  end
+end
+
 class RackBasedApplication
 
   def self.call(env)
