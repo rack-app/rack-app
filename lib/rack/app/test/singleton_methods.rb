@@ -12,9 +12,11 @@ module Rack::App::Test::SingletonMethods
   end
 
   def in_this_context(name, &block)
-    let(name, &block)
-  rescue NoMethodError
-    define_method(name, &block)
+    if respond_to?(:let)
+      let(name, &block)
+    else 
+      define_method(name, &block)
+    end 
   end
 
 end

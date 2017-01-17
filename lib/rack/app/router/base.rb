@@ -50,8 +50,8 @@ class Rack::App::Router::Base
     end
   end
 
-  def find_by_path_infos(env, &block)
-    block.call(raw_path_info(env)) || block.call(formatted_path_info(env))
+  def find_by_path_infos(env)
+    yield(raw_path_info(env)) || yield(formatted_path_info(env))
   end
 
   def get_request_method(env)

@@ -4,10 +4,10 @@ module Rack::App::InstanceMethods::Payload
     request.env[Rack::App::Constants::ENV::PAYLOAD_GETTER].call
   end
 
-  def payload_stream(&block)
+  def payload_stream
     return nil unless @request.body.respond_to?(:gets)
     while chunk = @request.body.gets
-      block.call(chunk)
+      yield(chunk)
     end
     @request.body.rewind
     nil

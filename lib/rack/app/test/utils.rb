@@ -13,7 +13,7 @@ module Rack::App::Test::Utils
   def env_by(properties)
 
     properties = format_properties(properties)
-    env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.gsub('-', '_').upcase}" => v.to_s) }
+    env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.tr('-', '_').upcase}" => v.to_s) }
     payload = properties.delete(:payload)
     env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
     env[::Rack::QUERY_STRING]= Rack::App::Utils.encode_www_form(properties[:params].to_a)

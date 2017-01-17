@@ -100,9 +100,10 @@ module Rack::App::Payload::Parser::Builder::Formats
     last_name = nil
     form_names.map(&:to_sym).each do |form_name|
       last_name = form_name
+      unless respond_to?(form_name)
+        raise(NotImplementedError, "unknown formatter: #{last_name}")
+      end 
       __send__ form_name, builder
     end
-  rescue NoMethodError
-    raise(NotImplementedError, "unknown formatter: #{last_name}")
   end
 end

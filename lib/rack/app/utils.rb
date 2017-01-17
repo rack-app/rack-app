@@ -56,7 +56,7 @@ module Rack::App::Utils
 
   def join(*url_path_parts)
     url_path_parts = [url_path_parts].flatten.compact.map(&:to_s)
-    File.join(*url_path_parts).gsub(File::Separator, '/').sub(/^\/?(.*)$/, '/\1')
+    File.join(*url_path_parts).tr(File::Separator, '/').sub(/^\/?(.*)$/, '/\1')
   end
 
   def expand_path(file_path)

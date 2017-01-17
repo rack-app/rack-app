@@ -10,7 +10,7 @@ module Rack::App::InstanceMethods::RedirectTo
     end
 
     response.status = 301
-    response.headers.merge!({'Location' => url})
+    response.headers['Location']= url
 
     finish!
 
