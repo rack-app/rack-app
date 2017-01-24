@@ -103,6 +103,17 @@ require 'rack/app'
 
 # Dir.glob(File.join(File.dirname(__FILE__), 'support', '**', '*.rb')).each { |file_path| require(file_path) }
 
+class BlockMiddlewareTester
+  def initialize(app, k, &block)
+    @app, @k, @block = app, k, block
+  end
+
+  def call(env)
+    env[@k] = @block.call
+    @app.call(env)
+  end
+end
+
 class SampleMiddleware
   def initialize(app, k, v)
     @stack = app

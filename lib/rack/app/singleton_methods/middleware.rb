@@ -11,8 +11,8 @@ module Rack::App::SingletonMethods::Middleware
 
   alias middleware middlewares
 
-  def use(*args)
-    middlewares{ |b| b.use(*args) }
+  def use(*args, &block)
+    middlewares{ |b| b.use(*args, &block) }
   end
 
   protected
