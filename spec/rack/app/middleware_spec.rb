@@ -6,15 +6,24 @@ describe Rack::App do
 
   describe '.use' do
     rack_app do
+
       use BlockMiddlewareTester, 'test' do
         'testing'
       end
 
-      get '/' do
+      use SampleMiddleware, "hello", "world"
+
+      get '/BlockMiddlewareTester' do
         request.env['test']
+      end
+
+      get '/SampleMiddleware' do
+        request.env['hello']
       end
     end
 
-    it { expect(get('/').body).to eq 'testing' }
+    it { expect(get('/BlockMiddlewareTester').body).to eq 'testing' }
+    it { expect(get('/SampleMiddleware').body).to eq 'world' }
+
   end
 end
