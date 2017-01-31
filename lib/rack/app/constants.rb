@@ -54,9 +54,6 @@ module Rack::App::Constants
     PATH_PARAMS = 'rack-app.path_params'.freeze
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     FORMATTED_PATH_INFO = 'rack-app.formatted_path_info'.freeze
-
-    #REMOVE!
-    PATH_PARAMS_MATCHER = 'rack-app.path_params_matcher'.freeze
     METHODOVERRIDE_ORIGINAL_METHOD = 'rack-app.methodoverride.original_method'.freeze
 
   end

@@ -57,8 +57,6 @@ describe Rack::App do
       context 'when dynamic path given with restful param' do
         before { request[:url]= '/users/123' }
 
-        before { request[:env]= {'rack.app.path_params_matcher' => {2 => 'user_id'}} }
-
         it { is_expected.to eq({"user_id" => '123'}) }
       end
 

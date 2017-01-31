@@ -3,8 +3,6 @@ require "rack/request"
 require "rack/response"
 class Rack::App::Middlewares::Configuration
 
-  require "rack/app/middlewares/configuration/path_params_matcher"
-
   def initialize(app, config)
     @app = app || raise
     @serializer = config.serializer || raise
