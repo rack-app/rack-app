@@ -54,7 +54,10 @@ module Rack::App::SingletonMethods::Mounting
 
     endpoint = Rack::App::Endpoint.new(
       route_registration_properties.merge(
-        :request_method => 'GET',
+        :request_methods => [
+          Rack::App::Constants::HTTP::METHOD::GET,
+          Rack::App::Constants::HTTP::METHOD::OPTIONS
+        ],
         :request_path => request_path,
         :application => file_server
       )
@@ -66,34 +69,17 @@ module Rack::App::SingletonMethods::Mounting
   end
 
   def mount_rack_interface_compatible_application(rack_based_app, options={})
-    router.register_endpoint!(
-      Rack::App::Endpoint.new(
-        route_registration_properties.merge(
-          :request_method => ::Rack::App::Constants::HTTP::METHOD::ANY,
+    properties = route_registration_properties.merge(
+          :request_methods => ::Rack::App::Constants::HTTP::METHOD::ANY,
           :request_path => Rack::App::Utils.join(
             @namespaces,
             options[:to],
             ::Rack::App::Constants::RACK_BASED_APPLICATION
           ),
           :application => rack_based_app
-        )
-      )
     )
+
+    router.register_endpoint!(Rack::App::Endpoint.new(properties))
   end
-
-  alias mount_rack_based_application mount_rack_interface_compatible_application
-  Rack::App::Utils.deprecate(self,:mount_rack_based_application, "mount or mount_rack_interface_compatible_application", 2016,9)
-  alias mount_app mount_rack_interface_compatible_application
-  Rack::App::Utils.deprecate(self,:mount_app, "mount or mount_rack_interface_compatible_application", 2016,9)
-
-  protected
-
-  def on_mounted(&block)
-    @on_mounted ||= []
-    @on_mounted << block unless block.nil?
-    @on_mounted
-  end
-
-  alias while_being_mounted on_mounted
 
 end

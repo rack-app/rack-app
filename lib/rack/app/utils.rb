@@ -22,6 +22,10 @@ module Rack::App::Utils
     path
   end
 
+  def split_path_info(path_info)
+    path_info.to_s.split('/').tap { |a| a.empty? && a.push('') }
+  end
+
   def snake_case(camel_cased_word)
     word = camel_cased_word.to_s.gsub('::', '/')
     word.gsub!(/([A-Z\d]+)([A-Z][a-z])/, '\1_\2')

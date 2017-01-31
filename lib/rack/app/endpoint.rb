@@ -2,7 +2,7 @@ class Rack::App::Endpoint
 
   require "forwardable"
   extend Forwardable
-  def_delegators :@config, :request_method, :request_path, :description
+  def_delegators :@config, :request_methods, :request_path, :description
 
   require "rack/app/endpoint/config"
   require "rack/app/endpoint/builder"
@@ -24,10 +24,6 @@ class Rack::App::Endpoint
 
   def call(env)
     to_app.call(env)
-  end
-
-  def supported_extnames
-    @config.serializer.extnames
   end
 
   def to_app

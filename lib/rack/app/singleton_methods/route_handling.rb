@@ -28,7 +28,7 @@ module Rack::App::SingletonMethods::RouteHandling
         :payload => payload,
         :error_handler => error,
         :user_defined_logic => block,
-        :request_method => request_method,
+        :request_methods => [request_method],
         :route => route_registration_properties.dup,
         :middleware_builders_blocks => next_endpoint_middlewares.dup,
         :request_path => ::Rack::App::Utils.join(@namespaces, request_path)

@@ -1,11 +1,12 @@
+# frozen_string_literal: true
 class Rack::App::Endpoint::Config
-
   def to_hash
     error_handler
     middleware_builders_blocks
     request_path
-    request_method
-    return @raw
+    request_methods
+    defined_request_path
+    @raw
   end
 
   def payload_builder
@@ -48,16 +49,29 @@ class Rack::App::Endpoint::Config
     @raw[:method_name] ||= register_method_to_app_class
   end
 
-  def request_method
-    (@raw[:request_method] || raise('missing request_method!')).to_s.upcase
+  def request_methods
+    case @raw[:request_methods] || raise('missing config: request_methods')
+    when Rack::App::Constants::HTTP::METHOD::ANY
+      Rack::App::Constants::HTTP::METHODS
+    when ::Array
+      @raw[:request_methods].map(&:to_sym)
+    else
+      [@raw[:request_methods]].flatten.map(&:to_sym)
+    end
   end
 
   def request_path
     Rack::App::Utils.normalize_path(@raw[:request_path] || raise('missing request_path!'))
   end
 
+  def defined_request_path
+    Rack::App::Utils.normalize_path(@raw[:defined_request_path] ||= request_path)
+  end
+
   def description
-    @raw[:route][:description] || @raw[:route][:desc] rescue nil
+    @raw[:route][:description] || @raw[:route][:desc]
+  rescue
+    nil
   end
 
   protected
@@ -69,11 +83,10 @@ class Rack::App::Endpoint::Config
   def register_method_to_app_class
     method_name = '__' + ::Rack::App::Utils.uuid
     app_class.__send__(:define_method, method_name, &logic_block)
-    return method_name
+    method_name
   end
 
   def logic_block
     @raw[:user_defined_logic]
   end
-
 end

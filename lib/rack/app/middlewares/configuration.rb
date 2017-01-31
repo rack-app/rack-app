@@ -13,12 +13,12 @@ class Rack::App::Middlewares::Configuration
   end
 
   def call(env)
-    env[Rack::App::Constants::ENV::REQUEST_HANDLER]= handler(env)
+    env[::Rack::App::Constants::ENV::REQUEST_HANDLER]= handler(env)
     env[::Rack::App::Constants::ENV::SERIALIZER]= @serializer
     env[::Rack::App::Constants::ENV::PAYLOAD_PARSER]= @payload_parser
     env[::Rack::App::Constants::ENV::PAYLOAD_GETTER]= lambda do
-       env[::Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= env[::Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(env)
-     end
+      env[::Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= env[::Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(env)
+    end
     @app.call(env)
   end
 

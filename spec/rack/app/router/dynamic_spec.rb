@@ -1,5 +1,5 @@
 require 'spec_helper'
-describe Rack::App::Router::Dynamic do
+describe Rack::App::Router do
 
   include Rack::App::Test
 

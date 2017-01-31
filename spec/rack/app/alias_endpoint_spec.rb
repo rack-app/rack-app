@@ -45,7 +45,7 @@ describe Rack::App do
         expect(get(:url => '/').body).to eq 'WORLD'
       end
 
-      it 'should define GET endpoint that point to the given request path\'s endpoint' do
+      it 'should define any request method endpoint that point to the given request path\'s endpoint' do
         expect(options(:url => '/').status).to eq 777
       end
 

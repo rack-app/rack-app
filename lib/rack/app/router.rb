@@ -1,42 +1,35 @@
 class Rack::App::Router
 
-  require 'rack/app/router/base'
-  require 'rack/app/router/static'
-  require 'rack/app/router/dynamic'
-  require 'rack/app/router/not_found'
+  require 'rack/app/router/tree'
+
+  NOT_FOUND_APP = lambda do |env|
+    rack_response = Rack::Response.new
+    rack_response.status = 404
+    rack_response.write('404 Not Found')
+    rack_response.finish
+  end
 
   def call(env)
-    Rack::App::RequestConfigurator.configure(env)
-    @static.call(env) or @dynamic.call(env) or @not_found.call(env)
+    @tree.call(env) || NOT_FOUND_APP.call(env)
   end
 
   def endpoints
-    [@static, @dynamic, @not_found].map(&:endpoints).reduce([], :+)
-  end
-
-  def show_endpoints
-
-    endpoints = self.endpoints
-
-    wd0 = endpoints.map { |endpoint| endpoint.request_method.to_s.length }.max
-    wd1 = endpoints.map { |endpoint| endpoint.request_path.to_s.length }.max
-    wd2 = endpoints.map { |endpoint| endpoint.description.to_s.length }.max
-
-    return endpoints.sort_by { |endpoint| [endpoint.request_method, endpoint.request_path] }.map do |endpoint|
-      [
-          endpoint.request_method.to_s.ljust(wd0),
-          endpoint.request_path.to_s.ljust(wd1),
-          endpoint.description.to_s.ljust(wd2)
-      ].join('   ')
-    end
-
+    @endpoints ||= []
   end
 
   def register_endpoint!(endpoint)
-    router = router_for(endpoint.request_path)
-    router.register_endpoint!(endpoint)
+    endpoints.push(endpoint)
+    compile_endpoint!(endpoint)
+    return endpoint
   end
 
+  # add ! to method name
+  def reset
+    @tree = Rack::App::Router::Tree.new
+    compile_registered_endpoints!
+  end
+
+  # rename to merge!
   def merge_router!(router, prop={})
     raise(ArgumentError, 'invalid router object, must implement :endpoints interface') unless router.respond_to?(:endpoints)
     router.endpoints.each do |endpoint|
@@ -47,27 +40,40 @@ class Rack::App::Router
     nil
   end
 
-  def reset
-    [@static, @dynamic].each(&:reset)
+
+  def show_endpoints
+
+    endpoints = self.endpoints
+
+    wd0 = endpoints.map { |endpoint| endpoint.request_methods.first.to_s.length }.max
+    wd1 = endpoints.map { |endpoint| endpoint.request_path.to_s.length }.max
+    wd2 = endpoints.map { |endpoint| endpoint.description.to_s.length }.max
+
+    return endpoints.sort_by { |endpoint| [endpoint.request_methods.first, endpoint.request_path] }.map do |endpoint|
+      [
+        endpoint.request_methods.first.to_s.ljust(wd0),
+        endpoint.request_path.to_s.ljust(wd1),
+        endpoint.description.to_s.ljust(wd2)
+      ].join('   ')
+    end
+
   end
 
   protected
 
+
   def initialize
-    @static = Rack::App::Router::Static.new
-    @dynamic = Rack::App::Router::Dynamic.new
-    @not_found = Rack::App::Router::NotFound.new
+    reset
   end
 
-  def router_for(request_path)
-    defined_path_is_dynamic?(request_path) ? @dynamic : @static
+  def compile_registered_endpoints!
+    endpoints.each do |endpoint|
+      compile_endpoint!(endpoint)
+    end
   end
 
-  def defined_path_is_dynamic?(path_str)
-    path_str = Rack::App::Utils.normalize_path(path_str)
-    !!(path_str.to_s =~ /\/:\w+/i) or
-        !!(path_str.to_s =~ /\/\*/i) or
-        path_str.include?(Rack::App::Constants::RACK_BASED_APPLICATION)
+  def compile_endpoint!(endpoint)
+    @tree.add(endpoint)
   end
 
 end
