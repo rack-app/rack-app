@@ -70,8 +70,8 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * no Class method bloat, so you can enjoy pure ruby without any surprises
 * App mounting so you can crete separated controllers for different task
 * Streaming
-* Null time look up routing
-  * allows as many endpoint registration to you as you want, without impact on route look up speed
+* O(log(n)) lookup routing
+  * allows as many endpoint registration to you as you want, without impact on route lookup speed
 * only basic sets for instance method lvl for the must need tools, such as params, payload
 * simple to use class level response serializer
   * so you can choose what type of serialization you want without any enforced convention
