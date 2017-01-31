@@ -68,7 +68,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * syntax sugar for default header definitions
   * namespaces for endpoint request path declarations so it can be dry and unified
 * no Class method bloat, so you can enjoy pure ruby without any surprises
-* App mounting so you can crete separated controllers for different task  
+* App mounting so you can crete separated controllers for different task
 * Streaming
 * Null time look up routing
   * allows as many endpoint registration to you as you want, without impact on route look up speed
@@ -100,7 +100,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 
 * **[David Bush](https://github.com/disavowd)**
 
-  * [wrote an article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
+  * [wrote an awesome article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
 
 ## [Contributing](CONTRIBUTING.md)
 
@@ -133,7 +133,7 @@ require 'rack/app'
 
 class App < Rack::App
 
-  apply_extensions :front_end  
+  apply_extensions :front_end
 
   mount SomeAppClass
 
