@@ -1,34 +1,52 @@
 # frozen_string_literal: true
 class Rack::App::Router::Tree::Leaf < ::Hash
-  require 'rack/app/router/tree/leaf/vein'
 
-  def get(env)
-    vein = vein_by(env)
-    vein && vein.get(env)
-  end
+  require 'rack/app/router/tree/leaf/mounted'
 
-  def set(endpoint)
-    endpoint.request_methods.each do |request_method|
-      vein_for(request_method).set(endpoint)
+  E = Rack::App::Constants::ENV
+
+  def set(env)
+    case env.type
+    when :APPLICATION
+      self[env.type] = Rack::App::Router::Tree::Leaf::Mounted::Application.new(env.endpoint)
+    when :MOUNT_POINT
+      self[env.type] = Rack::App::Router::Tree::Leaf::Mounted.new(env.endpoint)
+    else
+      save_endpoint(env)
     end
   end
 
-  def struct
-    hash = {}
-    self.each do |request_method, vein|
-      hash[request_method] = vein.struct
-    end
-    hash
+  def call_endpoint(env, current_path)
+    app = self[current_path] || self[:ANY]
+    (app && app.call(env)) || call_mount(env)
+  end
+
+  def call_mount(env)
+    app = self[:MOUNT_POINT] || self[:APPLICATION]
+    app && app.call(env)
   end
 
   protected
 
-  def vein_by(env)
-    self[env[Rack::App::Constants::ENV::REQUEST_METHOD].to_sym]
+  def save_endpoint(env)
+    if env.save_key.is_a?(Symbol)
+      vein_for(env.save_key).set(env)
+    else
+      split_save_to_extnames(env)
+    end
   end
 
-  def vein_for(request_method)
-    self[request_method] ||= Rack::App::Router::Tree::Leaf::Vein.new
+  def split_save_to_extnames(env)
+    save_key = env.save_key
+    env.endpoint.config.serializer.extnames.each do |extname|
+      vein_for(save_key + extname).set(env)
+    end
+    vein_for(save_key).set(env)
   end
+
+  def vein_for(path_part)
+    self[path_part] ||= Rack::App::Router::Tree::Vein.new
+  end
+
 
 end

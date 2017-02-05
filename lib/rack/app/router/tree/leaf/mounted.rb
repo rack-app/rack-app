@@ -1,9 +1,9 @@
 # frozen_string_literal: true
-class Rack::App::Router::Tree::Mounted
+class Rack::App::Router::Tree::Leaf::Mounted
 
-  require 'rack/app/router/tree/mounted/application'
+  require 'rack/app/router/tree/leaf/mounted/application'
 
-  def get(env)
+  def call(env)
     @app.call(env)
   end
 

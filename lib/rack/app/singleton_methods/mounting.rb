@@ -31,18 +31,14 @@ module Rack::App::SingletonMethods::Mounting
     directory_full_path = ::Rack::App::Utils.expand_path(directory_path)
 
     namespace options[:to] do
-
       Dir.glob(File.join(directory_full_path, '**', '*')).each do |file_path|
-
         request_path = file_path.sub(/^#{Regexp.escape(directory_full_path)}/, '')
         get(request_path) { serve_file(file_path) }
         options(request_path) { '' }
-
       end
-
     end
-    nil
 
+    nil
   end
 
   alias create_endpoints_for_files_in mount_directory
@@ -50,7 +46,7 @@ module Rack::App::SingletonMethods::Mounting
 
   def serve_files_from(file_path, options={})
     file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
-    request_path = Rack::App::Utils.join(@namespaces, options[:to], '**', '*')
+    request_path = Rack::App::Utils.join(@namespaces, options[:to], Rack::App::Constants::PATH::MOUNT_POINT)
 
     endpoint = Rack::App::Endpoint.new(
       route_registration_properties.merge(
@@ -74,7 +70,7 @@ module Rack::App::SingletonMethods::Mounting
           :request_path => Rack::App::Utils.join(
             @namespaces,
             options[:to],
-            ::Rack::App::Constants::RACK_BASED_APPLICATION
+            Rack::App::Constants::PATH::APPLICATION
           ),
           :application => rack_based_app
     )

@@ -2,6 +2,8 @@ class Rack::App::Router
 
   require 'rack/app/router/tree'
 
+  attr_reader :tree
+
   NOT_FOUND_APP = lambda do |env|
     rack_response = Rack::Response.new
     rack_response.status = 404
@@ -60,7 +62,6 @@ class Rack::App::Router
   end
 
   protected
-
 
   def initialize
     reset

@@ -54,11 +54,14 @@ module Rack::App::Constants
     PATH_PARAMS = 'rack-app.path_params'.freeze
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     FORMATTED_PATH_INFO = 'rack-app.formatted_path_info'.freeze
+    SPLITTED_PATH_INFO = 'rack-app.splitted_path_info'.freeze
     METHODOVERRIDE_ORIGINAL_METHOD = 'rack-app.methodoverride.original_method'.freeze
 
   end
 
-  MOUNTED_DIRECTORY = '[Mounted Directory]'.freeze
-  RACK_BASED_APPLICATION = '[Mounted Rack Application]'.freeze
+  module PATH
+    MOUNT_POINT = "[MOUNT_POINT]".freeze
+    APPLICATION = "[Mounted Application]".freeze
+  end
 
 end

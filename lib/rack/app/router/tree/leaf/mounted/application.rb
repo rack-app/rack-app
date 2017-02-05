@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class Rack::App::Router::Tree::Mounted::Application < Rack::App::Router::Tree::Mounted
+class Rack::App::Router::Tree::Leaf::Mounted::Application < Rack::App::Router::Tree::Leaf::Mounted
   protected
 
   def initialize(endpoint)
@@ -14,7 +14,7 @@ class Rack::App::Router::Tree::Mounted::Application < Rack::App::Router::Tree::M
   end
 
   def mount_path(endpoint)
-    mount_path_parts = (endpoint.request_path.split('/') - [Rack::App::Constants::RACK_BASED_APPLICATION, ''])
+    mount_path_parts = (endpoint.request_path.split('/') - [Rack::App::Constants::PATH::APPLICATION, ''])
     mount_path_parts.empty? ? '' : Rack::App::Utils.join(mount_path_parts)
   end
 end
