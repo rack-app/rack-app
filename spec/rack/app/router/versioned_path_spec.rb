@@ -4,10 +4,15 @@ describe Rack::App do
   include Rack::App::Test
 
   paths = [
+    '/1.0.0',
     '/v1.0.0',
     '/api/v1.0.0',
+    '/api/version/1.0.0',
     '/api/v1.0.0/anything',
-    '/api/v1.0.0/anything/plus_more'
+    '/api/v1.0.0-alpha2/anything',
+    '/api/version/1.0.0/anything',
+    '/api/v1.0.0/anything/plus_more',
+    '/api/version/1.0.0/anything/plus_more'
   ].freeze
 
   paths.each do |path|
