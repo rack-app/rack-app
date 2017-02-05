@@ -5,7 +5,6 @@ describe Rack::App do
 
   paths = [
     '/v1.0.0',
-    # '/v1.0.0.yaml',
     '/api/v1.0.0',
     '/api/v1.0.0/anything',
     '/api/v1.0.0/anything/plus_more'
@@ -33,7 +32,7 @@ describe Rack::App do
         end
 
         context 'when path called with expected registered response serialization (yaml for example)' do
-          let(:path_info) { path =~ /\.yaml$/ ? path : path + '.yaml' }
+          let(:path_info) { path + '.yaml' }
           it "should work with #{path}" do
             expect(get(path_info).body).to eq YAML.dump(path)
           end
