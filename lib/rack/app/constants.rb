@@ -38,6 +38,7 @@ module Rack::App::Constants
     REQUEST_PATH = Rack::App::Constants.rack_constant(:REQUEST_PATH, "REQUEST_PATH")
     REQUEST_METHOD = Rack::App::Constants.rack_constant(:REQUEST_METHOD, "REQUEST_METHOD")
 
+    ROUTER = 'rack-app.router'.freeze
     EXTNAME = 'rack-app.extname'.freeze
     SERIALIZER = 'rack-app.serializer'.freeze
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze

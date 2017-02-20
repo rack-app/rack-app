@@ -12,6 +12,7 @@ class Rack::App::Router
   end
 
   def call(env)
+    env[Rack::App::Constants::ENV::ROUTER]= self
     @tree.call(env) || NOT_FOUND_APP.call(env)
   end
 
@@ -27,6 +28,7 @@ class Rack::App::Router
 
   # add ! to method name
   def reset
+    @lookup_paths = Hash.new #(Hash.new)
     @tree = Rack::App::Router::Tree.new
     compile_registered_endpoints!
   end
@@ -61,6 +63,10 @@ class Rack::App::Router
 
   end
 
+  def final_path_for(klass, defined_path)
+    (@lookup_paths[klass][defined_path] || raise("missing path reference: #{klass}/#{original_path}")).dup
+  end
+
   protected
 
   def initialize
@@ -75,6 +81,15 @@ class Rack::App::Router
 
   def compile_endpoint!(endpoint)
     @tree.add(endpoint)
+    add_to_lookup_paths(endpoint)
+  end
+
+  def add_to_lookup_paths(endpoint)
+    return unless endpoint.rack_app?
+    def_path = endpoint.config.defined_request_path
+    final_path = endpoint.request_path
+    dictionary = @lookup_paths[endpoint.config.app_class] ||= {}
+    dictionary[def_path]= final_path
   end
 
 end

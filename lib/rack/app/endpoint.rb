@@ -30,4 +30,10 @@ class Rack::App::Endpoint
     @config.application || self.class::Builder.new(@config).build
   end
 
+  def rack_app?
+    !!@config.app_class
+  rescue
+    false
+  end
+
 end

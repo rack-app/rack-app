@@ -200,3 +200,23 @@ require 'rack/app/test'
 require 'yaml'
 
 IS_OLD_RUBY = !(RUBY_VERSION[0..2] > '1.8')
+
+class ExampleRackApp < Rack::App
+
+  get '/' do
+    '/'
+  end
+
+  get '/s' do
+    '/s'
+  end
+
+  get '/d/:id' do
+    "/d/#{params['id']}"
+  end
+
+  get '/path_to_root' do
+    path_to '/'
+  end
+
+end
