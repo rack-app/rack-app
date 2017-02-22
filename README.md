@@ -68,7 +68,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * syntax sugar for default header definitions
   * namespaces for endpoint request path declarations so it can be dry and unified
 * no Class method bloat, so you can enjoy pure ruby without any surprises
-* App mounting so you can crete separated controllers for different task
+* App mounting so you can create separated controllers for different task
 * Streaming
 * O(log(n)) lookup routing
   * allows as many endpoint registration to you as you want, without impact on route lookup speed
@@ -76,7 +76,7 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * simple to use class level response serializer
   * so you can choose what type of serialization you want without any enforced convention
 * static file serving so you can mount even filesystem based endpoints too
-* built in testing module so your app can easily written with BDD approach
+* built in testing module so your app can be easily written with BDD approach
 * made with performance in mind so your app don't lose time by your framework
 * per endpoint middleware definitions
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
