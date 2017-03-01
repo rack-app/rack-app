@@ -72,7 +72,14 @@ describe Rack::App do
     context 'when path params not include all the passed parameter' do
       let(:path) { '/query' }
 
-      it { is_expected.to eq '/mount/d/456?test=hello&world=hy' }
+      it 'should pass as query string' do
+        valid_formats = [
+          '/mount/d/456?test=hello&world=hy',
+          '/mount/d/456?world=hy&test=hello'
+        ]
+
+        expect(valid_formats).to include subject
+      end
     end
 
     context 'when class not specified, the current application class is the default' do
