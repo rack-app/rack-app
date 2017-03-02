@@ -1,6 +1,6 @@
-require "rack/builder"
+# frozen_string_literal: true
+require 'rack/builder'
 class Rack::App::Endpoint::Builder
-
   def initialize(config)
     @config = config
   end
@@ -8,11 +8,20 @@ class Rack::App::Endpoint::Builder
   def build
     builder = Rack::Builder.new
     apply_middleware_build_blocks(builder)
-    builder.run(Rack::App::Endpoint::Executor.new(@config))
+    builder.run(app)
     builder.to_app
   end
 
   protected
+
+  def app
+    case @config.type
+    when :endpoint
+      Rack::App::Endpoint::Executor.new(@config)
+    else
+      @config.callable
+    end
+  end
 
   def apply_middleware_build_blocks(builder)
     builder_blocks.each do |builder_block|
@@ -32,7 +41,6 @@ class Rack::App::Endpoint::Builder
   end
 
   def builder_blocks
-    [@config.app_class.middlewares, @config.middleware_builders_blocks].flatten
+    [@config.app_class.middlewares, @config.endpoint_specific_middlewares].flatten
   end
-
 end

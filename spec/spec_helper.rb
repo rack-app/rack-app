@@ -187,6 +187,9 @@ class RackBasedApplication
     elsif request_path == '/hello/world/test/endpoint'
       ['200', {'Content-Type' => 'text/html'}, ['Hello, World!']]
 
+    elsif request_path == '/get_value/test'
+      ['200', {}, [env['test']]]
+
     else
       ['404', {}, ['404 Not Found!']]
 

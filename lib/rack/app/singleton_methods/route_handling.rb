@@ -20,17 +20,17 @@ module Rack::App::SingletonMethods::RouteHandling
 
   alias desc description
 
-  def add_route(request_method, request_path, &block)
+  def add_route(request_method, request_path, callable)
 
     router.register_endpoint!(
       Rack::App::Endpoint.new({
         :app_class => self,
+        :callable => callable,
         :payload => payload,
         :error_handler => error,
-        :user_defined_logic => block,
         :request_methods => [request_method],
         :route => route_registration_properties.dup,
-        :middleware_builders_blocks => next_endpoint_middlewares.dup,
+        :endpoint_specific_middlewares => next_endpoint_middlewares.dup,
         :request_path => ::Rack::App::Utils.join(@namespaces, request_path)
       })
     )
@@ -39,6 +39,9 @@ module Rack::App::SingletonMethods::RouteHandling
     route_registration_properties.clear
     return nil
 
+  end
+
+  def add_app_to_route(app, request_path)
   end
 
   def namespace(request_path_namespace)

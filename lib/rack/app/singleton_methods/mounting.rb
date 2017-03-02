@@ -41,41 +41,16 @@ module Rack::App::SingletonMethods::Mounting
     nil
   end
 
-  alias create_endpoints_for_files_in mount_directory
-  Rack::App::Utils.deprecate(self,:create_endpoints_for_files_in, :mount_directory, 2016,9)
-
   def serve_files_from(file_path, options={})
     file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
-    request_path = Rack::App::Utils.join(@namespaces, options[:to], Rack::App::Constants::PATH::MOUNT_POINT)
-
-    endpoint = Rack::App::Endpoint.new(
-      route_registration_properties.merge(
-        :request_methods => [
-          Rack::App::Constants::HTTP::METHOD::GET,
-          Rack::App::Constants::HTTP::METHOD::OPTIONS
-        ],
-        :request_path => request_path,
-        :application => file_server
-      )
-    )
-
-    router.register_endpoint!(endpoint)
-    route_registration_properties.clear
+    request_path = Rack::App::Utils.join(options[:to], Rack::App::Constants::PATH::MOUNT_POINT)
+    add_route(::Rack::App::Constants::HTTP::METHOD::ANY, request_path, file_server)
     nil
   end
 
   def mount_rack_interface_compatible_application(rack_based_app, options={})
-    properties = route_registration_properties.merge(
-          :request_methods => ::Rack::App::Constants::HTTP::METHOD::ANY,
-          :request_path => Rack::App::Utils.join(
-            @namespaces,
-            options[:to],
-            Rack::App::Constants::PATH::APPLICATION
-          ),
-          :application => rack_based_app
-    )
-
-    router.register_endpoint!(Rack::App::Endpoint.new(properties))
+    request_path = Rack::App::Utils.join(options[:to],Rack::App::Constants::PATH::APPLICATION)
+    add_route(::Rack::App::Constants::HTTP::METHOD::ANY, request_path, rack_based_app)
   end
 
 end

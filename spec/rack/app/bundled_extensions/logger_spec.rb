@@ -14,7 +14,7 @@ describe Rack::App do
           get do
             logger.__send__(log_level, 'hello')
 
-            return 'OK'
+            respond_with 'OK'
           end
 
         end
@@ -38,7 +38,7 @@ describe Rack::App do
         get do
           logger.unknown 'hello'
 
-          return 'OK'
+          respond_with 'OK'
         end
 
       end
@@ -61,7 +61,7 @@ describe Rack::App do
         get do
           logger.info 'some msg'
 
-          return 'OK'
+          respond_with 'OK'
         end
 
       end
@@ -83,7 +83,7 @@ describe Rack::App do
         get do
           logger.info :hello => 'world'
 
-          return 'OK'
+          respond_with 'OK'
         end
 
       end

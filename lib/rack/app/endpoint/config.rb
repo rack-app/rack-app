@@ -1,20 +1,30 @@
 # frozen_string_literal: true
 class Rack::App::Endpoint::Config
+
   def to_hash
     error_handler
-    middleware_builders_blocks
+    endpoint_specific_middlewares
     request_path
     request_methods
     defined_request_path
     @raw
   end
 
-  def payload_builder
-    @raw[:payload].parser_builder
+  def callable
+    @raw[:callable]
   end
 
-  def application
-    @raw[:application]
+  def type
+    case callable
+    when ::Rack::App::Block
+      :endpoint
+    else
+      :application
+    end
+  end
+
+  def payload_builder
+    @raw[:payload].parser_builder
   end
 
   def app_class
@@ -41,13 +51,10 @@ class Rack::App::Endpoint::Config
     @raw[:error_handler] ||= Rack::App::ErrorHandler.new
   end
 
-  def middleware_builders_blocks
-    @raw[:middleware_builders_blocks] ||= []
+  def endpoint_specific_middlewares
+    @raw[:endpoint_specific_middlewares] ||= []
   end
 
-  def endpoint_method_name
-    @raw[:method_name] ||= register_method_to_app_class
-  end
 
   def request_methods
     case @raw[:request_methods] || raise('missing config: request_methods')

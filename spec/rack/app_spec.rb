@@ -206,12 +206,12 @@ describe Rack::App do
 
   end
 
-  describe 'return works in the endpoint block definition' do
+  describe '#respond_with' do
 
     rack_app do
 
       get '/return' do
-        return 'hello world'
+        respond_with 'hello world'
 
         'not happen'
       end
@@ -235,7 +235,7 @@ describe Rack::App do
         end
 
         get '/return' do
-          return 'hello world'
+          respond_with 'hello world'
         end
 
         class SubController < Rack::App

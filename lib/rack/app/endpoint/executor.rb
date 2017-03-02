@@ -2,7 +2,6 @@ class Rack::App::Endpoint::Executor
 
   def initialize(endpoint_properties)
     @endpoint_properties = endpoint_properties
-    @endpoint_properties.endpoint_method_name
   end
 
   def call(env)
@@ -35,7 +34,7 @@ class Rack::App::Endpoint::Executor
 
   def evaluate_value(request_handler)
     @endpoint_properties.error_handler.execute_with_error_handling_for(request_handler) do
-      request_handler.__send__(@endpoint_properties.endpoint_method_name)
+      request_handler.instance_exec(&@endpoint_properties.callable)
     end
   end
 

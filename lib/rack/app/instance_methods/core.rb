@@ -25,4 +25,8 @@ module Rack::App::InstanceMethods::Core
   alias finish_response finish!
   Rack::App::Utils.deprecate(self, :finish_response, :finish!, 2016,9)
 
+  def respond_with(respond_body)
+    throw(:response_body, respond_body)
+  end
+
 end
