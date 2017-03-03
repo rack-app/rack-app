@@ -2,12 +2,14 @@ module Rack::App::InstanceMethods::Core
 
   attr_writer :request, :response
 
+  E = ::Rack::App::Constants::ENV
+
   def params
-    request.env[::Rack::App::Constants::ENV::PARSED_PARAMS] ||= Rack::App::Params.new(request.env).to_hash
+    (request.env[E::PARAMS] ||= Rack::App::Params.new(request.env)).to_hash
   end
 
   def validated_params
-    request.env[::Rack::App::Constants::ENV::VALIDATED_PARAMS]
+    request.env[E::VALIDATED_PARAMS]
   end
 
   def request

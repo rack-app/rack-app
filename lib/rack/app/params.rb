@@ -1,12 +1,14 @@
 require 'cgi'
 class Rack::App::Params
 
+  E = ::Rack::App::Constants::ENV
+
   def to_hash
-    if @env[::Rack::App::Constants::ENV::PARSED_PARAMS]
-      @env[::Rack::App::Constants::ENV::PARSED_PARAMS]
-    else
-      query_params.merge(request_path_params)
-    end
+    @env[E::MERGED_PARAMS] ||= query_params.merge(path_segments_params)
+  end
+
+  def path_segments_params
+    @env[E::PATH_SEGMENTS_PARAMS] || {}
   end
 
   protected
@@ -16,17 +18,18 @@ class Rack::App::Params
   end
 
   def query_params
+    @env[E::QUERY_PARAMS] ||= generate_query_params
+  end
+
+  def generate_query_params
     raw_cgi_params.reduce({}) do |params_collection, (k, v)|
-      stripped_key = k.sub(/\[\]$/, '')
-
-      if single_paramter_value?(v) && !k.end_with?("[]")
-        params_collection[stripped_key]= v[0]
-      else
-        params_collection[stripped_key]= v
-      end
-
+      params_collection[k.sub(/\[\]$/, '')] = formatted_value(k, v)
       params_collection
     end
+  end
+
+  def formatted_value(key, value)
+    single_paramter_value?(value) && !key.end_with?("[]") ? value[0] : value
   end
 
   def single_paramter_value?(v)
@@ -35,10 +38,6 @@ class Rack::App::Params
 
   def raw_cgi_params
     CGI.parse(@env[::Rack::QUERY_STRING].to_s)
-  end
-
-  def request_path_params
-    @env[::Rack::App::Constants::ENV::PATH_PARAMS]
   end
 
 end

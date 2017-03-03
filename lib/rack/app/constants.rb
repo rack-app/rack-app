@@ -45,14 +45,17 @@ module Rack::App::Constants
     REQUEST_HANDLER = 'rack-app.handler'.freeze
 
     PARAMS_GETTER = 'rack-app.params.getter'
-    PARSED_PARAMS = 'rack-app.params.parsed'.freeze
+    PARAMS = 'rack-app.params.object'.freeze
+    QUERY_PARAMS =  'rack-app.params.query'.freeze
+
+    MERGED_PARAMS = 'rack-app.params.merged'.freeze
     VALIDATED_PARAMS = 'rack-app.params.validated'.freeze
+    PATH_SEGMENTS_PARAMS = 'rack-app.params.path_segments'.freeze
 
     PAYLOAD_PARSER = 'rack-app.payload.parser'.freeze
     PAYLOAD_GETTER = 'rack-app.payload.getter'.freeze
     PARSED_PAYLOAD = 'rack-app.payload.parsed'.freeze
 
-    PATH_PARAMS = 'rack-app.path_params'.freeze
     ORIGINAL_PATH_INFO = 'rack-app.original_path_info'.freeze
     FORMATTED_PATH_INFO = 'rack-app.formatted_path_info'.freeze
     SPLITTED_PATH_INFO = 'rack-app.splitted_path_info'.freeze
