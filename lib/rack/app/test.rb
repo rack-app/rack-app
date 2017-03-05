@@ -16,7 +16,7 @@ module Rack::App::Test
     properties = args.select { |e| e.is_a?(Hash) }.reduce({}, &:merge!)
     url = args.detect { |e| e.is_a?(String) } || properties.delete(:url)
     mock_request = Rack::MockRequest.new(rack_app)
-    request_env = Rack::App::Test::Utils.env_by(properties)
+    request_env = Rack::App::Test::Utils.env_by(url, properties)
     return @last_response = mock_request.request(request_method.to_s.upcase, url, request_env)
   end
 

@@ -46,10 +46,10 @@ module Rack::App::Constants
 
     PARAMS_GETTER = 'rack-app.params.getter'
     PARAMS = 'rack-app.params.object'.freeze
-    QUERY_PARAMS =  'rack-app.params.query'.freeze
 
     MERGED_PARAMS = 'rack-app.params.merged'.freeze
     VALIDATED_PARAMS = 'rack-app.params.validated'.freeze
+    QUERY_STRING_PARAMS =  'rack-app.params.query_string'.freeze
     PATH_SEGMENTS_PARAMS = 'rack-app.params.path_segments'.freeze
 
     PAYLOAD_PARSER = 'rack-app.payload.parser'.freeze
