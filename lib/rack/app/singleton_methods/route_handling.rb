@@ -28,7 +28,7 @@ module Rack::App::SingletonMethods::RouteHandling
         :callable => callable,
         :payload => payload,
         :error_handler => error,
-        :request_methods => [request_method],
+        :request_method => request_method,
         :route => route_registration_properties.dup,
         :endpoint_specific_middlewares => next_endpoint_middlewares.dup,
         :request_path => ::Rack::App::Utils.join(@namespaces, request_path)
@@ -39,9 +39,6 @@ module Rack::App::SingletonMethods::RouteHandling
     route_registration_properties.clear
     return nil
 
-  end
-
-  def add_app_to_route(app, request_path)
   end
 
   def namespace(request_path_namespace)

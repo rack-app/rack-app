@@ -5,7 +5,7 @@ class Rack::App::Endpoint::Config
     error_handler
     endpoint_specific_middlewares
     request_path
-    request_methods
+    request_method
     defined_request_path
     @raw
   end
@@ -55,16 +55,8 @@ class Rack::App::Endpoint::Config
     @raw[:endpoint_specific_middlewares] ||= []
   end
 
-
-  def request_methods
-    case @raw[:request_methods] || raise('missing config: request_methods')
-    when Rack::App::Constants::HTTP::METHOD::ANY
-      Rack::App::Constants::HTTP::METHODS
-    when ::Array
-      @raw[:request_methods].map(&:to_sym)
-    else
-      [@raw[:request_methods]].flatten.map(&:to_sym)
-    end
+  def request_method
+    @raw[:request_method] || raise('missing config: request_methods')
   end
 
   def request_path

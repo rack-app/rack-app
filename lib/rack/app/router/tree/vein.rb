@@ -3,7 +3,7 @@ class Rack::App::Router::Tree::Vein < ::Hash
 
   def set(env)
     app = create_app(env)
-    env.endpoint.request_methods.each do |request_method|
+    request_methods(env).each do |request_method|
       self[request_method.to_s.upcase] = app
     end
   end
@@ -29,6 +29,16 @@ class Rack::App::Router::Tree::Vein < ::Hash
     builder.use(Rack::App::Middlewares::SetPathParams, params)
     builder.run(app)
     builder.to_app
+  end
+
+  def request_methods(env)
+    request_method = env.endpoint.request_method
+    case request_method || raise('missing config: request_methods')
+    when Rack::App::Constants::HTTP::METHOD::ANY
+      Rack::App::Constants::HTTP::METHODS
+    else
+      [request_method].flatten.map(&:to_sym)
+    end
   end
 
 end

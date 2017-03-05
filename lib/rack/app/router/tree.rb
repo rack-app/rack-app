@@ -28,6 +28,7 @@ class Rack::App::Router::Tree
 
   def configure_request(env)
     env[E::PATH_SEGMENTS_PARAMS] ||= {}
+    env[E::PARAMS] ||= Rack::App::Params.new(env)
     fpi = format_path_info(env).freeze
     env[E::FORMATTED_PATH_INFO] = fpi
     spi = split_path_info(fpi).freeze

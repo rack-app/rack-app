@@ -49,13 +49,13 @@ class Rack::App::Router
 
     endpoints = self.endpoints
 
-    wd0 = endpoints.map { |endpoint| endpoint.request_methods.first.to_s.length }.max
+    wd0 = endpoints.map { |endpoint| endpoint.request_method.to_s.length }.max
     wd1 = endpoints.map { |endpoint| endpoint.request_path.to_s.length }.max
     wd2 = endpoints.map { |endpoint| endpoint.description.to_s.length }.max
 
-    return endpoints.sort_by { |endpoint| [endpoint.request_methods.first, endpoint.request_path] }.map do |endpoint|
+    return endpoints.sort_by { |endpoint| [endpoint.request_method, endpoint.request_path] }.map do |endpoint|
       [
-        endpoint.request_methods.first.to_s.ljust(wd0),
+        endpoint.request_method.to_s.ljust(wd0),
         endpoint.request_path.to_s.ljust(wd1),
         endpoint.description.to_s.ljust(wd2)
       ].join('   ')
