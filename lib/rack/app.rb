@@ -5,11 +5,12 @@ require 'rack/response'
 class Rack::App
 
   require 'rack/app/version'
+
+  require 'rack/app/utils'
   require 'rack/app/constants'
 
   require 'rack/app/cli'
   require 'rack/app/test'
-  require 'rack/app/utils'
   require 'rack/app/block'
   require 'rack/app/logger'
   require 'rack/app/params'

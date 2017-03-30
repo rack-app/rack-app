@@ -11,7 +11,7 @@ class Rack::App::Endpoint::Executor
   protected
 
   def execute(env)
-    request_handler = env[Rack::App::Constants::ENV::REQUEST_HANDLER]
+    request_handler = env[Rack::App::Constants::ENV::HANDLER]
     set_response_body(request_handler, get_response_body(request_handler))
     return request_handler.response
   end

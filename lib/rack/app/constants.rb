@@ -39,10 +39,10 @@ module Rack::App::Constants
     REQUEST_METHOD = Rack::App::Constants.rack_constant(:REQUEST_METHOD, "REQUEST_METHOD")
 
     ROUTER = 'rack-app.router'.freeze
+    HANDLER = 'rack-app.handler'.freeze
     EXTNAME = 'rack-app.extname'.freeze
     SERIALIZER = 'rack-app.serializer'.freeze
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze
-    REQUEST_HANDLER = 'rack-app.handler'.freeze
 
     PARAMS_GETTER = 'rack-app.params.getter'
     PARAMS = 'rack-app.params.object'.freeze
