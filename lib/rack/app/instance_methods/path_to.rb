@@ -9,7 +9,7 @@ module Rack::App::InstanceMethods::PathTo
     end
 
     router = request.env[Rack::App::Constants::ENV::ROUTER]
-    final_path = router.final_path_for(app_class, defined_path)
+    final_path = router.path_to(app_class, defined_path)
 
     path_keys = final_path.scan(/:(\w+)/).flatten
 

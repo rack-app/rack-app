@@ -63,7 +63,7 @@ class Rack::App::Router
 
   end
 
-  def final_path_for(klass, defined_path)
+  def path_to(klass, defined_path)
     (@lookup_paths[klass][defined_path] || raise("missing path reference: #{klass}/#{original_path}")).dup
   end
 
