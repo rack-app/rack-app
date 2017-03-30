@@ -6,6 +6,10 @@ describe Rack::App do
   rack_app do
     mount ExampleRackApp, :to => '/mount'
 
+    get '/missing' do
+      path_to '/not_exists', :class => ExampleRackApp
+    end
+
     get '/' do
       path_to '/', :class => ExampleRackApp
     end
@@ -86,6 +90,12 @@ describe Rack::App do
       let(:path) { '/mount/path_to_root' }
 
       it { is_expected.to eq '/mount' }
+    end
+
+    context 'when not existing path requested' do
+      let(:path) { '/missing' }
+
+      it { expect{subject}.to raise_error "missing path reference" }
     end
   end
 end
