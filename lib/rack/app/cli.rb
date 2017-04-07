@@ -1,4 +1,3 @@
-require 'rack/app'
 require 'optparse'
 class Rack::App::CLI
 

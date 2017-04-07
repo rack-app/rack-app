@@ -1,6 +1,6 @@
 require "uri"
-require "rack/app"
 require "rack/mock"
+require 'rack/app' unless defined?(Rack::App)
 module Rack::App::Test
 
   require 'rack/app/test/utils'

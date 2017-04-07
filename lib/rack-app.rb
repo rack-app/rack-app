@@ -1,1 +1,1 @@
-require 'rack/app'
+require 'rack/app' unless defined?(Rack::App)
