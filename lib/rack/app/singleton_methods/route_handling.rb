@@ -31,7 +31,7 @@ module Rack::App::SingletonMethods::RouteHandling
         :request_method => request_method,
         :route => route_registration_properties.dup,
         :endpoint_specific_middlewares => next_endpoint_middlewares.dup,
-        :request_path => ::Rack::App::Utils.join(@namespaces, request_path)
+        :request_path => ::Rack::App::Utils.join(namespace, request_path)
       })
     )
 
@@ -41,13 +41,12 @@ module Rack::App::SingletonMethods::RouteHandling
 
   end
 
-  def namespace(request_path_namespace)
-    return unless block_given?
+  def namespace(*namespace_paths)
     @namespaces ||= []
-    @namespaces.push(request_path_namespace)
-    yield
-  ensure
+    @namespaces.push(namespace_paths)
+    yield if block_given?
     @namespaces.pop
+    ::Rack::App::Utils.join(@namespaces.flatten)
   end
 
 end

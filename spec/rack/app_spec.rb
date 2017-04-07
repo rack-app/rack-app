@@ -222,52 +222,6 @@ describe Rack::App do
 
   end
 
-  describe '.namespace' do
-
-    rack_app do
-
-      namespace '/users' do
-
-        namespace '123' do
-          get '/hello' do
-            'yep'
-          end
-        end
-
-        get '/return' do
-          respond_with 'hello world'
-        end
-
-        class SubController < Rack::App
-
-          get '/test' do
-            'hy'
-          end
-
-        end
-
-        mount SubController
-
-        mount SubController, :to => 'sub'
-
-        serve_files_from '/spec/fixtures', :to => 'static'
-
-      end
-
-    end
-
-    it { expect(get(:url => '/users/return').body).to eq 'hello world' }
-
-    it { expect(get(:url => '/users/123/hello').body).to eq 'yep' }
-
-    it { expect(get(:url => '/users/test').body).to eq 'hy' }
-
-    it { expect(get(:url => '/users/sub/test').body).to eq 'hy' }
-
-    it { expect(get(:url => '/users/static/raw.txt').body).to eq "hello world!\nhow you doing?" }
-
-  end
-
   describe '.serve_files_from' do
 
     rack_app do
