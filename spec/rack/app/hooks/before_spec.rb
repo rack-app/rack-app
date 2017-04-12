@@ -15,6 +15,6 @@ describe Rack::App do
 
     it { expect(get('/say').body).to eq 'Hello, World!' }
 
-    it { expect(get('/say', params: { 'break_in_before' => true }).body).to eq 'breaked' }
+    it { expect(get('/say', :params => { 'break_in_before' => true }).body).to eq 'breaked' }
   end
 end
