@@ -31,7 +31,7 @@ describe Rack::App do
        expect(rack_app.queue).to eq %w(in after)
     end
 
-    it { expect(get('/', params: {"break_in_after" => true}).body).to eq 'breaked' }
+    it { expect(get('/', :params => {"break_in_after" => true}).body).to eq 'breaked' }
   end
 
 end
