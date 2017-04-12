@@ -2,34 +2,22 @@ class Rack::App::Endpoint::Executor
 
   def initialize(endpoint_properties)
     @endpoint_properties = endpoint_properties
+    @catcher = Rack::App::Endpoint::Catcher.new(proc{ |env| execute(env) }, endpoint_properties)
   end
 
   def call(env)
-    return catch(:rack_response){ execute(env) }.finish
+    @catcher.call(env)
   end
 
   protected
 
   def execute(env)
-    request_handler = env[Rack::App::Constants::ENV::HANDLER]
-    set_response_body(request_handler, get_response_body(request_handler))
-    return request_handler.response
+    resp = evaluate_value(env[Rack::App::Constants::ENV::HANDLER])
+    throw type(resp), resp
   end
 
-  def get_response_body(request_handler)
-    catch :response_body do
-      evaluated_value = evaluate_value(request_handler)
-
-      evaluated_value
-    end
-  end
-
-  EXTNAME = ::Rack::App::Constants::ENV::EXTNAME
-
-  def set_response_body(handler, response_body)
-    extname = handler.request.env[EXTNAME]
-    handler.response.headers.merge!(@endpoint_properties.serializer.response_headers_for(extname))
-    handler.response.write(@endpoint_properties.serializer.serialize(extname, response_body))
+  def type(resp)
+    resp.is_a?(Rack::Response) ? :rack_response : :response_body
   end
 
   def evaluate_value(request_handler)

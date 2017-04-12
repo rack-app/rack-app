@@ -6,6 +6,7 @@ class Rack::App::Endpoint
 
   require "rack/app/endpoint/config"
   require "rack/app/endpoint/builder"
+  require "rack/app/endpoint/catcher"
   require "rack/app/endpoint/executor"
 
   attr_reader :config

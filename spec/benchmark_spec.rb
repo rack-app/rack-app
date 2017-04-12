@@ -13,11 +13,8 @@ describe '#Performance Benchmark' do
   let(:raw_rack_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackSkeleton).get(request_path) } } }
 
   let(:maximum_accepted_seconds) do
-    if RUBY_VERSION >= '1.9'
-      6
-    else
-      13
-    end
+    expected_maximum_time = 8
+    RUBY_VERSION >= '1.9' ? expected_maximum_time : expected_maximum_time * 2
   end
 
   describe 'speed difference measured from empty rack class' do
