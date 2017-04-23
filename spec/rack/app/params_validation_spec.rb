@@ -40,7 +40,7 @@ describe Rack::App do
 
     context 'when endpoint have params validation' do
       let(:request_path) { '/validated' }
-      before { params['dogs'] = ['Lobelia'] }
+      let(:params) { {"dogs" => ['Lobelia']} }
 
       context 'and the given Definition is wrongly use the :of expression' do
         it 'should raise error telling how wrong move that was' do
