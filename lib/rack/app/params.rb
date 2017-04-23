@@ -59,12 +59,8 @@ class Rack::App::Params
   def raw_rack_formatted_params
     cgi_params  = raw_cgi_params
     regexp      = /\[|%5B/
-    well_formed = cgi_params
-                    .select { |k,v| !k.match(regexp) }
-                    .reduce({}) { |o, (k, v)| o[k] = formatted_value(k,v); o }
-    reformated  = cgi_params
-                    .select { |k, value| k.match(regexp) }
-                    .map { |k, v| (v.to_s.match(regexp).nil? ? v : array_value_to_string(k, v)) }.join('&')
+    well_formed = cgi_params.select { |k,v| !k.match(regexp) }.reduce({}) { |o, (k, v)| o[k] = formatted_value(k,v); o }
+    reformated  = cgi_params.select { |k, value| k.match(regexp) }.map { |k, v| (v.to_s.match(regexp).nil? ? v : array_value_to_string(k, v)) }.join('&')
     parsed      = Rack::Utils.parse_nested_query reformated
 
     well_formed.merge(parsed)
