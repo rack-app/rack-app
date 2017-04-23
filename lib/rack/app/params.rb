@@ -49,13 +49,9 @@ class Rack::App::Params
     ::Rack::Utils.parse_nested_query(query_string).merge!(params_that_presented_multiple_times)
   end
 
-  ARRAY_FORM = /^\w+\[\]$/
-  HASH_FORM = /^\w+(\[\w+\])+$/
   def params_that_presented_multiple_times
     cgi_params = CGI.parse(query_string)
-    cgi_params.reject! { |_k, v| v.length == 1 }
-    cgi_params.reject! { |k, _v| k =~ ARRAY_FORM }
-    cgi_params.reject! { |k, _v| k =~ HASH_FORM }
+    cgi_params.reject! { |k, v| v.length == 1 && k !~ /^\w+$/ }
     cgi_params.reduce({}) do |result, (key, value)|
       result[key] = formatted_value(key, value)
       result
