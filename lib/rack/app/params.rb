@@ -27,8 +27,8 @@ class Rack::App::Params
   end
 
   def generate_query_params
-    raw_cgi_params.reduce({}) do |params_collection, (k, v)|
-      params_collection[k.sub(/\[\]$/, '')] = formatted_value(k, v)
+    raw_rack_formatted_params.reduce({}) do |params_collection, (k, v)|
+      params_collection[k.sub(/\[\]$/, '')] = v
       params_collection
     end
   end
@@ -37,12 +37,37 @@ class Rack::App::Params
     single_paramter_value?(value) && !key.end_with?("[]") ? value[0] : value
   end
 
+  #
+  # Converts an array value to a string
+  #
+  # @example:
+  # array_value_to_string('a[][b]', [2, 3])
+  # => "a[][b]=2&a[][b]=3"
+  #
+  def array_value_to_string(key, value)
+    value.to_a.map { |val| "#{key}=#{val}" }.join('&')
+  end
+
   def single_paramter_value?(v)
     v.is_a?(Array) and v.length === 1
   end
 
   def raw_cgi_params
-    CGI.parse(@env[::Rack::QUERY_STRING].to_s)
+    CGI.parse(@env[::Rack::QUERY_STRING])
+  end
+
+  def raw_rack_formatted_params
+    cgi_params  = raw_cgi_params
+    regexp      = /\[|%5B/
+    well_formed = cgi_params
+                    .select { |k,v| !k.match(regexp) }
+                    .reduce({}) { |o, (k, v)| o[k] = formatted_value(k,v); o }
+    reformated  = cgi_params
+                    .select { |k, value| k.match(regexp) }
+                    .map { |k, v| (v.to_s.match(regexp).nil? ? v : array_value_to_string(k, v)) }.join('&')
+    parsed      = Rack::Utils.parse_nested_query reformated
+
+    well_formed.merge(parsed)
   end
 
 end
