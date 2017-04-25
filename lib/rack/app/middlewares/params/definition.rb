@@ -1,6 +1,5 @@
 class Rack::App::Middlewares::Params::Definition
-
-  require "rack/app/middlewares/params/definition/options"
+  require 'rack/app/middlewares/params/definition/options'
 
   def initialize(&descriptor)
     @required = {}
@@ -8,15 +7,15 @@ class Rack::App::Middlewares::Params::Definition
     instance_exec(&descriptor)
   end
 
-  def required(params_key,options)
-    @required[params_key.to_s]= self.class::Options.new(options).formatted
+  def required(params_key, options)
+    @required[params_key.to_s] = self.class::Options.new(options).formatted
   end
 
-  def optional(params_key,options)
-    @optional[params_key.to_s]= self.class::Options.new(options).formatted
+  def optional(params_key, options)
+    @optional[params_key.to_s] = self.class::Options.new(options).formatted
   end
 
   def to_descriptor
-    {:required => @required, :optional => @optional}
+    { :required => @required, :optional => @optional }
   end
 end
