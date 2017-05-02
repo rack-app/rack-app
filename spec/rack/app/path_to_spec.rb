@@ -34,6 +34,10 @@ describe Rack::App do
       path_to '/d/:id', 'id' => 456, "test" => "hello", "world" => "hy", :class => ExampleRackApp
     end
 
+    get '/nested_query_hash' do
+      path_to '/d/:id', 'id' => 456, "test" => { "world" => "hy" }, :class => ExampleRackApp
+    end
+
   end
 
   describe '#path_to' do
@@ -84,6 +88,12 @@ describe Rack::App do
 
         expect(valid_formats).to include subject
       end
+    end
+
+    context 'when path params are a nested hash' do
+      let(:path) { '/nested_query_hash' }
+
+      it { is_expected.to eq '/mount/d/456?test[world]=hy'  }
     end
 
     context 'when class not specified, the current application class is the default' do
