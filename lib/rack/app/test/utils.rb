@@ -24,7 +24,7 @@ module Rack::App::Test::Utils
 
   def query_string_by(uri, params={})
      uri_based = URI.parse(uri).query.to_s
-     prop_based = Rack::App::Utils.encode_www_form(params.to_a)
+     prop_based = Rack::Utils.build_nested_query(params)
 
      parts = [uri_based, prop_based]
      parts.delete("")

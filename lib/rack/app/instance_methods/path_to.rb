@@ -19,7 +19,7 @@ module Rack::App::InstanceMethods::PathTo
     end
 
     unless query_string_hash.empty?
-      final_path.concat("?" + Rack::App::Utils.encode_www_form(query_string_hash))
+      final_path.concat("?" + Rack::Utils.build_nested_query(query_string_hash))
     end
 
     final_path

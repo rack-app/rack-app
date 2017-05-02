@@ -62,7 +62,7 @@ describe Rack::App do
         end
 
         context 'and contains more value' do
-          let(:params) { {'dogs[]' => ['Molly', 'Sunny']} }
+          let(:params) { {'dogs' => ['Molly', 'Sunny']} }
 
           it { expect(request.status).to eq 200 }
           it { expect(request.body).to eq 'OK' }
@@ -169,24 +169,20 @@ describe Rack::App do
         params['b'] = '2016-07-25T20:35:35+02:00'
         params['c0'] = [1.5]
         params['c1'] = [1.5, 2.3]
-        params['c2[]'] = [3.14]
-        params['c3[]'] = [3.14, 42.0]
+        params['c2'] = [3.14]
+        params['c3'] = [3.14, 42.0]
         params['d'] = true
         params['e'] = 123
         params['f'] = 456.789
       end
-
-      # before do
-      #  puts request.body
-      # end
 
       it { is_expected.to be_a Hash }
       it { expect(subject['a']).to eq 123.45 }
       it { expect(subject['b']).to eq DateTime.parse(params['b']) }
       it { expect(subject['c0']).to eq params['c0'] }
       it { expect(subject['c1']).to eq params['c1'] }
-      it { expect(subject['c2']).to eq params['c2[]'] }
-      it { expect(subject['c3']).to eq params['c3[]'] }
+      it { expect(subject['c2']).to eq params['c2'] }
+      it { expect(subject['c3']).to eq params['c3'] }
       it { expect(subject['d']).to eq params['d'] }
       it { expect(subject['e']).to eq params['e'] }
       it { expect(subject['f']).to eq params['f'] }
