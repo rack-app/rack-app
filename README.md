@@ -5,22 +5,33 @@
 [travis-home]: http://travis-ci.org/
 
 Your next favourite rack based micro framework that is totally addition free!
-Have a cup of awesomeness with your minimalist framework!
+Have a cup of awesomeness with your sadistically minimalist framework!
 
 The idea behind is simple.
 Keep the dependencies and everything as little as possible,
 while able to write pure rack apps,
 that will do nothing more than what you defined.
 
-If you want see fancy magic, you are in a bad place buddy!
-This also implies that the framework does not include extensions like ActiveSupport that monkey patch the whole world.
-
-Routing can handle any amount of endpoints that can fit in the memory,
+The Routing can handle any amount of endpoints that can fit in the memory,
 so if you that crazy to use more than 10k endpoint,
 you still dont have to worry about response speed.
 
 It was inspirited by sinatra, grape, and the pure use form of rack.
 It's in production, powering Back Ends on Heroku
+
+## Concerns
+
+If you want see fancy magic, you are in a bad place buddy!
+
+This also implies that the framework does not include extensions that monkey patch the whole world to give you nice features.
+The Clean architechture define that a webframework should only provide an external interface to the web, and nothing more.
+
+If you use rack-app, one thing is sure.
+
+You either love it or will be able to remove it from the project even after years of development because,
+it will not vendor-lock your application business entities and business use cases to this framework.
+
+And it's totaly fine to us. We don't want everyone to be tied to our solutions, we only want build clean and well designed softwared for the developer happiness.
 
 ## Installation
 
@@ -75,6 +86,8 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * so you can choose what type of serialization you want without any enforced convention
 * static file serving so you can mount even filesystem based endpoints too
 * built in testing module so your app can be easily written with BDD approach
+* made with minimalism in mind so your app can't rely on the framework when you implement business logic
+  * if you need something, you should implement it without any dependency on a webframework, rack-app only mean to be to provide you with easy to use interface to the web layer, nothing less and nothing more
 * per endpoint middleware definitions
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
 * File Upload and file download in a efficient and elegant way with minimal memory consuming
