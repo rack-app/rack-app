@@ -4,10 +4,8 @@
 [travis-link]: https://travis-ci.org/rack-app/rack-app
 [travis-home]: http://travis-ci.org/
 
-*Happy New Year!*
-
 Your next favourite rack based micro framework that is totally addition free!
-Have a cup of awesomeness with your performance designed framework!
+Have a cup of awesomeness with your minimalist framework!
 
 The idea behind is simple.
 Keep the dependencies and everything as little as possible,
@@ -77,7 +75,6 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * so you can choose what type of serialization you want without any enforced convention
 * static file serving so you can mount even filesystem based endpoints too
 * built in testing module so your app can be easily written with BDD approach
-* made with performance in mind so your app don't lose time by your framework
 * per endpoint middleware definitions
   * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
 * File Upload and file download in a efficient and elegant way with minimal memory consuming
