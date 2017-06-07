@@ -1,6 +1,6 @@
-# frozen_string_literal: true
 require 'spec_helper'
-describe Rack::App do
+
+RSpec.describe Rack::App do
   include Rack::App::Test
 
   paths = [
@@ -15,31 +15,36 @@ describe Rack::App do
     '/api/version/1.0.0/anything/plus_more'
   ].freeze
 
-  paths.each do |path|
-    context "when the path is #{path}" do
-      rack_app do
-
-        formats do
-          on '.yaml', 'application/x-yaml' do |obj|
-            YAML.dump(obj)
-          end
-        end
-
-        get path do
-          path
-        end
-
+  rack_app do
+    formats do
+      on '.yaml', 'application/x-yaml' do |obj|
+        YAML.dump(obj)
       end
+    end
 
-      describe 'versioned paths' do
+    paths.each do |path|
+      get path do
+        path
+      end
+    end
+  end
+
+  describe 'versioned path parts are in the path_info' do
+    subject(:the_response_body) { get(path_info).body }
+
+    paths.each do |path|
+      context "when the path is #{path}" do
+        let(:path_info) { path }
+
         it "should work with #{path}" do
-          expect(get(path).body).to eq path
+          is_expected.to eq path
         end
 
         context 'when path called with expected registered response serialization (yaml for example)' do
           let(:path_info) { path + '.yaml' }
+
           it "should work with #{path}" do
-            expect(get(path_info).body).to eq YAML.dump(path)
+            is_expected.to eq YAML.dump(path)
           end
         end
       end
