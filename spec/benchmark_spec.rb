@@ -2,20 +2,16 @@ require File.join(File.dirname(__FILE__), 'benchmark_spec', 'rack_app')
 require File.join(File.dirname(__FILE__), 'benchmark_spec', 'rack_skeleton')
 
 require 'spec_helper'
-require 'benchmark'
-require 'rack/app/test'
-require 'timeout'
 
 describe '#Performance Benchmark' do
+  require 'benchmark'
+  require 'timeout'
 
   let(:test_amount) { (ENV['BENCHMARK_QUANTITY'] || 100).to_i }
   let(:rack_app_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackApp).get(request_path) } } }
   let(:raw_rack_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackSkeleton).get(request_path) } } }
 
-  let(:maximum_accepted_seconds) do
-    expected_maximum_time = 10
-    RUBY_VERSION >= '1.9' ? expected_maximum_time : expected_maximum_time * 2
-  end
+  let(:maximum_accepted_seconds) { 10 }
 
   describe 'speed difference measured from empty rack class' do
     subject { rack_app_result.real / raw_rack_result.real }
@@ -36,7 +32,7 @@ describe '#Performance Benchmark' do
   end
 
   describe 'route tree generation time' do
-    let(:maximum_allowed_time){ RUBY_VERSION > '1.8' ? 15 : 60 }
+    let(:maximum_allowed_time) { 15 }
 
     include Rack::App::Test
     context 'when only static endpoints given' do
@@ -77,4 +73,4 @@ describe '#Performance Benchmark' do
 
   end
 
-end
+end if RUBY_VERSION > '1.8'
