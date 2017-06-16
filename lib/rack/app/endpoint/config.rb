@@ -27,8 +27,21 @@ class Rack::App::Endpoint::Config
     @raw[:payload].parser_builder
   end
 
+  def ancestor_apps
+    [@raw[:ancestors]].flatten.compact
+  end
+
   def app_class
-    @raw[:app_class] || raise('missing app class')
+    ancestor_apps.first || raise('missing app class')
+  end
+
+  def middlewares
+    mws = []
+    ancestor_apps.reverse_each do |ancestors_app|
+      mws.push(*ancestors_app.middlewares)
+    end
+    mws.push(*endpoint_specific_middlewares)
+    return mws
   end
 
   def serializer

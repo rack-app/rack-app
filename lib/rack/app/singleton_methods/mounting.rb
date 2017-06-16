@@ -20,7 +20,12 @@ module Rack::App::SingletonMethods::Mounting
     end
 
     cli.merge!(app.cli)
-    merge_prop = {:namespaces => [@namespaces, options[:to]].flatten}
+
+    merge_prop = {
+      :namespaces => [@namespaces, options[:to]].flatten,
+      :new_ancestor => self
+    }
+
     router.merge_router!(app.router, merge_prop)
 
     nil

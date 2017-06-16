@@ -38,7 +38,8 @@ class Rack::App::Router
     raise(ArgumentError, 'invalid router object, must implement :endpoints interface') unless router.respond_to?(:endpoints)
     router.endpoints.each do |endpoint|
       new_request_path = ::Rack::App::Utils.join(prop[:namespaces], endpoint.request_path)
-      new_endpoint = endpoint.fork(:request_path => new_request_path)
+      new_ancestors = endpoint.config.ancestor_apps + [prop[:new_ancestor]]
+      new_endpoint = endpoint.fork(:request_path => new_request_path, :ancestors => new_ancestors)
       register_endpoint!(new_endpoint)
     end
     nil

@@ -24,7 +24,7 @@ class Rack::App::Endpoint::Builder
   end
 
   def apply_middleware_build_blocks(builder)
-    builder_blocks.each do |builder_block|
+    @config.middlewares.each do |builder_block|
       builder_block.call(builder)
     end
     builder.use(Rack::App::Middlewares::Configuration, @config)
@@ -42,9 +42,5 @@ class Rack::App::Endpoint::Builder
     @config.app_class.after.each do |after_block|
       builder.use(Rack::App::Middlewares::Hooks::After, after_block)
     end
-  end
-
-  def builder_blocks
-    [@config.app_class.middlewares, @config.endpoint_specific_middlewares].flatten
   end
 end

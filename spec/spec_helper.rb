@@ -170,4 +170,8 @@ class ExampleRackApp < Rack::App
     path_to '/'
   end
 
+  get '/fetch/:env_value' do
+    request.env[params['env_value']]
+  end
+
 end
