@@ -73,4 +73,4 @@ describe '#Performance Benchmark' do
 
   end
 
-end if RUBY_VERSION > '1.8'
+end unless IS_OLD_RUBY
