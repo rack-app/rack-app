@@ -127,22 +127,21 @@ class RackBasedApplication
 
   def call(env)
 
-    request_path = env[::Rack::App::Constants::ENV::PATH_INFO]
-
-    if request_path == '/'
+    case env[::Rack::App::Constants::ENV::PATH_INFO]
+    when '/'
       ['200', {'Content-Type' => 'text/html'}, ['static endpoint']]
 
-    elsif request_path =~ /^\/users\/.*/
+    when /^\/users\/.*/
       ['200', {'Content-Type' => 'text/html'}, ['dynamic endpoint']]
 
-    elsif request_path == '/hello/world/test/endpoint'
+    when '/hello/world/test/endpoint'
       ['200', {'Content-Type' => 'text/html'}, ['Hello, World!']]
 
-    elsif request_path == '/get_value/test'
-      ['200', {}, [env['test']]]
+    when /\/get_value\/\w+/
+      ['200', {}, [env[env[::Rack::App::Constants::ENV::PATH_INFO].split("/")[-1]]]]
 
     else
-      ['404', {}, ['404 Not Found!']]
+      ['404', {}, ['404 Not Found: ' + env[::Rack::App::Constants::ENV::PATH_INFO].to_s]]
 
     end
 
