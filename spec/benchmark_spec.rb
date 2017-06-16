@@ -13,7 +13,7 @@ describe '#Performance Benchmark' do
   let(:raw_rack_result) { Benchmark.measure { test_amount.times { ::Rack::MockRequest.new(RackSkeleton).get(request_path) } } }
 
   let(:maximum_accepted_seconds) do
-    expected_maximum_time = 8
+    expected_maximum_time = 10
     RUBY_VERSION >= '1.9' ? expected_maximum_time : expected_maximum_time * 2
   end
 
