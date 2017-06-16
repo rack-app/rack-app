@@ -79,12 +79,6 @@ class Rack::App::Endpoint::Config
     @raw = raw
   end
 
-  def register_method_to_app_class
-    method_name = '__' + ::Rack::App::Utils.uuid
-    app_class.__send__(:define_method, method_name, &logic_block)
-    method_name
-  end
-
   def logic_block
     @raw[:user_defined_logic]
   end
