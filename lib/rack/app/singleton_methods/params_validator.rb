@@ -8,6 +8,4 @@ module Rack::App::SingletonMethods::ParamsValidator
       builder.use(Rack::App::Middlewares::Params::Parser, descriptor)
     end
   end
-  alias params validate_params
-  Rack::App::Utils.deprecate(self, :params, :validate_params, 2016, 10)
 end

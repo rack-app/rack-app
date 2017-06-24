@@ -23,12 +23,4 @@ module Rack::App::SingletonMethods::Middleware
     @next_endpoint_middlewares
   end
 
-  alias only_next_endpoint_middlewares next_endpoint_middlewares
-
-  Rack::App::Utils.deprecate(self,
-    :only_next_endpoint_middlewares,
-    :next_endpoint_middlewares,
-    2016,9
-  )
-
 end
