@@ -25,7 +25,7 @@ class Rack::App::Middlewares::Params::Validator
   end
 
   def validate(env)
-    params = Rack::App::Params.new(env).to_hash
+    params = Rack::App::Params.new(env).merged_params
     validation_results(env, params)
   end
 

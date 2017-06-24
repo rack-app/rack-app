@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module Rack::App::InstanceMethods::Params
 
   E = ::Rack::App::Constants::ENV
@@ -10,6 +9,8 @@ module Rack::App::InstanceMethods::Params
   def validated_params
     request.env[E::PARAMS].validated_params
   end
+
+  Rack::App::Utils.deprecate(self, :validated_params, :params, 2017, 07)
 
   def path_segments_params
     request.env[E::PARAMS].path_segments_params

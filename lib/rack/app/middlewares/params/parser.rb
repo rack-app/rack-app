@@ -15,7 +15,7 @@ class Rack::App::Middlewares::Params::Parser
   protected
 
   def set_params(env)
-    params = Rack::App::Params.new(env).to_hash
+    params = Rack::App::Params.new(env).merged_params
     validated_params = (env[::Rack::App::Constants::ENV::VALIDATED_PARAMS] ||= {})
     parse_params(validated_params, params)
   end

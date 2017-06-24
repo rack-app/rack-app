@@ -142,12 +142,12 @@ describe Rack::App do
         required 'id', :type => Integer
       end
       get '/validated_params/:id' do
-        Marshal.dump(validated_params)
+        Marshal.dump(params)
       end
 
       desc 'unvalidated endpoint for validated_params checking from env'
       get '/unvalidated_params' do
-        Marshal.dump(validated_params)
+        Marshal.dump(params)
       end
     end
 
@@ -157,7 +157,7 @@ describe Rack::App do
     context 'when endpoint called with no validate_params definition' do
       let(:request_path) { '/unvalidated_params' }
 
-      it { is_expected.to be nil }
+      it { is_expected.to eq params }
     end
 
     context 'when endpoint called with validate_params definition' do

@@ -5,6 +5,10 @@ class Rack::App::Params
   E = ::Rack::App::Constants::ENV
 
   def to_hash
+    validated_params || merged_params
+  end
+
+  def merged_params
     @env[E::MERGED_PARAMS] ||= query_string_params.merge(path_segments_params)
   end
 

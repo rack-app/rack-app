@@ -14,7 +14,7 @@ describe 'Params Validation additional tests' do
                      :desc => 'the subject of the conversation'
     end
     get '/validated' do
-      respond_with "Hello #{validated_params['to']}: #{validated_params['words'].join(' ')}"
+      respond_with "Hello #{params['to']}: #{params['words'].join(' ')}"
     end
 
     get '/unvalidated' do
