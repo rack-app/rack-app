@@ -174,3 +174,13 @@ class ExampleRackApp < Rack::App
   end
 
 end
+
+
+class OthExampleRackApp < Rack::App
+
+  get '/' do
+    '/'
+  end
+
+end
+
