@@ -1,7 +1,7 @@
 require 'spec_helper'
 RSpec.describe 'Rack::App.router' do
   rack_app do
-    mount OthExampleRackApp, to: '/oth'
+    mount OthExampleRackApp, :to => '/oth'
   end
 
   describe '#path_to' do
