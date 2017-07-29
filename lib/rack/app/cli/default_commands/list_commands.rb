@@ -1,33 +1,58 @@
 module Rack::App::CLI::DefaultCommands::ListCommands
-
   extend self
 
-  PRESERVED_KEYWORDS = ['commands', 'help', 'routes']
+  PRESERVED_KEYWORDS = %w[commands help routes irb].freeze
 
-  def get_message(known_commands)
-    puts_collection = []
+  DEFAULT_COMMANDS = {
+    'commands' => 'list all available command',
+    'routes' => Rack::App::CLI::DefaultCommands::ShowRoutes.description,
+    # 'irb' => Rack::App::CLI::DefaultCommands::IRB.description
+  }.freeze
 
-    add_header(puts_collection)
-
-    list_command_name = 'commands'
-    rjust = known_commands.keys.push(*PRESERVED_KEYWORDS).map(&:to_s).map(&:length).max + 3
-
-    puts_collection << [list_command_name.to_s.rjust(rjust), 'list all available command'].join('  ')
-    puts_collection << ['routes'.to_s.rjust(rjust), 'list all available endpoint'].join('  ')
-
-    known_commands.sort_by { |name, _| name.to_s }.each do |name, command|
-      puts_collection << [name.to_s.rjust(rjust), command.class.description].join('  ')
+  class Formatter
+    def initialize(known_commands)
+      @rjust = known_commands.keys.push(*PRESERVED_KEYWORDS).map(&:to_s).map(&:length).max + 3
     end
 
-    puts_collection.join("\n")
+    def command_suggestion_line_by(name, desc)
+      [name.to_s.rjust(@rjust), desc].join('  ')
+    end
+
+    def format(collection_hash)
+      collection_hash.to_a.sort_by{ |k, v| k.to_s }.map do |name, desc|
+        command_suggestion_line_by(name, desc)
+      end.join("\n")
+    end
+  end
+
+  def get_message(known_commands)
+    collection = {}
+    add_default_suggestions(collection)
+    add_user_defined_commands(known_commands, collection)
+
+    [
+      header,
+      Formatter.new(known_commands).format(collection)
+    ].join("\n")
   end
 
   protected
 
-  def add_header(puts_collection)
-    cmd_file_name = File.basename($0)
-    puts_collection << "Usage: #{cmd_file_name} <command> [options] <args>\n\n"
-    puts_collection << "Some useful #{cmd_file_name} commands are:"
+  def header
+    cmd_file_name = File.basename($PROGRAM_NAME)
+    [
+      "Usage: #{cmd_file_name} <command> [options] <args>\n\n",
+      "Some useful #{cmd_file_name} commands are:"
+    ].join("\n")
   end
 
+  def add_default_suggestions(collection)
+    collection.merge!(DEFAULT_COMMANDS)
+  end
+
+  def add_user_defined_commands(known_commands, collection)
+    known_commands.sort_by { |name, _| name.to_s }.each do |name, command|
+      collection[name] = command.class.description
+    end
+  end
 end
