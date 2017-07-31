@@ -1,5 +1,6 @@
 require 'spec_helper'
 src_folder = Dir.pwd
+argv_org = ARGV.dup
 describe Rack::App::CLI do
   let(:project_folder) { File.join(File.dirname(__FILE__), 'cli_spec') }
 
@@ -7,6 +8,10 @@ describe Rack::App::CLI do
 
   before { Rack::App::CLI::Fetcher.instance_variable_set(:@rack_app, nil) }
   after { Rack::App::CLI::Fetcher.instance_variable_set(:@rack_app, nil) }
+  after do
+    ::ARGV.clear
+    ::ARGV.push(*argv_org)
+  end
 
   describe '.start' do
     subject { described_class.start(argv) }
@@ -20,7 +25,7 @@ describe Rack::App::CLI do
             "Usage: rspec <command> [options] <args>\n\n",
             'Some useful rspec commands are:',
             '   commands  list all available command',
-            #'        irb  open an irb session with the application loaded in',
+            '        irb  open an irb session with the application loaded in',
             '     routes  list the routes for the application'
           ].join("\n")
         )
@@ -62,7 +67,7 @@ describe Rack::App::CLI do
               'Some useful rspec commands are:',
               '   commands  list all available command',
               '      hello  hello world cli',
-              #'        irb  open an irb session with the application loaded in',
+              '        irb  open an irb session with the application loaded in',
               '     routes  list the routes for the application',
               "       test  it's a sample test cli command"
 
@@ -83,7 +88,7 @@ describe Rack::App::CLI do
               'Some useful rspec commands are:',
               '   commands  list all available command',
               '      hello  hello world cli',
-              #'        irb  open an irb session with the application loaded in',
+              '        irb  open an irb session with the application loaded in',
               '     routes  list the routes for the application',
               "       test  it's a sample test cli command"
             ].join("\n")
@@ -91,6 +96,33 @@ describe Rack::App::CLI do
 
           subject
         end
+      end
+
+      context 'when irb requested' do
+        before { argv << 'irb' }
+
+        context 'and no other args given for the irb command' do
+          it 'should open an interactive shell' do
+            expect(::IRB).to receive(:start)
+
+            subject
+
+            expect(::ARGV).to eq []
+          end
+        end
+
+        context 'and args given for the irb consolse' do
+          before { argv << "-m" << "--noecho" }
+
+          it 'should open an interactive shell' do
+            expect(::IRB).to receive(:start)
+
+            subject
+
+            expect(::ARGV).to eq ["-m", "--noecho"]
+          end
+        end
+
       end
 
       context 'when help requested' do
@@ -103,7 +135,7 @@ describe Rack::App::CLI do
               'Some useful rspec commands are:',
               '   commands  list all available command',
               '      hello  hello world cli',
-              #'        irb  open an irb session with the application loaded in',
+              '        irb  open an irb session with the application loaded in',
               '     routes  list the routes for the application',
               "       test  it's a sample test cli command"
             ].join("\n")

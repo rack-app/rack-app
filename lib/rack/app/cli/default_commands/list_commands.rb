@@ -6,7 +6,7 @@ module Rack::App::CLI::DefaultCommands::ListCommands
   DEFAULT_COMMANDS = {
     'commands' => 'list all available command',
     'routes' => Rack::App::CLI::DefaultCommands::ShowRoutes.description,
-    # 'irb' => Rack::App::CLI::DefaultCommands::IRB.description
+    'irb' => Rack::App::CLI::DefaultCommands::IRB.description
   }.freeze
 
   class Formatter

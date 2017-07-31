@@ -36,6 +36,9 @@ class Rack::App::CLI::Runner
       when 'routes'
         Rack::App::CLI::DefaultCommands::ShowRoutes.new.start(argv)
 
+      when 'irb'
+        Rack::App::CLI::DefaultCommands::IRB.new.start(argv)
+
       else
         command = command_for(command_name)
         run_command(argv, command, command_name)
