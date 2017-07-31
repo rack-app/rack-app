@@ -1,3 +1,10 @@
 #!/usr/bin/env ruby
+
+begin
+  require 'bundler'
+  Bundler.require(:default, ENV['RACK_ENV'])
+rescue LoadError
+end
+
 require 'rack/app'
 Rack::App::CLI.start(ARGV)
