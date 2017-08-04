@@ -24,9 +24,9 @@ describe Rack::App::CLI do
           [
             "Usage: rspec <command> [options] <args>\n\n",
             'Some useful rspec commands are:',
-            '   commands  list all available command',
-            '        irb  open an irb session with the application loaded in',
-            '     routes  list the routes for the application'
+            '     help  list all available command or describe a specific command',
+            '      irb  open an irb session with the application loaded in',
+            '   routes  list the routes for the application'
           ].join("\n")
         )
 
@@ -65,12 +65,11 @@ describe Rack::App::CLI do
             [
               "Usage: rspec <command> [options] <args>\n\n",
               'Some useful rspec commands are:',
-              '   commands  list all available command',
-              '      hello  hello world cli',
-              '        irb  open an irb session with the application loaded in',
-              '     routes  list the routes for the application',
-              "       test  it's a sample test cli command"
-
+              '    hello  hello world cli',
+              '     help  list all available command or describe a specific command',
+              '      irb  open an irb session with the application loaded in',
+              '   routes  list the routes for the application',
+              "     test  it's a sample test cli command"
             ].join("\n")
           )
 
@@ -86,11 +85,11 @@ describe Rack::App::CLI do
             [
               "Usage: rspec <command> [options] <args>\n\n",
               'Some useful rspec commands are:',
-              '   commands  list all available command',
-              '      hello  hello world cli',
-              '        irb  open an irb session with the application loaded in',
-              '     routes  list the routes for the application',
-              "       test  it's a sample test cli command"
+              '    hello  hello world cli',
+              '     help  list all available command or describe a specific command',
+              '      irb  open an irb session with the application loaded in',
+              '   routes  list the routes for the application',
+              "     test  it's a sample test cli command"
             ].join("\n")
           )
 
@@ -112,17 +111,16 @@ describe Rack::App::CLI do
         end
 
         context 'and args given for the irb consolse' do
-          before { argv << "-m" << "--noecho" }
+          before { argv << '-m' << '--noecho' }
 
           it 'should open an interactive shell' do
             expect(::IRB).to receive(:start)
 
             subject
 
-            expect(::ARGV).to eq ["-m", "--noecho"]
+            expect(::ARGV).to eq ['-m', '--noecho']
           end
         end
-
       end
 
       context 'when help requested' do
@@ -133,11 +131,11 @@ describe Rack::App::CLI do
             [
               "Usage: rspec <command> [options] <args>\n\n",
               'Some useful rspec commands are:',
-              '   commands  list all available command',
-              '      hello  hello world cli',
-              '        irb  open an irb session with the application loaded in',
-              '     routes  list the routes for the application',
-              "       test  it's a sample test cli command"
+              '    hello  hello world cli',
+              '     help  list all available command or describe a specific command',
+              '      irb  open an irb session with the application loaded in',
+              '   routes  list the routes for the application',
+              "     test  it's a sample test cli command"
             ].join("\n")
           )
 

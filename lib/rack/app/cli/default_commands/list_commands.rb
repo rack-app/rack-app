@@ -1,11 +1,11 @@
 module Rack::App::CLI::DefaultCommands::ListCommands
   extend self
 
-  PRESERVED_KEYWORDS = %w[commands help routes irb].freeze
+  PRESERVED_KEYWORDS = %w[help routes irb].freeze
 
   DEFAULT_COMMANDS = {
-    'commands' => 'list all available command',
     'routes' => Rack::App::CLI::DefaultCommands::ShowRoutes.description,
+    'help' => 'list all available command or describe a specific command',
     'irb' => Rack::App::CLI::DefaultCommands::IRB.description
   }.freeze
 
