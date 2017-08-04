@@ -5,14 +5,18 @@ class Rack::App::Endpoint::Builder
     @config = config
   end
 
+  def to_app
+    build.to_app
+  end
+
+  protected
+
   def build
     builder = Rack::Builder.new
     apply_middleware_build_blocks(builder)
     builder.run(app)
-    builder.to_app
+    builder
   end
-
-  protected
 
   def app
     case @config.type

@@ -28,7 +28,7 @@ class Rack::App::Endpoint
   end
 
   def to_app
-    self.class::Builder.new(@config).build
+    self.class::Builder.new(@config).to_app
   end
 
   def rack_app?
