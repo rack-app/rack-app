@@ -14,13 +14,19 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app r
     allow(Rack::App::CLI).to receive(:rack_app).and_return(rack_app)
   end
 
-  define :puts_output do |expected_message|
+  define :output do |expectation|
     supports_block_expectations
 
     match do |example|
-      expect(STDOUT).to receive(:puts).with(expected_message)
+      messages = []
+      allow(STDOUT).to receive(:puts) do |*msgs|
+        messages.push(*msgs)
+        nil
+      end
+
       example.call
-      true
+
+      expect(messages.join("\n")).to expectation
     end
   end
 
@@ -29,12 +35,16 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app r
 
     context 'given that endpoints defined in the application' do
       rack_app do
+
         desc 'example description'
         get '/a/:b/c' do
         end
+
+        mount RackBasedApplication
       end
 
-      it { expect{ after_run }.to puts_output "GET   /a/:b/c   example description" }
+      it { expect{ after_run }.to output include "ANY   /[Mounted Application]" }
+      it { expect{ after_run }.to output include "GET   /a/:b/c                  example description" }
 
       context 'when verbose flag given' do
         let(:argv) { ["--verbose"] }
@@ -44,7 +54,10 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app r
             endpoint.properties[:callable].source_location.join(":")
         end
 
-        it { expect{ after_run }.to puts_output "GET   /a/:b/c   example description   #{expected_definition_path}" }
+        let(:mounted_app_expected_location) { RackBasedApplication.method(:call).source_location.join(':') }
+
+        it { expect{ after_run }.to output include "ANY   /[Mounted Application]                         #{mounted_app_expected_location}" }
+        it { expect{ after_run }.to output include "GET   /a/:b/c                  example description   #{expected_definition_path}" }
       end
     end
   end

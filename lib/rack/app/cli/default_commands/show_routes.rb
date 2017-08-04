@@ -11,7 +11,8 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
     :description => proc { |endpoint| endpoint.description },
     :definition_path => proc do |endpoint|
       callable = endpoint.properties[:callable]
-      (callable && callable.source_location.join(":") ) || ""
+      callable = callable.method(:call) unless callable.is_a?(::Proc)
+      callable.source_location.join(':')
     end
   }.freeze
 
