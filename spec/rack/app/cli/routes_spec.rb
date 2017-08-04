@@ -36,6 +36,10 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app r
     context 'given that endpoints defined in the application' do
       rack_app do
 
+        middlewares do
+          use SimpleSetterMiddleware, "hello", "world"
+        end
+
         desc 'example description'
         get '/a/:b/c' do
         end
@@ -43,22 +47,40 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app r
         mount RackBasedApplication
       end
 
-      it { expect{ after_run }.to output include "ANY   /[Mounted Application]" }
-      it { expect{ after_run }.to output include "GET   /a/:b/c                  example description" }
+      it { expect { after_run }.to output include 'ANY   /[Mounted Application]' }
+      it { expect { after_run }.to output include 'GET   /a/:b/c' }
+
+      let(:endpoint_def_location) do
+        endpoint = rack_app.router.endpoints.first
+        endpoint.properties[:callable].source_location.join(':')
+      end
+
+      let(:mounted_app_def_location) { RackBasedApplication.method(:call).source_location.join(':') }
 
       context 'when verbose flag given' do
-        let(:argv) { ["--verbose"] }
-
-        let(:expected_definition_path) do
-            endpoint = rack_app.router.endpoints.first
-            endpoint.properties[:callable].source_location.join(":")
-        end
-
-        let(:mounted_app_expected_location) { RackBasedApplication.method(:call).source_location.join(':') }
-
-        it { expect{ after_run }.to output include "ANY   /[Mounted Application]                         #{mounted_app_expected_location}" }
-        it { expect{ after_run }.to output include "GET   /a/:b/c                  example description   #{expected_definition_path}" }
+        let(:argv) { ['--verbose'] }
+        it { expect { after_run }.to output include "ANY   /[Mounted Application]                         #{mounted_app_def_location}" }
+        it { expect { after_run }.to output include "GET   /a/:b/c                  example description   #{endpoint_def_location}" }
       end
+
+      context 'when description flag given' do
+        let(:argv) { ['--description'] }
+        it { expect { after_run }.to output include "ANY   /[Mounted Application]" }
+        it { expect { after_run }.to output include "GET   /a/:b/c                  example description" }
+      end
+
+      context 'when source location flag given' do
+        let(:argv) { ['--source-location'] }
+        it { expect { after_run }.to output include "ANY   /[Mounted Application]   #{mounted_app_def_location}" }
+        it { expect { after_run }.to output include "GET   /a/:b/c                  #{endpoint_def_location}" }
+      end
+
+      context 'when middlewares flag given' do
+        let(:argv) { ['--middlewares'] }
+        it { expect { after_run }.to output include "ANY   /[Mounted Application]\n\t* SimpleSetterMiddleware" }
+        it { expect { after_run }.to output include "GET   /a/:b/c               \n\t* SimpleSetterMiddleware" }
+      end
+
     end
   end
 end

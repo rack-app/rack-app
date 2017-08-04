@@ -31,7 +31,8 @@ class Rack::App::CLI::Runner
         show_help_message(argv)
 
       when 'routes'
-        Rack::App::CLI::DefaultCommands::ShowRoutes.new.start(argv)
+        command = Rack::App::CLI::DefaultCommands::ShowRoutes.new
+        run_command(argv, command, "routes")
 
       when 'irb'
         Rack::App::CLI::DefaultCommands::IRB.new.start(argv)
