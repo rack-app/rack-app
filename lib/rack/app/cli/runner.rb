@@ -27,9 +27,6 @@ class Rack::App::CLI::Runner
   def start_command_for(command_name, argv)
     case command_name.to_s
 
-      when 'commands'
-        show_commands
-
       when 'help'
         show_help_message(argv)
 

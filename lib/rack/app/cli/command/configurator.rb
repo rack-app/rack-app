@@ -3,10 +3,8 @@ module Rack::App::CLI::Command::Configurator
   extend self
 
   def configure(command, name, options_parser)
-
-    attach_definitions(command, options_parser, command.class.option_definitions)
+    attach_definitions(command, options_parser, command.class.__option_definitions__)
     update_banner(command, name, options_parser.banner)
-
   end
 
   protected

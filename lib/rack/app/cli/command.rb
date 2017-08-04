@@ -5,7 +5,7 @@ class Rack::App::CLI::Command
 
   class << self
 
-    def option_definitions
+    def __option_definitions__
       @options_parser_options ||= []
     end
 
@@ -17,7 +17,7 @@ class Rack::App::CLI::Command
     alias desc description
 
     def option(*args, &block)
-      option_definitions << {:args => args, :block => block}
+      __option_definitions__ << {:args => args, :block => block}
     end
 
     alias on option
@@ -28,11 +28,8 @@ class Rack::App::CLI::Command
 
   end
 
-  def options
-    @options ||= {}
-  end
-
   def action(*argv)
+    raise NotImplementedError
   end
 
   def start(argv)

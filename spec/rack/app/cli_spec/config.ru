@@ -44,6 +44,10 @@ App.cli  do
       $stdout.puts [file_path, options[:append]].join(' ')
     end
 
+    def options
+      @options ||= {}
+    end
+
   end
 
 end
