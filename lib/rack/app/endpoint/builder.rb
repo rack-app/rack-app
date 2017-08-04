@@ -25,7 +25,7 @@ class Rack::App::Endpoint::Builder
 
   def apply_middleware_build_blocks(builder)
     @config.middlewares.each do |builder_block|
-      builder_block.call(builder)
+      builder.instance_exec(builder, &builder_block)
     end
     builder.use(Rack::App::Middlewares::Configuration, @config)
 

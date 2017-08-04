@@ -289,8 +289,8 @@ describe Rack::App do
           request.env['custom']
         end
 
-        middlewares do |builder|
-          builder.use(SampleMiddleware, 'custom', 'value')
+        middlewares do
+          use(SampleMiddleware, 'custom', 'value')
         end
 
       end
