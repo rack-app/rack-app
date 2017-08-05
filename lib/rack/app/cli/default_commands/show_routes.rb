@@ -49,8 +49,9 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
   end
 
   def width_by(endpoints, fields)
-    fields.each_with_object({}) do |property, widths|
+    fields.reduce({}) do |widths, property|
       widths[property] = endpoints.map { |endpoint| FIELD_FETCHERS[property].call(endpoint).to_s.length }.max
+      widths
     end
   end
 
