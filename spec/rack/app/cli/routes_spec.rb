@@ -1,5 +1,5 @@
 require 'spec_helper'
-RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, command: 'rack-app routes' do
+RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, :command => 'rack-app routes' do
   subject(:command) { described_class.new }
   let(:argv) { [] }
   let(:option_parser) { OptionParser.new }
