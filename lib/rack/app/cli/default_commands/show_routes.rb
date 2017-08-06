@@ -17,25 +17,11 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
     @middlewares = true
   end
 
-  FIELD_FETCHERS = {
-    :request_method =>  proc { |endpoint| endpoint.request_method },
-    :request_path =>  proc { |endpoint| endpoint.request_path },
-    :description => proc { |endpoint| endpoint.description },
-    :source_location => proc do |endpoint|
-      callable = endpoint.properties[:callable]
-      callable = callable.method(:call) unless callable.is_a?(::Proc)
-      callable.source_location.join(':')
-    end
-  }.freeze
-
-  SORT_FIELDS = [:request_method, :request_path].freeze
-
   action do
     STDOUT.puts(format(sort(Rack::App::CLI.rack_app.router.endpoints)))
   end
 
   private
-
 
   def get_fields
     if @verbose
@@ -50,14 +36,33 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
 
   def width_by(endpoints, fields)
     fields.reduce({}) do |widths, property|
-      widths[property] = endpoints.map { |endpoint| FIELD_FETCHERS[property].call(endpoint).to_s.length }.max
+      widths[property] = endpoints.map { |endpoint| fetch_field(endpoint, property).to_s.length }.max
       widths
     end
   end
 
+  SORT_FIELDS = [:request_method, :request_path].freeze
 
   def sort(endpoints)
-    endpoints.sort_by { |endpoint| SORT_FIELDS.map { |sf| FIELD_FETCHERS[sf].call(endpoint) } }
+    endpoints.sort_by { |endpoint| SORT_FIELDS.map { |sf| fetch_field(endpoint, sf) } }
+  end
+
+  FIELD_FETCHERS = {
+    :request_method =>  proc { |endpoint| endpoint.request_method },
+    :request_path =>  proc { |endpoint| endpoint.request_path },
+    :description => proc { |endpoint| endpoint.description },
+    :source_location => proc do |endpoint|
+      callable = endpoint.properties[:callable]
+      callable = callable.method(:call) unless callable.is_a?(::Proc)
+      path = callable.source_location.join(':')
+      relative_path_rgx = Regexp.new(sprintf('^%s', Regexp.escape(Rack::App::Utils.pwd('/'))))
+      path.sub!(relative_path_rgx, '')
+      path
+    end
+  }.freeze
+
+  def fetch_field(endpoint, field)
+    instance_exec(endpoint, &FIELD_FETCHERS[field])
   end
 
   def format(endpoints)
@@ -68,7 +73,7 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
       outputs = []
 
       outputs << fields.map do |field|
-        FIELD_FETCHERS[field].call(endpoint).to_s.ljust(widths[field])
+        fetch_field(endpoint, field).to_s.ljust(widths[field])
       end.join('   ')
 
       if @middlewares

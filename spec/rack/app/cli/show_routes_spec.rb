@@ -52,13 +52,18 @@ RSpec.describe Rack::App::CLI::DefaultCommands::ShowRoutes, :command => 'rack-ap
 
       let(:endpoint_def_location) do
         endpoint = rack_app.router.endpoints.first
-        endpoint.properties[:callable].source_location.join(':')
+        path = endpoint.properties[:callable].source_location.join(':')
+        path.sub(/#{PROJECT_ROOT_DIRECTORY}#{File::Separator}/, '')
       end
 
-      let(:mounted_app_def_location) { RackBasedApplication.method(:call).source_location.join(':') }
+      let(:mounted_app_def_location) do
+        path = RackBasedApplication.method(:call).source_location.join(':')
+        path.sub(/#{PROJECT_ROOT_DIRECTORY}#{File::Separator}/, '')
+      end
 
       context 'when verbose flag given' do
         let(:argv) { ['--verbose'] }
+
         it { expect { after_run }.to output include "ANY   /[Mounted Application]                         #{mounted_app_def_location}" }
         it { expect { after_run }.to output include "GET   /a/:b/c                  example description   #{endpoint_def_location}" }
       end

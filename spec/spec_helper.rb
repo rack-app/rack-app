@@ -184,3 +184,8 @@ class OthExampleRackApp < Rack::App
 
 end
 
+PROJECT_ROOT_DIRECTORY = File.dirname(File.dirname(__FILE__))
+
+def errpp(*args)
+  PP.pp(*args, STDERR)
+end
