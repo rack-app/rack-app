@@ -56,8 +56,7 @@ class Rack::App::CLI::DefaultCommands::ShowRoutes < Rack::App::CLI::Command
       callable = callable.method(:call) unless callable.is_a?(::Proc)
       path = callable.source_location.join(':')
       relative_path_rgx = Regexp.new(sprintf('^%s', Regexp.escape(Rack::App::Utils.pwd('/'))))
-      path.sub!(relative_path_rgx, '')
-      path
+      path.sub(relative_path_rgx, '')
     end
   }.freeze
 
