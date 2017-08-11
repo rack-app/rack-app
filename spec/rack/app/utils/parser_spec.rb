@@ -1,4 +1,5 @@
 require "spec_helper"
+require 'time'
 describe Rack::App::Utils::Parser do
 
   describe '.parse' do

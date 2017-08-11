@@ -126,7 +126,7 @@ describe Rack::App do
     end
   end
 
-  describe '#validated_params' do
+  describe '#params' do
     rack_app do
       desc 'validated endpoint for env setting testing'
       validate_params do
