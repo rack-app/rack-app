@@ -60,8 +60,11 @@ module Rack::App::Test
       raise("Can't find any path that fullfill the requirement")
     end
 
-    if matching_endpoints.length != app_class.router.endpoints.length
-      raise("endpoint count not matching")
+    return unless app_class.is_a?(Class) && app_class <= Rack::App
+    app_owned_endpoints = app_class.router.endpoints.select(&selector)
+
+    if matching_endpoints.length != app_owned_endpoints.length
+      raise('endpoint count not matching')
     end
   end
 end

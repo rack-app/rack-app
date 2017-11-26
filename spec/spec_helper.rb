@@ -2,7 +2,6 @@ require 'rspec'
 require 'yaml'
 require 'pp'
 
-
 rack_api_lib_folder = File.join(File.dirname(__FILE__), '..', 'lib')
 $LOAD_PATH.unshift(rack_api_lib_folder)
 
@@ -33,12 +32,9 @@ $LOAD_PATH.unshift(rack_api_lib_folder)
 
 # end
 
-
 require 'rack-app'
 
-
 RSpec.configure do |config|
-
   config.include Rack::App::Test
 
   config.expect_with :rspec do |expectations|
@@ -48,15 +44,15 @@ RSpec.configure do |config|
   config.mock_with :rspec do |mocks|
     mocks.verify_partial_doubles = true
   end
-
 end
-
 
 # Dir.glob(File.join(File.dirname(__FILE__), 'support', '**', '*.rb')).each { |file_path| require(file_path) }
 
 class BlockMiddlewareTester
   def initialize(app, k, &block)
-    @app, @k, @block = app, k, block
+    @app = app
+    @k = k
+    @block = block
   end
 
   def call(env)
@@ -68,21 +64,20 @@ end
 class SampleMiddleware
   def initialize(app, k, v)
     @stack = app
-    @k, @v = k, v
+    @k = k
+    @v = v
   end
 
   def call(env)
-    env[@k.dup]= @v.dup
+    env[@k.dup] = @v.dup
     @stack.call(env)
   end
 end
 
 module SampleMethods
-
   def hello_world
     'hello world'
   end
-
 end
 
 class SimpleExecMiddleware
@@ -98,16 +93,16 @@ class SimpleExecMiddleware
 end
 
 class SimpleSetterMiddleware
-
   def initialize(app, k, v)
-    @app, @k, @v = app, k, v
+    @app = app
+    @k = k
+    @v = v
   end
 
   def call(env)
     env[@k] = @v
     @app.call(env)
   end
-
 end
 
 module RackMountTestApp
@@ -120,39 +115,34 @@ module RackMountTestApp
 end
 
 class RackBasedApplication
-
   def self.call(env)
     new.call(env)
   end
 
   def call(env)
-
     case env[::Rack::App::Constants::ENV::PATH_INFO]
     when '/'
-      ['200', {'Content-Type' => 'text/html'}, ['static endpoint']]
+      ['200', { 'Content-Type' => 'text/html' }, ['static endpoint']]
 
     when /^\/users\/.*/
-      ['200', {'Content-Type' => 'text/html'}, ['dynamic endpoint']]
+      ['200', { 'Content-Type' => 'text/html' }, ['dynamic endpoint']]
 
     when '/hello/world/test/endpoint'
-      ['200', {'Content-Type' => 'text/html'}, ['Hello, World!']]
+      ['200', { 'Content-Type' => 'text/html' }, ['Hello, World!']]
 
     when /\/get_value\/\w+/
-      ['200', {}, [env[env[::Rack::App::Constants::ENV::PATH_INFO].split("/")[-1]]]]
+      ['200', {}, [env[env[::Rack::App::Constants::ENV::PATH_INFO].split('/')[-1]]]]
 
     else
       ['404', {}, ['404 Not Found: ' + env[::Rack::App::Constants::ENV::PATH_INFO].to_s]]
 
     end
-
   end
-
 end
 
-IS_OLD_RUBY = !(RUBY_VERSION[0..2] > '1.8')
+IS_OLD_RUBY = RUBY_VERSION[0..2] <= '1.8'
 
 class ExampleRackApp < Rack::App
-
   get '/' do
     '/'
   end
@@ -172,16 +162,18 @@ class ExampleRackApp < Rack::App
   get '/fetch/:env_value' do
     request.env[params['env_value']]
   end
-
 end
 
+class ExampleRackAppWithMounting < Rack::App
+  get('/ExampleRackAppWithMounting') { 'ExampleRackAppWithMounting' }
+
+  mount ExampleRackApp
+end
 
 class OthExampleRackApp < Rack::App
-
   get '/' do
     '/'
   end
-
 end
 
 PROJECT_ROOT_DIRECTORY = File.dirname(File.dirname(__FILE__))

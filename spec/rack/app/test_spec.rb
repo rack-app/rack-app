@@ -176,10 +176,18 @@ describe Rack::App::Test do
   describe '#mount' do
     rack_app do
       mount ExampleRackApp, to: '/api'
+      mount ExampleRackAppWithMounting, to: '/r'
+      mount RackBasedApplication, to: '/app'
     end
 
+    it { expect { mount RackBasedApplication, to: '/app' }.to_not raise_error }
+    it { expect { mount ExampleRackAppWithMounting, to: '/r' }.to_not raise_error }
     it { expect { mount ExampleRackApp, to: '/api' }.to_not raise_error }
     it { expect { mount ExampleRackApp, to: '/oth' }.to raise_error StandardError }
     it { expect { mount ExampleRackApp, to: '/api/s' }.to raise_error StandardError }
+
+    it('match the mounted app mounted applications path too') do
+      expect { mount ExampleRackApp, to: '/r' }.to_not raise_error
+    end
   end
 end
