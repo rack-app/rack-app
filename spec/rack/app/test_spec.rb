@@ -172,4 +172,14 @@ describe Rack::App::Test do
       it { expect(subject.body).to eq "hello\nworld" }
     end
   end
+
+  describe '#mount' do
+    rack_app do
+      mount ExampleRackApp, to: '/api'
+    end
+
+    it { expect { mount ExampleRackApp, to: '/api' }.to_not raise_error }
+    it { expect { mount ExampleRackApp, to: '/oth' }.to raise_error StandardError }
+    it { expect { mount ExampleRackApp, to: '/api/s' }.to raise_error StandardError }
+  end
 end

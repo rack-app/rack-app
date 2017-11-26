@@ -1,7 +1,6 @@
-require "uri"
-require "rack/mock"
+require 'uri'
+require 'rack/mock'
 module Rack::App::Test
-
   require 'rack/app/test/utils'
   require 'rack/app/test/singleton_methods'
 
@@ -16,12 +15,12 @@ module Rack::App::Test
     url = args.detect { |e| e.is_a?(String) } || properties.delete(:url)
     mock_request = Rack::MockRequest.new(rack_app)
     request_env = Rack::App::Test::Utils.env_by(url, properties)
-    return @last_response = mock_request.request(request_method.to_s.upcase, url, request_env)
+    @last_response = mock_request.request(request_method.to_s.upcase, url, request_env)
   end
 
   Rack::App::Constants::HTTP::METHODS.each do |request_method_type|
     define_method(request_method_type.to_s.downcase) do |*args|
-      self.__send_rack_app_request__(request_method_type, *args)
+      __send_rack_app_request__(request_method_type, *args)
     end
   end
 
@@ -38,4 +37,31 @@ module Rack::App::Test
     block.is_a?(Proc) ? @rack_app.instance_exec(&block) : @rack_app
   end
 
+  def mount(app_class, options)
+    path_prefix = options.fetch(:to)
+
+    selector = lambda do |e|
+      if e.config.type == :endpoint
+        e.config.app_class == app_class
+      else
+        e.config.callable == app_class
+      end
+    end
+
+    endpoints = rack_app.router.endpoints.select(&selector)
+
+    request_paths_that_has_prefix = lambda do |e|
+      e.request_path.start_with?(path_prefix)
+    end
+
+    matching_endpoints = endpoints.select(&request_paths_that_has_prefix)
+
+    if matching_endpoints.empty?
+      raise("Can't find any path that fullfill the requirement")
+    end
+
+    if matching_endpoints.length != app_class.router.endpoints.length
+      raise("endpoint count not matching")
+    end
+  end
 end
