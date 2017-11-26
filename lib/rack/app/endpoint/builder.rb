@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'rack/builder'
 class Rack::App::Endpoint::Builder
   def initialize(config)
@@ -33,17 +34,28 @@ class Rack::App::Endpoint::Builder
     end
     builder.use(Rack::App::Middlewares::Configuration, @config)
 
-    apply_hook_middlewares(builder)
+    apply_catcher_on_need(builder)
+    @config.ancestor_apps.reverse_each do |app_class|
+      apply_hook_middlewares(app_class, builder)
+    end
   end
 
-  def apply_hook_middlewares(builder)
-    if @config.app_class.before.length + @config.app_class.after.length > 0
+  def apply_catcher_on_need(builder)
+    at_least_one_hook_requested = @config.ancestor_apps.any? do |app_class|
+      app_class.before.length + app_class.after.length > 0
+    end
+
+    if at_least_one_hook_requested
       builder.use(Rack::App::Endpoint::Catcher, @config)
     end
-    @config.app_class.before.each do |before_block|
+  end
+
+  def apply_hook_middlewares(app_class, builder)
+    app_class.before.each do |before_block|
       builder.use(Rack::App::Middlewares::Hooks::Before, before_block)
     end
-    @config.app_class.after.each do |after_block|
+
+    app_class.after.each do |after_block|
       builder.use(Rack::App::Middlewares::Hooks::After, after_block)
     end
   end
