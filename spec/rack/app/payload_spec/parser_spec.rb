@@ -8,7 +8,7 @@ describe "Rack::App#payload" do
 
     payload do
       configure_parser do
-        accept :www_form_urlencoded
+        accept :www_form_urlencoded, :multipart
 
         on "custom/x-yaml" do |io|
           YAML.load(io.read)
@@ -18,6 +18,10 @@ describe "Rack::App#payload" do
 
     get "/" do
       Marshal.dump(payload) #> [{"Foo" => "bar"}]
+    end
+
+    post '/multipart' do
+      payload['file'][:tempfile].read
     end
 
   end
@@ -228,6 +232,24 @@ describe "Rack::App#payload" do
 
       end
     end
+  end
 
+  context 'when content type is multipart' do
+    let(:file_path) { Rack::App::Utils.pwd('spec/fixtures/raw.txt') }
+    let(:payload_struct) do
+      { 'file' => Rack::Multipart::UploadedFile.new(file_path) }
+    end
+
+    let(:request_options) do
+      {
+        payload: Rack::Multipart.build_multipart(payload_struct),
+        env: {
+          Rack::App::Constants::ENV::CONTENT_TYPE => 'multipart/form-data; boundary="AaB03x"',
+          Rack::App::Constants::ENV::CONTENT_LENGTH => '163'
+        }
+      }
+    end
+
+    it { expect(post('/multipart', request_options).body).to eq "hello world!\nhow you doing?" }
   end
 end

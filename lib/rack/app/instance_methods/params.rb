@@ -13,5 +13,4 @@ module Rack::App::InstanceMethods::Params
   def query_string_params
     request.env[E::PARAMS].query_string_params
   end
-
 end

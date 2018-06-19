@@ -43,6 +43,7 @@ module Rack::App::Constants
     EXTNAME = 'rack-app.extname'.freeze
     SERIALIZER = 'rack-app.serializer'.freeze
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze
+    CONTENT_LENGTH = 'CONTENT_LENGTH'.freeze
 
     PARAMS_GETTER = 'rack-app.params.getter'
     PARAMS = 'rack-app.params.object'.freeze

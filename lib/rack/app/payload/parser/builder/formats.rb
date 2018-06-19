@@ -63,7 +63,6 @@ module Rack::App::Payload::Parser::Builder::Formats
 
   FORM_CONTENT_TYPES = [
     'application/x-www-form-urlencoded',
-    # 'multipart/form-data'
   ].freeze
 
   FORM_SEP_CHAR = '&'.freeze
@@ -96,13 +95,29 @@ module Rack::App::Payload::Parser::Builder::Formats
   alias form www_form_urlencoded
   alias urlencoded www_form_urlencoded
 
+  MULTIPART_CONTENT_TYPES = 'multipart/form-data'.freeze
+
+  MULTIPART_PARSER = proc do |io, content_type, content_length|
+    tempfile = Rack::Multipart::Parser::TEMPFILE_FACTORY
+    bufsize = Rack::Multipart::Parser::BUFSIZE
+    query_parser = Rack::Utils.default_query_parser
+    multipart_struct = Rack::Multipart::Parser.parse(
+      io, content_length, content_type, tempfile, bufsize, query_parser
+    )
+    multipart_struct.params
+  end
+
+  def multipart(builder)
+    builder.on(MULTIPART_CONTENT_TYPES, &MULTIPART_PARSER)
+  end
+
   def accept(builder, *form_names)
     last_name = nil
     form_names.map(&:to_sym).each do |form_name|
       last_name = form_name
       unless respond_to?(form_name)
         raise(NotImplementedError, "unknown formatter: #{last_name}")
-      end 
+      end
       __send__ form_name, builder
     end
   end
