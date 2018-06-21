@@ -94,6 +94,12 @@ Yes, in fact it's already powering heroku hosted micro-services.
   * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usually solution which includes buffering in memory
 * params validation with ease
 
+## Under the hood
+
+rack-app's router relies on a tree structure which makes heavy use of *common prefixes*,
+it is basically a *compact* [*prefix tree*](https://en.wikipedia.org/wiki/Trie) (or just [*Radix tree*](https://en.wikipedia.org/wiki/Radix_tree)).
+Nodes with a common prefix also share a common parent.
+
 ## Contributors
 
 * **[Daniel Nagy](https://github.com/thilonel)**
