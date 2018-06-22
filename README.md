@@ -146,6 +146,7 @@ end
 ```ruby
 
 require 'rack/app'
+require 'rack/app/front_end' # You need to add `gem 'rack-app-front_end'` to your Gemfile
 
 class App < Rack::App
 
@@ -164,11 +165,12 @@ class App < Rack::App
   validate_params do
     required 'words', :class => Array, :of => String, :desc => 'some word', :example => ['pug']
     optional 'word', :class => String, :desc => 'one word', :example => 'pug'
+    optional 'boolean', :class => :boolean, :desc => 'boolean value', :example => true
   end
   get '/hello' do
-    puts(validate_params['words'])
+    puts(params['words'])
 
-    return 'Hello World!'
+    'Hello World!'
   end
 
   namespace '/users' do
@@ -229,7 +231,7 @@ describe App do
 
   describe '/hello' do
     # example for params and headers and payload use
-    subject{ get(url: '/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}, payload: 'some string') }
+    subject { get(url: '/hello', params: {'dog' => 'meat'}, headers: {'X-Cat' => 'fur'}, payload: 'some string') }
 
     it { expect(subject.status).to eq 200 }
 
@@ -238,7 +240,7 @@ describe App do
 
   describe '/users/:user_id' do
     # restful endpoint example
-    subject{ get(url: '/users/1234') }
+    subject { get(url: '/users/1234') }
 
     it { expect(subject.body).to eq 'hello 1234!'}
 
@@ -248,7 +250,7 @@ describe App do
 
   describe '/make_error' do
     # error handled example
-    subject{ get(url: '/make_error') }
+    subject { get(url: '/make_error') }
 
     it { expect(subject.body).to eq '{:error=>"error block rescued"}' }
   end
