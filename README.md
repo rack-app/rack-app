@@ -118,11 +118,13 @@ Nodes with a common prefix also share a common parent.
 
   * [wrote an awesome article](https://www.sitepoint.com/rack-app-a-performant-and-pragmatic-web-microframework/) about the project
 
+* **[TheSmartnik](https://github.com/TheSmartnik)**
+
+  * Clarify examples in the documentation
+
 ## [Contributing](CONTRIBUTING.md)
 
 ## Usage
-
-config.ru
 
 #### basic
 
@@ -146,11 +148,8 @@ end
 ```ruby
 
 require 'rack/app'
-require 'rack/app/front_end' # You need to add `gem 'rack-app-front_end'` to your Gemfile
 
 class App < Rack::App
-
-  apply_extensions :front_end
 
   mount SomeAppClass
 
@@ -213,6 +212,40 @@ you can access Rack::Request with the request method and
 Rack::Response as response method.
 
 By default if you dont write anything to the response 'body' the endpoint block logic return will be used
+
+### Frontend Example
+
+if you don't mind extend your dependency list, than you can use the front_end extension for creating template based web applications.
+
+```ruby
+require 'rack/app'
+require 'rack/app/front_end' # You need to add `gem 'rack-app-front_end'` to your Gemfile
+
+class App < Rack::App
+
+  apply_extensions :front_end
+
+  helpers do
+
+    def method_that_can_be_used_in_template
+      'hello world!'
+    end
+
+  end
+
+  # use ./app/layout.html.erb as layout, this is optionable
+  layout 'layout.html.erb'
+
+  # at '/' the endpoint will serve (render)
+  # the ./app/index.html content as response body and wrap around with layout if layout is given
+  get '/' do
+    render 'index.html'
+  end
+
+end
+```
+
+this example expects an "app" folder next to the "app.rb" file that included templates being used such as layout.html.erb and index.html.
 
 ## Testing
 
