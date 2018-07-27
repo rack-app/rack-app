@@ -21,12 +21,12 @@ class Rack::App::Router::Tree::Vein < ::Hash
 
   def create_app(env)
     app = env.endpoint.to_app
-    env.params.empty? ? app : wrap(app, env.params)
+    env.params.empty? ? app : wrap(app, env)
   end
 
-  def wrap(app, params)
+  def wrap(app, env)
     builder = Rack::Builder.new
-    builder.use(Rack::App::Middlewares::SetPathParams, params)
+    builder.use(Rack::App::Middlewares::SetPathParams, env)
     builder.run(app)
     builder.to_app
   end

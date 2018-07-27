@@ -1,7 +1,7 @@
 class Rack::App::Middlewares::SetPathParams
 
-  def initialize(app, params_lookup_hash)
-    @params_lookup_hash = params_lookup_hash
+  def initialize(app, build_env)
+    @build_env = build_env
     @app = app
   end
 
@@ -16,15 +16,16 @@ class Rack::App::Middlewares::SetPathParams
   protected
 
   def populate_path_params(env)
-    @params_lookup_hash.each do |index, key|
+    @build_env.params.each do |index, key|
       env[E::PATH_SEGMENTS_PARAMS][key] = env[E::SPLITTED_PATH_INFO][index]
     end
   end
 
   def correct_last_value_from_extensions(env)
+    return if @build_env.endpoint.config.serializer.extnames.empty?
     last_index = env[E::SPLITTED_PATH_INFO].length - 1
-    return if @params_lookup_hash[last_index].nil?
-    extless(env[E::PATH_SEGMENTS_PARAMS][@params_lookup_hash[last_index]])
+    return if @build_env.params[last_index].nil?
+    extless(env[E::PATH_SEGMENTS_PARAMS][@build_env.params[last_index]])
   end
 
   def extless(value)

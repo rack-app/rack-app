@@ -22,6 +22,10 @@ describe Rack::App do
         YAML.dump(params)
       end
 
+      get '/domain/:addr' do
+        YAML.dump(params)
+      end
+
     end
 
     let(:request) { {:url => '/params', :env => {}} }
@@ -64,6 +68,14 @@ describe Rack::App do
         before { request[:url]= '/users/123' }
 
         it { is_expected.to eq({"user_id" => '123'}) }
+
+        context 'and the dynamic path part include dot' do
+          before { request[:url]= '/domain/example.com' }
+
+          context 'and that "extension" has no unserializer defined' do
+            it { is_expected.to eq({"addr" => 'example.com'}) }
+          end
+        end
       end
 
     end

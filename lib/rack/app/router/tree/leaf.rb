@@ -48,5 +48,4 @@ class Rack::App::Router::Tree::Leaf < ::Hash
     self[path_part] ||= Rack::App::Router::Tree::Vein.new
   end
 
-
 end
