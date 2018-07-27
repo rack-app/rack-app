@@ -75,6 +75,10 @@ describe Rack::App do
           context 'and that "extension" has no unserializer defined' do
             it { is_expected.to eq({"addr" => 'example.com'}) }
           end
+
+          context 'and that "extension" has unserializer defined' do
+            it("is specified in the formats_spec") {}
+          end
         end
       end
 

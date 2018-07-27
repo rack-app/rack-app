@@ -30,6 +30,7 @@ class Rack::App::Middlewares::SetPathParams
 
   def extless(value)
     extname = File.extname(value)
+    return unless @build_env.endpoint.config.serializer.extnames.include?(extname)
     value.slice!(/#{Regexp.escape(extname)}$/) unless extname.empty?
   end
 

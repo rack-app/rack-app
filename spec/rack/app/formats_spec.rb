@@ -51,6 +51,25 @@ describe "Rack::App#formats" do
         expect(last_response.headers).to include 'Content-Type' => 'application/x-yaml'
       end
 
+      context 'when the dynamic url part has extension too' do
+        context "and it's before the request extension" do
+          it 'should not malform the dynamic value even with extensions' do
+            get("/test/example.com.yaml")
+
+            expect(last_response.body).to eq YAML.dump({"type" => "dynamic endpoint endpoint", "id" => "example.com"})
+            expect(last_response.headers).to include 'Content-Type' => 'application/x-yaml'
+          end
+        end
+
+        context "and it's before the request extension" do
+          it 'should not malform the dynamic value even with extensions' do
+            get("/test/example.com")
+
+            expect(last_response.body).to match "example.com"
+          end
+        end
+      end
+
     end
 
   end
