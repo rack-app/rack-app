@@ -19,6 +19,24 @@ you still dont have to worry about response speed.
 It was inspirited by sinatra, grape, and the pure use form of rack.
 It's in production, powering Back Ends on Heroku
 
+## Development Status
+
+The framework considered stable and finalized.
+I don't have plan to feature creep the framework,
+since most of the custom edge cases can be resolved with composition.
+
+The next time it will receive further updates,
+when rack provides a finalized support for http2.
+
+If you have an issue, I weekly check the issues tab,
+answer and reply back, or implement a fix for it.
+
+Since the framework only dependency is the `rack` gem,
+I don't really have to update the code base,
+because there is no integration problems.
+
+Cheers and Happy Coding!
+
 ## Concerns
 
 If you want see fancy magic, you are in a bad place buddy!
