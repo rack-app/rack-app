@@ -21,8 +21,8 @@ It's in production, powering Back Ends on Heroku
 
 ## Development Status
 
-The framework considered stable and finalized.
-I don't have plan to feature creep the framework,
+The framework considered stable.
+I don't have plan to feature creep the framework without real life use-cases,
 since most of the custom edge cases can be resolved with composition.
 
 The next time it will receive further updates,
