@@ -313,7 +313,7 @@ end
 
 ## Example Apps To start with
 
-* [Official website How To examples](http://rack-app.com/)
+* [Official website How To examples](http://www.rack-app.com/)
 
 * [Rack::App Team Github repositories](https://github.com/rack-app)
 
