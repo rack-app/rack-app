@@ -37,22 +37,20 @@ class Rack::App::Middlewares::Params::Validator
 
   def validate_required_params(env, params)
     @descriptor[:required].each do |key, properties|
-      validate_key(key,properties,params)
+      validate_key(key, properties, params)
     end
   end
 
   def validate_optional_params(env, params)
     @descriptor[:optional].each do |key, properties|
-      next unless params.has_key?(key)
+      next unless params.key?(key)
 
-      validate_key(key,properties,params)
+      validate_key(key, properties, params)
     end
   end
 
-  def validate_key(key,properties,params)
-    unless params.has_key?(key)
-      missing_key_error(key, properties[:class])
-    end
+  def validate_key(key, properties, params)
+    missing_key_error(key, properties[:class]) unless params.key?(key)
 
     if properties[:of]
       validate_array(properties[:class], properties[:of], key, *params[key])
@@ -69,7 +67,7 @@ class Rack::App::Middlewares::Params::Validator
   end
 
   def validate_array(type, elements_type, key, *elements)
-    values = elements.map{ |str| parse(elements_type, str) }
+    values = elements.map { |str| parse(elements_type, str) }
 
     if values.include?(nil)
       invalid_type_of_error(key, type, elements_type)
@@ -92,11 +90,11 @@ class Rack::App::Middlewares::Params::Validator
     error "invalid key: #{key}"
   end
 
-  def invalid_type_error(key,klass)
+  def invalid_type_error(key, klass)
     error "invalid type for #{key}: #{klass} expected"
   end
 
-  def invalid_type_of_error(key,klass,of)
+  def invalid_type_of_error(key, klass, of)
     error "invalid type for #{key}: #{klass} of #{of} expected"
   end
 end
