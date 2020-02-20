@@ -6,7 +6,7 @@
 
 ![rack-app-logo](/assets/rack-app-logo.png)
 
-Your next favourite rack based micro framework that is totally addition free!
+Your next favorite rack-based micro-framework that is totally addition free!
 Have a cup of awesomeness with your sadistically minimalist framework!
 
 The idea behind is simple.
@@ -16,7 +16,7 @@ that will do nothing more than what you defined.
 
 The Routing can handle any amount of endpoints that can fit in the memory,
 so if you that crazy to use more than 10k endpoint,
-you still dont have to worry about response speed.
+you still don't have to worry about response speed.
 
 It was inspirited by sinatra, grape, and the pure use form of rack.
 It's in production, powering Back Ends on Heroku
@@ -24,34 +24,34 @@ It's in production, powering Back Ends on Heroku
 ## Development Status
 
 The framework considered stable.
-I don't have plan to feature creep the framework without real life use-cases,
+I don't have the plan to feature creep the framework without real-life use-cases,
 since most of the custom edge cases can be resolved with composition.
 
 The next time it will receive further updates,
 when rack provides a finalized support for http2.
 
 If you have an issue, I weekly check the issues tab,
-answer and reply back, or implement a fix for it.
+answer and reply, or implement a fix for it.
 
-Since the framework only dependency is the `rack` gem,
-I don't really have to update the code base,
-because there is no integration problems.
+Since the framework, the only dependency is the `rack` gem,
+I don't have to update the code base,
+because there are no integration problems.
 
 Cheers and Happy Coding!
 
 ## Concerns
 
-If you want see fancy magic, you are in a bad place buddy!
+If you want to see fancy magic, you are in a bad place buddy!
 
 This also implies that the framework does not include extensions that monkey patch the whole world to give you nice features.
-The Clean architechture define that a webframework should only provide an external interface to the web, and nothing more.
+Clean architecture defines that a web framework should only provide an external interface to the web, and nothing more.
 
 If you use rack-app, one thing is sure.
 
 You either love it or will be able to remove it from the project even after years of development because,
 it will not vendor-lock your application business entities and business use cases to this framework.
 
-And it's totaly fine to us. We don't want everyone to be tied to our solutions, we only want build clean and well designed softwared for the developer happiness.
+And it's totally fine for us. We don't want everyone to be tied to our solutions, we only want to build clean and well-designed software for the developer happiness.
 
 ## Installation
 
@@ -72,7 +72,7 @@ Or install it yourself as:
 
 ## Is it Production ready?
 
-Yes, in fact it's already powering heroku hosted micro-services.
+Yes, it's already powering Heroku hosted micro-services.
 
 ## Principles
 
@@ -80,18 +80,18 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * No Code bloat
 * No on run time processing, or keep at the bare minimum
 * Fully BDD (Behaviour Driven Design)
-  * build in test module to ease the development with easy to use tests
+  * built-in test module to ease the development with easy to use tests
 * Easy to Learn
   * rack-app use well known and easy to understand conventions, such as sinatra like DSL
 * Principle Of Least Surprise
 * Modular design
-* Only dependency is rack, nothing more
+* the Only dependency is rack, nothing more
 * Open development
-* Try to create Examples for every feature so even the "sketch to learn new" types can feel in comfort
+* Try to create Examples for every feature
 
 ## Features
 
-* easy to understand syntax
+* Easy to understand syntax
   * module method level endpoint definition inspirited heavily by the Sinatra DSL
   * unified error handling
   * syntax sugar for default header definitions
@@ -100,18 +100,18 @@ Yes, in fact it's already powering heroku hosted micro-services.
 * App mounting so you can create separated controllers for different task
 * Streaming
 * O(log(n)) lookup routing
-  * allows as many endpoint registration to you as you want, without impact on route lookup speed
-* only basic sets for instance method lvl for the must need tools, such as params, payload
-* simple to use class level response serializer
+  * allows as many endpoint registrations to you as you want, without impact on route lookup speed
+* only basic sets for instance method level for the must need tools, such as params, payload
+* Simple to use class level response serializer
   * so you can choose what type of serialization you want without any enforced convention
-* static file serving so you can mount even filesystem based endpoints too
-* built in testing module so your app can be easily written with BDD approach
+* static file serving so you can mount even filesystem-based endpoints too
+* built-in testing module so your app can be easily written with BDD approach
 * made with minimalism in mind so your app can't rely on the framework when you implement business logic
-  * if you need something, you should implement it without any dependency on a webframework, rack-app only mean to be to provide you with easy to use interface to the web layer, nothing less and nothing more
+  * if you need something, you should implement it without any dependency on a web framework, rack-app only mean to be to provide you with easy to use interface to the web layer, nothing less and nothing more
 * per endpoint middleware definitions
-  * you can define middleware stack before endpoints and it will only applied to them, similar like protected method workflow
-* File Upload and file download in a efficient and elegant way with minimal memory consuming
-  * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usually solution which includes buffering in memory
+  * you can define middleware stack before endpoints and it will only apply to them, similar like protected method workflow
+* File Upload and file download efficiently and elegantly with minimal memory consuming
+  * note that this is not only memory friendly way pure rack solution, but also 2x faster than the usual solution which includes buffering in memory
 * params validation with ease
 
 ## Under the hood
@@ -229,13 +229,13 @@ end
 ```
 
 you can access Rack::Request with the request method and
-Rack::Response as response method.
+Rack::Response as a response method.
 
-By default if you dont write anything to the response 'body' the endpoint block logic return will be used
+By default, if you don't write anything to the response 'body' the endpoint block logic return will be used
 
 ### Frontend Example
 
-if you don't mind extend your dependency list, than you can use the front_end extension for creating template based web applications.
+if you don't mind extending your dependency list then you can use the front_end extension for creating template-based web applications.
 
 ```ruby
 require 'rack/app'
@@ -257,7 +257,7 @@ class App < Rack::App
   layout 'layout.html.erb'
 
   # at '/' the endpoint will serve (render)
-  # the ./app/index.html content as response body and wrap around with layout if layout is given
+  # the ./app/index.html content as response body and wrap around with layout if the layout is given
   get '/' do
     render 'index.html'
   end
@@ -320,14 +320,14 @@ end
 * [Rack::App Team Github repositories](https://github.com/rack-app)
 
 * [Basic](https://github.com/rack-app/rack-app-example-basic)
-  * bare bone simple example app
+  * bare-bone simple example app
 
 * [Escher Authorized Api](https://github.com/rack-app/rack-app-example-escher)
-  * complex authorization for corporal level api use
+  * complex authorization for corporal level API use
 
 ## [Benchmarking](https://github.com/rack-app/rack-app-benchmark)
 
-This is a repo that used for measure Rack::App project speed in order keep an eye on the performance in every release.
+This is a repo that used for measure Rack::App project speed in order to keep an eye on the performance in every release.
 
 the benchmarking was taken on the following hardware specification:
 * Processor: 2,7 GHz Intel Core i5
