@@ -28,6 +28,9 @@ class Rack::App::Endpoint
   end
 
   def to_app
+    # TODO: fix this to cache it, but to that you need to resolve the problem when middlewares added,
+    # old endpoints are not refreshed by the middleware configs
+    # router.reset must be checked
     self.class::Builder.new(@config).to_app
   end
 

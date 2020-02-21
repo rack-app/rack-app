@@ -12,7 +12,7 @@ describe Rack::App do
       after do
         if params['break_in_after']
           resp = Rack::Response.new
-          resp.write('breaked')
+          resp.write('42')
           respond_with(resp)
         end
       end
@@ -29,6 +29,6 @@ describe Rack::App do
       expect(rack_app.queue).to eq %w[in after]
     end
 
-    it { expect(get('/', :params => { 'break_in_after' => true }).body).to eq 'breaked' }
+    it { expect(get('/', :params => {'break_in_after' => true}).body).to eq '42' }
   end
 end

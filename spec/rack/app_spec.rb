@@ -259,7 +259,7 @@ describe Rack::App do
 
       rack_app do
 
-        get '/before_middlewares' do
+        get '/before_middlewares_block_part' do
           request.env['custom']
         end
 
@@ -267,14 +267,14 @@ describe Rack::App do
           builder.use(SampleMiddleware, 'custom', 'value')
         end
 
-        get '/after_middlewares' do
+        get '/after_middlewares_block_part' do
           request.env['custom']
         end
 
       end
 
-      it { expect(get(:url => '/before_middlewares').body).to eq 'value' }
-      it { expect(get(:url => '/after_middlewares').body).to eq 'value' }
+      it { expect(get(:url => '/before_middlewares_block_part').body).to eq 'value' }
+      it { expect(get(:url => '/after_middlewares_block_part').body).to eq 'value' }
     end
 
     context 'when middleware setting is after endpoints' do

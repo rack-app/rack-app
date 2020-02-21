@@ -6,11 +6,14 @@ class Rack::App::Endpoint::Catcher
   end
 
   def call(env)
-    handle_rack_response do
+    resp = handle_rack_response do
       handle_response_body(env) do
         @app.call(env)
       end
     end
+    return resp.finish if resp.is_a?(Rack::Response)
+
+    resp
   end
 
   protected
