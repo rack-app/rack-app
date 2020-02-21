@@ -28,7 +28,7 @@ describe Rack::App do
 
           expect(last_response.status).to eq code
 
-          unless Rack::Utils::STATUS_WITH_NO_ENTITY_BODY.key?(code)
+          unless Rack::Utils::STATUS_WITH_NO_ENTITY_BODY.include?(code)
             expect(last_response.body).to eq desc
           end
         end
