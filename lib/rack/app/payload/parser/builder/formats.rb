@@ -2,11 +2,11 @@ module Rack::App::Payload::Parser::Builder::Formats
   extend(self)
 
   JSON_CONTENT_TYPES = [
-    'application/json',
-    'application/x-javascript',
-    'text/javascript',
-    'text/x-javascript',
-    'text/x-json'
+      'application/json',
+      'application/x-javascript',
+      'text/javascript',
+      'text/x-javascript',
+      'text/x-json'
   ].freeze
 
   JSON_PARSER = proc do |io|
@@ -28,9 +28,9 @@ module Rack::App::Payload::Parser::Builder::Formats
   end
 
   JSON_STREAM_CONTENT_TYPES = [
-    'application/jsonstream',
-    'application/stream+json',
-    'application/x-json-stream'
+      'application/jsonstream',
+      'application/stream+json',
+      'application/x-json-stream'
   ].freeze
 
   JSON_STREAM_PARSER = proc do |io|
@@ -62,8 +62,8 @@ module Rack::App::Payload::Parser::Builder::Formats
   # end
 
   FORM_CONTENT_TYPES = [
-    'application/x-www-form-urlencoded',
-    # 'multipart/form-data'
+      'application/x-www-form-urlencoded',
+  # 'multipart/form-data'
   ].freeze
 
   FORM_SEP_CHAR = '&'.freeze
@@ -76,7 +76,7 @@ module Rack::App::Payload::Parser::Builder::Formats
                         lambda do |form|
                           ::Rack::Utils.parse_nested_query(form, FORM_SEP_CHAR)
                         end
-  end
+                      end
 
   NULL_END_CHAR = /#{"\u0000"}$/
 
@@ -102,7 +102,7 @@ module Rack::App::Payload::Parser::Builder::Formats
       last_name = form_name
       unless respond_to?(form_name)
         raise(NotImplementedError, "unknown formatter: #{last_name}")
-      end 
+      end
       __send__ form_name, builder
     end
   end
