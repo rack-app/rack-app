@@ -33,9 +33,8 @@ when rack provides a finalized support for http2.
 If you have an issue, I weekly check the issues tab,
 answer and reply, or implement a fix for it.
 
-Since the framework, the only dependency is the `rack` gem,
-I don't have to update the code base,
-because there are no integration problems.
+Since the framework's only dependency is the `rack` gem,
+I don't have to update the code base to often.
 
 Cheers and Happy Coding!
 
