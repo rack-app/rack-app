@@ -196,17 +196,7 @@ describe Rack::App::FileServer do
       end
 
       let :path do
-        @tmpdir_path = Dir.mktmpdir('rack-app-serve-file-tests-')
-        forbidden_file_path = File.join(@tmpdir_path, 'forbidden.txt')
-        File.open(forbidden_file_path, 'w') { |f| f.write('foo bar baz') }
-        File.chmod(0, forbidden_file_path)
-        file_to_serve = File.join(@tmpdir_path, 'raw.txt')
-        FileUtils.copy_file(fixture_path, file_to_serve)
-        file_to_serve
-      end
-
-      after :each do
-        FileUtils.rm_rf(@tmpdir_path) if @tmpdir_path
+        fixture_path
       end
 
       it_should_serve_the_file.call(self)
