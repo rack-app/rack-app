@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Rack::App::FileServer do
   let(:instance) { described_class.new(root_folder) }
-  let(:root_folder) { Rack::App::Utils.pwd('spec','fixtures') }
+  let(:root_folder) { Rack::App::Utils.pwd('spec', 'fixtures') }
   let(:request_method) { 'GET' }
 
   let(:env) do
@@ -26,7 +26,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
         end
 
         it 'should response with a ::Rack::File instance' do
@@ -67,7 +67,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
         end
 
         it 'should response with a ::Rack::File instance' do
@@ -108,7 +108,7 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ["Last-Modified", "Content-Type", "Content-Length"]
+          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
         end
 
         it 'should response with a ::Rack::File instance' do
@@ -141,15 +141,45 @@ describe Rack::App::FileServer do
   end
 
   describe '#serve_file' do
+    subject do
+      described_class.serve_file({}, path)
+    end
 
-    it 'should serve file' do
+    fixture_path = Rack::App::Utils.pwd('spec/fixtures/raw.txt')
 
-      rack_resp = described_class.serve_file({},Rack::App::Utils.pwd('spec/fixtures/raw.txt'))
+    it_should_serve_the_file = lambda do |spec|
+      spec.it 'should serve file' do
+        rack_resp = subject
+        expect(rack_resp[0]).to eq 200
+        expect(rack_resp[1].keys).to match_array(['Last-Modified', 'Content-Type', 'Content-Length'])
+        expect(rack_resp[2]).to respond_to :each
+      end
+    end
 
-      expect(rack_resp[0]).to eq 200
-      expect(rack_resp[1].keys).to match_array(["Last-Modified","Content-Type","Content-Length"])
-      expect(rack_resp[2]).to respond_to :each
+    context 'when file served from a project directory where everything belongs to the running process' do
+      let :path do
+        fixture_path
+      end
 
+      it_should_serve_the_file.call(self)
+    end
+
+    context 'when file served from a directory where not all file is accessible' do
+      let :path do
+        @tmpdir_path = Dir.mktmpdir('rack-app-serve-file-tests-')
+        forbidden_file_path = File.join(@tmpdir_path, 'forbidden.txt')
+        File.open(forbidden_file_path, 'w') { |f| f.write('foo bar baz') }
+        File.chmod(0, forbidden_file_path)
+        file_to_serve = File.join(@tmpdir_path, 'raw.txt')
+        FileUtils.copy_file(fixture_path, file_to_serve)
+        file_to_serve
+      end
+
+      after :each do
+        FileUtils.rm_rf(@tmpdir_path) if @tmpdir_path
+      end
+
+      it_should_serve_the_file.call(self)
     end
 
   end
