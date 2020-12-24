@@ -46,8 +46,8 @@ module Rack::App::SingletonMethods::Mounting
     nil
   end
 
-  def serve_files_from(file_path, options={})
-    file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(file_path))
+  def serve_files_from(dir_path, options={})
+    file_server = Rack::App::FileServer.new(Rack::App::Utils.expand_path(dir_path))
     request_path = Rack::App::Utils.join(options[:to], Rack::App::Constants::PATH::MOUNT_POINT)
     add_route(::Rack::App::Constants::HTTP::METHOD::ANY, request_path, file_server)
     nil

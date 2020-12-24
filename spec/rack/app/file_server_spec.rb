@@ -182,6 +182,35 @@ describe Rack::App::FileServer do
       it_should_serve_the_file.call(self)
     end
 
+    context 'when file served from a directory where multiple user has files with not permiting file mod' do
+      # this is a terrible test,
+      # I can't create a real life use-case
+      # where there is a multi-user shared directory
+      # with the test runner user.
+      # Since OS behaviour is considered non-volatile,
+      # I stub glob out to mimic failing with EPERM error.
+      # it is far from a proper test, and not likely to help me in the future.
+      before do
+        # glob should not even happen
+        allow(Dir).to(receive(:glob)) { |*args| raise Errno::EPERM }
+      end
+
+      let :path do
+        @tmpdir_path = Dir.mktmpdir('rack-app-serve-file-tests-')
+        forbidden_file_path = File.join(@tmpdir_path, 'forbidden.txt')
+        File.open(forbidden_file_path, 'w') { |f| f.write('foo bar baz') }
+        File.chmod(0, forbidden_file_path)
+        file_to_serve = File.join(@tmpdir_path, 'raw.txt')
+        FileUtils.copy_file(fixture_path, file_to_serve)
+        file_to_serve
+      end
+
+      after :each do
+        FileUtils.rm_rf(@tmpdir_path) if @tmpdir_path
+      end
+
+      it_should_serve_the_file.call(self)
+    end
   end
 
 end
