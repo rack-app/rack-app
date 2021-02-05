@@ -25,10 +25,6 @@ env:
     - BENCHMARK_QUANTITY=100000
     - STREAM_FILE_SIZE=68
 
-branches:
-  only:
-    - master
-
 notifications:
   email:
     - adamluzsi@gmail.com
