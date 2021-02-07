@@ -10,7 +10,8 @@ rvm:
   - jruby-head
   - 2.5
   - 2.6
-  - 3.0.0
+  - 2.7
+  - 3.0
 
 matrix:
   allow_failures:
@@ -23,10 +24,6 @@ env:
     - TIMEOUT=1
     - BENCHMARK_QUANTITY=100000
     - STREAM_FILE_SIZE=68
-
-branches:
-  only:
-    - master
 
 notifications:
   email:
