@@ -8,12 +8,8 @@ install:
 rvm:
   - ruby-head
   - jruby-head
-  - jruby-19mode
-  - 1.9
-  - 2.3.8
-  - 2.4.6
-  - 2.5.5
-  - 2.6.3
+  - 2.5
+  - 2.6
   - 3.0.0
 
 matrix:
