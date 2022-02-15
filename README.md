@@ -6,24 +6,22 @@
 
 ![rack-app-logo](/assets/rack-app-logo.png)
 
-Your next favorite rack-based micro-framework that is totally addition free!
-Have a cup of awesomeness with your sadistically minimalist framework!
+`rack-app` is a minimalist web framework that focuses on simplicity and maintainability.
+The framework is meant to be used by seasoned web developers.
 
-The idea behind is simple.
-Keep the dependencies and everything as little as possible,
-while able to write pure rack apps,
+`rack-app` focus on keeping the dependencies as little as possible,
+while allowing writing functional and minimalist rack-based applications,
 that will do nothing more than what you defined.
 
-The Routing can handle any amount of endpoints that can fit in the memory,
-so if you that crazy to use more than 10k endpoint,
-you still don't have to worry about response speed.
+The routing uses a prefix tree,
+thus adding a large number of API endpoints won't affect the routing lookup time.
 
-It was inspirited by sinatra, grape, and the pure use form of rack.
-It's in production, powering Back Ends on Heroku
+It was inspirited by `Sinatra`, `grape`, and `rack`.
+It's used in production, powering back-end APIs running on the public cloud.
 
 ## Development Status
 
-The framework considered stable.
+The framework is considered stable.
 I don't have the plan to feature creep the framework without real-life use-cases,
 since most of the custom edge cases can be resolved with composition.
 
@@ -34,23 +32,9 @@ If you have an issue, I weekly check the issues tab,
 answer and reply, or implement a fix for it.
 
 Since the framework's only dependency is the `rack` gem,
-I don't have to update the code base to often.
+I don't have to update the codebase too often.
 
 Cheers and Happy Coding!
-
-## Concerns
-
-If you want to see fancy magic, you are in a bad place buddy!
-
-This also implies that the framework does not include extensions that monkey patch the whole world to give you nice features.
-Clean architecture defines that a web framework should only provide an external interface to the web, and nothing more.
-
-If you use rack-app, one thing is sure.
-
-You either love it or will be able to remove it from the project even after years of development because,
-it will not vendor-lock your application business entities and business use cases to this framework.
-
-And it's totally fine for us. We don't want everyone to be tied to our solutions, we only want to build clean and well-designed software for the developer happiness.
 
 ## Installation
 
@@ -324,55 +308,6 @@ end
 * [Escher Authorized Api](https://github.com/rack-app/rack-app-example-escher)
   * complex authorization for corporal level API use
 
-## [Benchmarking](https://github.com/rack-app/rack-app-benchmark)
-
-This is a repo that used for measure Rack::App project speed in order to keep an eye on the performance in every release.
-
-the benchmarking was taken on the following hardware specification:
-* Processor: 2,7 GHz Intel Core i5
-* Memory: 16 GB 1867 MHz DDR3
-* Ruby: ruby 2.3.0p0 (2015-12-25 revision 53290) [x86_64-darwin15]
-
-
-### Endpoint to be call type: static
-
-#### number of declared endpoints: 100
-
-| name                   | version                | current / fastest      | real                   |
-| ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| rack-app               | 4.0.0                  | 1.0                    | 2.2053215187043942e-05 |
-| rack-app               | 5.2.0                  | 1.185                  | 2.6140331494390213e-05 |
-| rack-app               | 5.0.0.rc3              | 1.387                  | 3.0592694940592784e-05 |
-| rack-app               | 5.10.0                 | 1.687                  | 3.719768107671963e-05  |
-| rack-app               | 5.12.0                 | 1.747                  | 3.852106360719058e-05  |
-| rack-app               | 5.7.0                  | 1.784                  | 3.934149001724991e-05  |
-| ramaze                 | 2012.12.08             | 2.237                  | 4.932373271523216e-05  |
-| hobbit                 | 0.6.1                  | 3.111                  | 6.860981349018188e-05  |
-| brooklyn               | 0.0.1                  | 5.245                  | 0.00011567194234917104 |
-| plezi                  | 0.14.1                 | 5.334                  | 0.00011763589749898317 |
-| plezi                  | 0.14.2                 | 5.588                  | 0.00012324020796222724 |
-| nancy                  | 0.3.0                  | 5.725                  | 0.00012626088352407584 |
-| nyny                   | 3.4.3                  | 5.744                  | 0.00012667404900032145 |
-| roda                   | 2.20.0                 | 9.662                  | 0.00021307581296423227 |
-| roda                   | 2.17.0                 | 10.646                 | 0.00023477471132838754 |
-| scorched               | 0.25                   | 12.728                 | 0.0002807019599946191  |
-| scorched               | 0.27                   | 16.074                 | 0.0003544879730325173  |
-| sinatra                | 1.4.7                  | 19.857                 | 0.00043791615583657487 |
-| grape                  | 0.17.0                 | 25.941                 | 0.0005720832234016178  |
-| rails                  | 5.0.0                  | 33.234                 | 0.0007329187002032537  |
-| camping                | 2.1.532                | 39.818                 | 0.0008781073650072727  |
-| grape                  | 0.18.0                 | 41.857                 | 0.000923075147962645   |
-| rails                  | 5.0.0.1                | 47.286                 | 0.0010428086559986802  |
-| cuba                   | 3.8.0                  | 55.397                 | 0.0012216723478342246  |
-| almost-sinatra         | unknown                | 58.728                 | 0.0012951477793394547  |
-
-For more reports check the Benchmark repo out :)
-
-## Roadmap
-
-### Team [Backlog](https://docs.google.com/spreadsheets/d/19GGX51i6uCQQz8pQ-lvsIxu43huKCX-eC1526-RL3YA/edit?usp=sharing)
-
-If you have anything to say, you can leave a comment. :)
 
 ## Development
 
