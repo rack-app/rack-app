@@ -9,7 +9,7 @@ class Rack::App::RequestStream
 
   def each(&block)
     enum = Enumerator.new do |y|
-      @io.rewind
+      # @io.rewind
       while chunk = @io.gets
         y << @parser.call(chunk)
       end

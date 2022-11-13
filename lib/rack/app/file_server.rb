@@ -14,7 +14,7 @@ class Rack::App::FileServer
   def initialize(root_folder, opts = {})
     @root_folder = root_folder
     @relative_file_paths = []
-    @rack_file_server = ::Rack::File.new(@root_folder, {})
+    @rack_file_server = ::Rack::Files.new(@root_folder, {})
 
     if map_relative_file_paths?(opts)
       map_relative_paths!

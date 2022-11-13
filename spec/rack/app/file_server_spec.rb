@@ -26,10 +26,10 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
+          expect(subject[1].keys).to match_array ['last-modified', 'content-type', 'content-length']
         end
 
-        it 'should response with a ::Rack::File instance' do
+        it 'should response with a ::Rack::Files instance' do
           expect(subject[2]).to respond_to :each
         end
 
@@ -67,10 +67,10 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
+          expect(subject[1].keys).to match_array ['last-modified', 'content-type', 'content-length']
         end
 
-        it 'should response with a ::Rack::File instance' do
+        it 'should response with a ::Rack::Files instance' do
           expect(subject[2]).to respond_to :each
         end
 
@@ -108,10 +108,10 @@ describe Rack::App::FileServer do
         end
 
         it 'should set the response headers' do
-          expect(subject[1].keys).to match_array ['Last-Modified', 'Content-Type', 'Content-Length']
+          expect(subject[1].keys).to match_array ['last-modified', 'content-type', 'content-length']
         end
 
-        it 'should response with a ::Rack::File instance' do
+        it 'should response with a ::Rack::Files instance' do
           expect(subject[2]).to respond_to :each
         end
 
@@ -151,7 +151,7 @@ describe Rack::App::FileServer do
       spec.it 'should serve file' do
         rack_resp = subject
         expect(rack_resp[0]).to eq 200
-        expect(rack_resp[1].keys).to match_array(['Last-Modified', 'Content-Type', 'Content-Length'])
+        expect(rack_resp[1].keys).to match_array(['last-modified', 'content-type', 'content-length'])
         expect(rack_resp[2]).to respond_to :each
       end
     end

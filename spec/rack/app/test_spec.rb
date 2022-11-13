@@ -167,7 +167,7 @@ describe Rack::App::Test do
     end
 
     describe '#env' do
-      subject { get :url => '/payload', :env => { 'rack.input' => ::Rack::Lint::InputWrapper.new(StringIO.new("hello\nworld")) } }
+      subject { get :url => '/payload', :env => { 'rack.input' => ::Rack::Lint::Wrapper::InputWrapper.new(StringIO.new("hello\nworld")) } }
 
       it { expect(subject.body).to eq "hello\nworld" }
     end

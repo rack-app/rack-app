@@ -47,7 +47,7 @@ describe Rack::App::InstanceMethods do
 
   describe '#serve_file' do
 
-    it 'should serve file content with Rack::File' do
+    it 'should serve file content with Rack::Files' do
       response = get(:url => '/serve_file')
 
       expect(response.status).to eq 200

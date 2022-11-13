@@ -1,4 +1,5 @@
-class Rack::App::CLI::Fetcher::Server < Rack::Server
+require 'rackup/server'
+class Rack::App::CLI::Fetcher::Server < ::Rackup::Server
 
   def get_rack_app
     app_class = self.app

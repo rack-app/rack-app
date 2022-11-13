@@ -9,7 +9,7 @@ module Rack::App::InstanceMethods::Payload
     while chunk = @request.body.gets
       yield(chunk)
     end
-    @request.body.rewind
+    # @request.body.rewind
     nil
   end
 

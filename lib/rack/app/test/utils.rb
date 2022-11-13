@@ -15,7 +15,7 @@ module Rack::App::Test::Utils
     properties = format_properties(properties)
     env = properties[:headers].reduce({}) { |m, (k, v)| m.merge("HTTP_#{k.to_s.tr('-', '_').upcase}" => v.to_s) }
     payload = properties.delete(:payload)
-    env["rack.input"]= ::Rack::Lint::InputWrapper.new(string_io_for(payload))
+    env["rack.input"]= ::Rack::Lint::Wrapper::InputWrapper.new(string_io_for(payload))
     env[::Rack::QUERY_STRING]= query_string_by(uri, properties[:params])
     env.merge!(properties[:env] || {})
 
