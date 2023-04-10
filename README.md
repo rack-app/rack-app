@@ -1,8 +1,4 @@
-# [Rack::App](http://www.rack-app.com/) [![Build Status][travis-image]][travis-link]
-
-[travis-image]: https://travis-ci.org/rack-app/rack-app.svg?branch=master
-[travis-link]: https://travis-ci.org/rack-app/rack-app
-[travis-home]: http://travis-ci.org/
+# [Rack::App](http://www.rack-app.com/)
 
 ![rack-app-logo](/assets/rack-app-logo.png)
 
