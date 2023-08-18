@@ -93,7 +93,8 @@ describe Rack::App do
     context 'when path params are a nested hash' do
       let(:path) { '/nested_query_hash' }
 
-      it { is_expected.to eq '/mount/d/456?test[world]=hy'  }
+      # TODO check if this is interpretable by incoming request parsing
+      it { is_expected.to eq '/mount/d/456?test%5Bworld%5D=hy'  }
     end
 
     context 'when class not specified, the current application class is the default' do

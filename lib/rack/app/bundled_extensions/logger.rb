@@ -9,4 +9,6 @@ Rack::App::Extension.register(:logger) do
     end
   end
 
+  before { logger }
+  
 end

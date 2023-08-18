@@ -11,8 +11,14 @@ describe Rack::App do
 
           apply_extensions :logger
 
-          get do
+          get "method" do
             logger.__send__(log_level, 'hello')
+
+            respond_with 'OK'
+          end
+
+          get "instance-var" do
+            @logger.__send__(log_level, 'hello')
 
             respond_with 'OK'
           end
@@ -24,7 +30,15 @@ describe Rack::App do
           date_identifier = '\d+\-\d+\-\d+T\d+:\d+:\d+\.\d+ #\d+'
           rgx = /#{log_level_short_hand}, \[#{date_identifier}\] +#{log_level.to_s.upcase} +\-\- [\d\w]+: hello\n/
           expect(STDOUT).to receive(:write).with(rgx)
-          get('/')
+          get('/method')
+        end
+
+        it "should create log with the logger instance :#{log_level} method" do
+          log_level_short_hand = log_level.to_s.upcase[0..0]
+          date_identifier = '\d+\-\d+\-\d+T\d+:\d+:\d+\.\d+ #\d+'
+          rgx = /#{log_level_short_hand}, \[#{date_identifier}\] +#{log_level.to_s.upcase} +\-\- [\d\w]+: hello\n/
+          expect(STDOUT).to receive(:write).with(rgx)
+          get('/instance-var')
         end
 
       end
