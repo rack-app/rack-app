@@ -1,6 +1,7 @@
 require "rack/builder"
 require "rack/request"
 require "rack/response"
+
 class Rack::App::Middlewares::Configuration
 
   def initialize(app, config)
@@ -11,10 +12,10 @@ class Rack::App::Middlewares::Configuration
   end
 
   def call(env)
-    env[::Rack::App::Constants::ENV::HANDLER]= handler(env)
-    env[::Rack::App::Constants::ENV::SERIALIZER]= @serializer
-    env[::Rack::App::Constants::ENV::PAYLOAD_PARSER]= @payload_parser
-    env[::Rack::App::Constants::ENV::PAYLOAD_GETTER]= lambda do
+    setup_handler(env)
+    env[::Rack::App::Constants::ENV::SERIALIZER] = @serializer
+    env[::Rack::App::Constants::ENV::PAYLOAD_PARSER] = @payload_parser
+    env[::Rack::App::Constants::ENV::PAYLOAD_GETTER] = lambda do
       env[::Rack::App::Constants::ENV::PARSED_PAYLOAD] ||= env[::Rack::App::Constants::ENV::PAYLOAD_PARSER].parse_env(env)
     end
     @app.call(env)
@@ -22,11 +23,17 @@ class Rack::App::Middlewares::Configuration
 
   protected
 
-  def handler(env)
-    new_handler = @handler_class.new
-    new_handler.request = ::Rack::Request.new(env)
-    new_handler.response = ::Rack::Response.new
-    new_handler
+  def setup_handler(env)
+    request = ::Rack::Request.new(env)
+    response = ::Rack::Response.new
+    h = @handler_class.new
+    h.env = env
+    h.request = request
+    h.response = response
+    handlers = ::Rack::App::Handlers.new(env, request, response)
+    handlers[@handler_class] = h
+    env[::Rack::App::Constants::ENV::HANDLERS] = handlers
+    env[::Rack::App::Constants::ENV::HANDLER] = handlers[@handler_class]
   end
 
   def extname(env)

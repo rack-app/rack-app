@@ -11,17 +11,17 @@ module Rack::App::Constants
   module HTTP
 
     module METHOD
-      ANY     = 'ANY'.freeze
-      GET     = 'GET'.freeze
-      POST    = 'POST'.freeze
-      PUT     = 'PUT'.freeze
-      PATCH   = 'PATCH'.freeze
-      DELETE  = 'DELETE'.freeze
-      HEAD    = 'HEAD'.freeze
+      ANY = 'ANY'.freeze
+      GET = 'GET'.freeze
+      POST = 'POST'.freeze
+      PUT = 'PUT'.freeze
+      PATCH = 'PATCH'.freeze
+      DELETE = 'DELETE'.freeze
+      HEAD = 'HEAD'.freeze
       OPTIONS = 'OPTIONS'.freeze
-      LINK    = 'LINK'.freeze
-      UNLINK  = 'UNLINK'.freeze
-      TRACE   = 'TRACE'.freeze
+      LINK = 'LINK'.freeze
+      UNLINK = 'UNLINK'.freeze
+      TRACE = 'TRACE'.freeze
     end
 
     METHODS = (METHOD.constants - [:ANY]).map(&:to_s).freeze
@@ -40,6 +40,7 @@ module Rack::App::Constants
 
     ROUTER = 'rack-app.router'.freeze
     HANDLER = 'rack-app.handler'.freeze
+    HANDLERS = 'rack-app.handlers'.freeze
     EXTNAME = 'rack-app.extname'.freeze
     SERIALIZER = 'rack-app.serializer'.freeze
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze
@@ -49,7 +50,7 @@ module Rack::App::Constants
 
     MERGED_PARAMS = 'rack-app.params.merged'.freeze
     VALIDATED_PARAMS = 'rack-app.params.validated'.freeze
-    QUERY_STRING_PARAMS =  'rack-app.params.query_string'.freeze
+    QUERY_STRING_PARAMS = 'rack-app.params.query_string'.freeze
     PATH_SEGMENTS_PARAMS = 'rack-app.params.path_segments'.freeze
 
     PAYLOAD_PARSER = 'rack-app.payload.parser'.freeze

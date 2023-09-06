@@ -5,14 +5,14 @@ describe Rack::App do
   describe '.before' do
     klass = Class.new(described_class)
     klass.class_eval do
-      before { @say = 'Hello' }
-      before { @word = 'World' }
+      before { env[:@say] = 'Hello' }
+      before { env[:@world] = 'World' }
     end
 
     rack_app(Class.new(klass)) do
 
       get '/say' do
-        "#{@say}, #{@word}!"
+        "#{env[:@say]}, #{env[:@world]}!"
       end
 
     end
@@ -23,7 +23,7 @@ describe Rack::App do
   describe '.after' do
     klass = Class.new(described_class)
     klass.class_eval do
-      after { self.class.queue << 'after' }
+      after { env[::Rack::App::Constants::ENV::HANDLER].class.queue << 'after' }
     end
 
     rack_app(Class.new(klass)) do
@@ -41,8 +41,8 @@ describe Rack::App do
     end
 
     it 'should be executed after the endpoint definition' do
-       expect(get('/').body).to eq 'OK'
-       expect(rack_app.queue).to eq %w(in after)
+      expect(get('/').body).to eq 'OK'
+      expect(rack_app.queue).to eq %w(in after)
     end
   end
 

@@ -1,6 +1,10 @@
 module Rack::App::InstanceMethods::Core
 
-  attr_writer :request, :response
+  attr_writer :env, :request, :response
+
+  def env
+    @env || raise("env object is not set for #{self.class}")
+  end
 
   def request
     @request || raise("request object is not set for #{self.class}")
