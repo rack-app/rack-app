@@ -15,6 +15,7 @@ class Rack::App
   require 'rack/app/logger'
   require 'rack/app/params'
   require 'rack/app/router'
+  require 'rack/app/request'
   require 'rack/app/payload'
   require 'rack/app/handlers'
   require 'rack/app/endpoint'

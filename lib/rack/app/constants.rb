@@ -45,7 +45,7 @@ module Rack::App::Constants
     SERIALIZER = 'rack-app.serializer'.freeze
     CONTENT_TYPE = 'CONTENT_TYPE'.freeze
 
-    PARAMS_GETTER = 'rack-app.params.getter'
+    PARAMS_GETTER = 'rack-app.params.getter'.freeze
     PARAMS = 'rack-app.params.object'.freeze
 
     MERGED_PARAMS = 'rack-app.params.merged'.freeze

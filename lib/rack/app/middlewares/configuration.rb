@@ -24,7 +24,7 @@ class Rack::App::Middlewares::Configuration
   protected
 
   def setup_handler(env)
-    request = ::Rack::Request.new(env)
+    request = ::Rack::App::Request.new(env)
     response = ::Rack::Response.new
     h = @handler_class.new
     h.env = env
