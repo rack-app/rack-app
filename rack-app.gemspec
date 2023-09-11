@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   summary = 'Minimalist rack application interface building framework.'
   spec.summary = summary
   spec.description = summary
-  spec.homepage = 'http://www.rack-app.com/'
+  spec.homepage = 'https://github.com/rack-app/rack-app/wiki'
   spec.license = 'Apache License 2.0'
 
   spec.files = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

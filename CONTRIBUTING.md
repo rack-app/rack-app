@@ -1,7 +1,7 @@
 # How to contribute
 
 I'm really glad you're reading this, because we need volunteer developers to help this project come to fruition.
-[Rack::App official website](http://www.rack-app.com/) tells you where we are,
+[Rack::App official Wiki](https://github.com/rack-app/rack-app/wiki) tells you where we are,
 
 ## Testing
 
