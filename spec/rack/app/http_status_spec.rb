@@ -6,7 +6,7 @@ describe Rack::App do
 
     rack_app do
 
-      Rack::App::Constants::HTTP_STATUS_CODES.each do |code,_|
+      Rack::App::Constants::HTTP_STATUS_CODES.each do |code, _|
         get "/#{code}" do
           http_status!(code)
 
@@ -18,7 +18,6 @@ describe Rack::App do
         http_status!(418, "I'm a teapot! :)")
       end
     end
-
 
     Rack::App::Constants::HTTP_STATUS_CODES.each do |code, desc|
       context "when #{code} status code given" do
@@ -42,6 +41,28 @@ describe Rack::App do
         get("/custom_desc")
         expect(last_response.status).to eq 418
         expect(last_response.body).to eq "I'm a teapot! :)"
+      end
+    end
+
+    context 'when serialization is defined' do
+      content = { "hello" => "world" }
+      require 'json'
+      rack_app do
+
+        serializer do |object|
+          JSON.dump(object)
+        end
+
+        get '/' do
+          http_status!(418, content)
+        end
+
+      end
+
+      it 'should use the serializer to encode the http_status content' do
+        get("/")
+        expect(last_response.status).to eq 418
+        expect(JSON.load(last_response.body)).to eq(content)
       end
     end
 
