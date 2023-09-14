@@ -246,6 +246,30 @@ describe Rack::App do
         end
       end
 
+      context 'payload' do
+
+        context "POST + Form url encoded payload" do
+
+          rack_app do
+
+            post '/' do
+              response.status = 418
+              YAML.dump(request.params)
+            end
+
+          end
+
+          it 'form encoded value is ' do
+            post "/", payload: "foo=bar",
+                 headers: { "Content-Type" => "application/x-www-form-urlencoded" }
+
+            expect(last_response.status).to eq 418
+            expect(YAML.load(last_response.body)).to eq({"foo" => "bar"})
+          end
+
+        end
+
+      end
     end
   end
 end

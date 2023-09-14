@@ -2,7 +2,7 @@ require "rack/request"
 class Rack::App::Request < ::Rack::Request
 
   def params
-    @env[::Rack::App::Constants::ENV::PARAMS].to_hash
+    @params ||= super.merge(@env[::Rack::App::Constants::ENV::PARAMS].to_hash)
   end
 
   def path_segments_params
