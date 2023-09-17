@@ -82,15 +82,43 @@ describe Rack::App do
 
     context 'when no mount point given' do
 
-      rack_app do
-        mount_rack_interface_compatible_application RackMountTestApp
+      context 'an object with call method support' do
+        rack_app do
+          mount_rack_interface_compatible_application RackMountTestApp
+        end
+
+        Rack::App::Constants::HTTP::METHODS.each do |method_type|
+          context "when request method is #{method_type}" do
+            ['/','/test','/test/this'].each do |path_info|
+              context "when request path is #{path_info}" do
+                it { expect(__send_rack_app_request__(method_type, path_info).body).to eq [method_type, path_info].join(':') }
+              end
+            end
+          end
+        end
       end
 
-      Rack::App::Constants::HTTP::METHODS.each do |method_type|
-        context "when request method is #{method_type}" do
-          ['/','/test','/test/this'].each do |path_info|
-            context "when request path is #{path_info}" do
-              it { expect(__send_rack_app_request__(method_type, path_info).body).to eq [method_type, path_info].join(':') }
+      context 'Rack::Builder' do
+        rack_app do
+
+          rica = Rack::Builder.new do
+            run(lambda {|env|
+              path_info = env[::Rack::App::Constants::ENV::PATH_INFO]
+              method_type = env['REQUEST_METHOD']
+              Rack::Response.new(method_type + ':' + path_info).finish
+            })
+          end
+
+          mount rica
+
+        end
+
+        Rack::App::Constants::HTTP::METHODS.each do |method_type|
+          context "when request method is #{method_type}" do
+            ['/','/test','/test/this'].each do |path_info|
+              context "when request path is #{path_info}" do
+                it { expect(__send_rack_app_request__(method_type, path_info).body).to eq [method_type, path_info].join(':') }
+              end
             end
           end
         end
