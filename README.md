@@ -2,6 +2,8 @@
 
 ![rack-app-logo](/assets/rack-app-logo.png)
 
+[rack-app GPT assistant](https://chat.openai.com/g/g-DOKIpY8aq-rack-app)
+
 `rack-app` is a minimalist web framework that focuses on simplicity and maintainability.
 The framework is meant to be used by seasoned web developers.
 
