@@ -35,7 +35,7 @@ describe Rack::App do
 
           let(:request) { { :url => '/params', :env => {} } }
 
-          subject { YAML.load(get(request).body) }
+          subject { YAML.load(get(request).body, permitted_classes: %w[Rack::QueryParser::Params]) }
 
           context 'when query string given in request env' do
 
